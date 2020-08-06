@@ -1,6 +1,8 @@
-# SimpleGUI
+# Simple(Gray)GUI
 
 ---
+
+**注意:当前项目正在经历从单色屏幕到灰度屏支持的变更,可能存在意想不到的Bug,如您需要在项目中使用SimpleGUI,请移步[SimpleGUI](https://gitee.com/Polarix/simplegui)官方仓库!**
 
 #### 简介
 SimpleGUI是一款针对单色显示屏设计的GUI接口库。

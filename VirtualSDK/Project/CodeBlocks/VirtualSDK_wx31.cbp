@@ -100,6 +100,9 @@
 		<Unit filename="../../../DemoProc/src/Basic.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../DemoProc/src/Curve.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../DemoProc/src/DemoProc.c">
 			<Option compilerVar="CC" />
 		</Unit>

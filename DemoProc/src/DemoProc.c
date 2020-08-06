@@ -10,6 +10,7 @@
 #include "DemoProc.h"
 
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
+#include "Common.h"
 #include "SDKInterface.h"
 #include "SGUI_FontResource.h"
 #else
@@ -82,9 +83,10 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	SGUI_SystemIF_MemorySet(&g_stDemoEngine, 0x00, sizeof(HMI_ENGINE_OBJECT));
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	/* Initialize display size. */
-	g_stDeviceInterface.stSize.iWidth = 128;
-	g_stDeviceInterface.stSize.iHeight = 64;
-	/* Initialize interface object. */
+	g_stDeviceInterface.stSize.iWidth = PARAM_DEFAULT_PIXEL_NUM_H;
+	g_stDeviceInterface.stSize.iHeight = PARAM_DEFAULT_PIXEL_NUM_V;
+    g_stDeviceInterface.uiDepthBits = PARAM_DEFAULT_PIXEL_DEPTH;
+    /* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
 	g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;

@@ -61,6 +61,15 @@ typedef	SGUI_UINT32						SGUI_ROM_ADDRESS;
 #define SGUI_FALSE						(0)
 #define SGUI_TRUE						(!SGUI_FALSE)
 
+#define SGUI_COLOR_TRANS                (-1)
+/******
+ * Deprecated!
+ * Prepared to delete this guy!
+ * DO NOT USE THIS MACRO ANY MORE!
+ */
+#define SGUI_COLOR_FRGCLR               (0x0A)
+#define SGUI_COLOR_BKGCLR               (0)
+
 typedef struct
 {
 	SGUI_INT							iX;
@@ -87,12 +96,7 @@ typedef struct
 	SGUI_INT							iMax;
 }SGUI_RANGE;
 
-typedef enum
-{
-	SGUI_COLOR_BKGCLR =					0,
-	SGUI_COLOR_FRGCLR =					1,
-	SGUI_COLOR_TRANS =					2,
-}SGUI_COLOR;
+typedef SGUI_INT16 SGUI_COLOR ;
 
 typedef enum
 {
@@ -127,6 +131,8 @@ typedef struct
 {
 	//Screen display area size in pixel.
 	SGUI_AREA_SIZE						stSize;
+    // Screen display pixel depth in bit count(eg. 4(bits) means 16 grayscale)
+    SGUI_UINT8                          uiDepthBits;
 	//Bitmap data buffer.
 	SGUI_BYTE							arrBmpDataBuffer[SGUI_BMP_DATA_BUFFER_SIZE];
     //Engine & device initialize function.

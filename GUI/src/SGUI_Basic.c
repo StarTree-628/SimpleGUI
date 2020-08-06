@@ -41,13 +41,9 @@ void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinateX, SG
 		{
 			/* Action function is unspecified, no actions. */
 		}
-        else if(SGUI_COLOR_FRGCLR == eColor)
+        else
         {
-            pstDeviceIF->fnSetPixel(uiCoordinateX, uiCoordinateY, 1);
-        }
-        else if(SGUI_COLOR_BKGCLR == eColor)
-        {
-            pstDeviceIF->fnSetPixel(uiCoordinateX, uiCoordinateY, 0);
+            pstDeviceIF->fnSetPixel(uiCoordinateX,uiCoordinateY,eColor);
         }
     }
 }
@@ -68,13 +64,11 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinate
     /* Variable Declaration				*/
     /*----------------------------------*/
     SGUI_COLOR					eColor;
-    SGUI_UINT					uiPixValue;
 
     /*----------------------------------*/
     /* Initialize						*/
     /*----------------------------------*/
     eColor =					SGUI_COLOR_BKGCLR;
-    uiPixValue =				0;
 
     /*----------------------------------*/
     /* Process							*/
@@ -87,16 +81,8 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinate
 		}
 		else
 		{
-			uiPixValue = pstDeviceIF->fnGetPixel(uiCoordinateX, uiCoordinateY);
-			if(0 == uiPixValue)
-			{
-				eColor = SGUI_COLOR_BKGCLR;
-			}
-			else
-			{
-				eColor = SGUI_COLOR_FRGCLR;
-			}
-		}
+			eColor = pstDeviceIF->fnGetPixel(uiCoordinateX, uiCoordinateY);
+        }
     }
 
     return eColor;
@@ -440,15 +426,16 @@ void SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCx, SGUI_UINT 
                 // Fill the circle
                 if((uiRadius > 1) && (eFillColor != SGUI_COLOR_TRANS) && (uiPosXOffset_Old != uiPosXOffset))
                 {
-
                     SGUI_Basic_DrawLine(pstDeviceIF, uiCx-uiPosXOffset, uiCy-uiYOffset+1, uiCx-uiPosXOffset, uiCy+uiYOffset-1, eFillColor);
                     SGUI_Basic_DrawLine(pstDeviceIF, uiCx+uiPosXOffset, uiCy-uiYOffset+1, uiCx+uiPosXOffset, uiCy+uiYOffset-1, eFillColor);
                     uiPosXOffset_Old = uiPosXOffset;
                 }
-                SGUI_Basic_DrawLine(pstDeviceIF, uiCx-uiYOffset, uiCy-uiPosXOffset+1, uiCx-uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
-                SGUI_Basic_DrawLine(pstDeviceIF, uiCx+uiYOffset, uiCy-uiPosXOffset+1, uiCx+uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
-                uiYOffset_Old = uiYOffset;
-
+				if ((uiRadius > 1) && (eFillColor != SGUI_COLOR_TRANS) && (uiYOffset_Old != uiYOffset))
+				{
+                    SGUI_Basic_DrawLine(pstDeviceIF, uiCx-uiYOffset, uiCy-uiPosXOffset+1, uiCx-uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
+                    SGUI_Basic_DrawLine(pstDeviceIF, uiCx+uiYOffset, uiCy-uiPosXOffset+1, uiCx+uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
+                    uiYOffset_Old = uiYOffset;
+                }
                 // Draw edge.
                 SGUI_Basic_DrawPoint(pstDeviceIF, uiCx+uiPosXOffset, uiCy+uiYOffset, eEdgeColor);
                 SGUI_Basic_DrawPoint(pstDeviceIF, uiCx-uiPosXOffset, uiCy+uiYOffset, eEdgeColor);
@@ -490,6 +477,8 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX,
     /* Variable Declaration				*/
     /*----------------------------------*/
     SGUI_UINT					i_W, i_H;
+    SGUI_COLOR                  clsOriginColor;
+    SGUI_UINT16                 uiDepthTotal=1<<pstDeviceIF->uiDepthBits;
 
     /*----------------------------------*/
     /* Process							*/
@@ -498,14 +487,8 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX,
     {
         for(i_H=0; i_H<uiHeight; i_H++)
         {
-            if(SGUI_Basic_GetPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H) == SGUI_COLOR_FRGCLR)
-            {
-                SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, SGUI_COLOR_BKGCLR);
-            }
-            else
-            {
-                SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, SGUI_COLOR_FRGCLR);
-            }
+            clsOriginColor=SGUI_Basic_GetPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H);
+            SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, uiDepthTotal-clsOriginColor);
         }
     }
 }

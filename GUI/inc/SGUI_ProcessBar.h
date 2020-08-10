@@ -25,7 +25,9 @@ typedef struct
 	SGUI_SIZE				Height;
 	SGUI_PROCBAR_DIRECTION	Direction;
 	SGUI_UINT32				MaxValue;
-
+    SGUI_COLOR              BorderColor;
+    SGUI_COLOR              BackgroundColor;
+    SGUI_COLOR              BarColor;
 }SGUI_PROCBAR_PARAMETER;
 
 typedef struct

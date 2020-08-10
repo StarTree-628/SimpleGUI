@@ -86,20 +86,20 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stNumBoxInitParam.eAlignment = SGUI_CENTER;
 	stNumBoxInitParam.iMin = -50;
 	stNumBoxInitParam.iMax = 100;
-	stNumBoxInitParam.pstFontRes = &SGUI_DEFAULT_FONT_8;
+	stNumBoxInitParam.pstFontRes = SGUI_FONT_REF(FONT_8);
 	stNumBoxInitParam.stLayout.iX = VARIABLE_BOX_POSX+2;
 	stNumBoxInitParam.stLayout.iY = VARIABLE_BOX_NUMBER_POSY+2;
 	stNumBoxInitParam.stLayout.iWidth = pstDeviceIF->stSize.iWidth - (VARIABLE_BOX_POSX*2)-4;
-	stNumBoxInitParam.stLayout.iHeight = SGUI_DEFAULT_FONT_8.iHeight;
+	stNumBoxInitParam.stLayout.iHeight = SGUI_FONT(FONT_8).iHeight;
 
 	SGUI_NumberVariableBox_Initialize(&s_stNumberVariableBox, &stNumBoxInitParam);
 
 
-	stTextBoxInitParam.pstFontRes = &SGUI_DEFAULT_FONT_12;
+	stTextBoxInitParam.pstFontRes = SGUI_FONT_REF(FONT_12);
 	stTextBoxInitParam.stLayout.iX = VARIABLE_BOX_POSX+2;
 	stTextBoxInitParam.stLayout.iY = VARIABLE_BOX_TEXT_POSY+2;
 	stTextBoxInitParam.stLayout.iWidth = pstDeviceIF->stSize.iWidth-(VARIABLE_BOX_POSX*2)-4;
-	stTextBoxInitParam.stLayout.iHeight = SGUI_DEFAULT_FONT_12.iHeight;
+	stTextBoxInitParam.stLayout.iHeight = SGUI_FONT(FONT_12).iHeight;
 	stTextBoxInitParam.sTextLengthMax = TEXT_VARIABLE_LENGTH;
 
 	SGUI_TextVariableBox_Initialize(&s_stTextVariableBox, &stTextBoxInitParam, s_szTextVariableBuffer);
@@ -127,7 +127,7 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Prepare(SGUI_SCR_DEV* pstDeviceIF, const v
 	HMI_DemoVariableBox_DrawFrame(pstDeviceIF, (SGUI_SZSTR)s_szFrameTitle);
 	// Show notice
 	SGUI_Notice_FitArea(pstDeviceIF, &(stNoticeBox.stLayout));
-	SGUI_Notice_Repaint(pstDeviceIF, &stNoticeBox, &SGUI_DEFAULT_FONT_8, 0);
+	SGUI_Notice_Repaint(pstDeviceIF, &stNoticeBox, SGUI_FONT_REF(FONT_8), 0);
 	// Start RTC
 	RTCTimerEnable(true);
 	return HMI_RET_NORMAL;
@@ -350,6 +350,6 @@ void HMI_DemoVariableBox_DrawFrame(SGUI_SCR_DEV* pstDeviceIF, SGUI_SZSTR szTitle
 		SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, RECT_WIDTH(pstDeviceIF->stSize), RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
 		SGUI_Basic_DrawRectangle(pstDeviceIF, 2, 2, RECT_WIDTH(pstDeviceIF->stSize)-4, RECT_HEIGHT(pstDeviceIF->stSize)-4, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
 		SGUI_Basic_DrawLine(pstDeviceIF, 3, 17, 124, 17, SGUI_COLOR_FRGCLR);
-		SGUI_Text_DrawText(pstDeviceIF, szTitle, &GB2312_FZXS12, &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+		SGUI_Text_DrawText(pstDeviceIF, szTitle, SGUI_FONT_REF(GB2312_FZXS12), &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
 	}
 }

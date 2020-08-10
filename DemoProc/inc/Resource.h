@@ -9,7 +9,7 @@
 #include "DemoResource_UTF8.h"
 #endif
 
-extern const SGUI_FONT_RES GB2312_FZXS12;
+SGUI_FONT_RESOURCE_DECLARE(GB2312_FZXS12);
 
 
 #endif // _INCLUDE_RESOURCE_H_

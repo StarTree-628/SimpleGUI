@@ -30,6 +30,7 @@ bool Application::OnInit(void)
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
+	m_pLogWindow = new wxLogWindow(NULL,"SimpleGUI Simulator Log");
 	// Register image media handle.
 	wxInitAllImageHandlers();
 	// Read virtual device parameter.

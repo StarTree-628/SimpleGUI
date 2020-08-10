@@ -25,9 +25,32 @@
 #define		SGUI_DEVPF_IF_DEFINE(R, FN, PARAM)		typedef R(*FN)PARAM
 #define		SGUI_BMP_DATA_BUFFER_SIZE				(512)
 
-#define	SGUI_BMP_RESOURCE_DECLARE(NAME)				extern const SGUI_BMP_RES NAME
-#define	SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, ...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
-													const SGUI_BMP_RES NAME = {W, H, NAME##DATA}
+#define	SGUI_BMP_RESOURCE_DECLARE(NAME)				        extern const SGUI_BMP_RES NAME
+#define	SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, D, FGP, ...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
+                                                            const SGUI_BMP_RES NAME = {W, H, D, FGP, NAME##DATA}
+
+#define SGUI_FONT(NAME)                                     SGUI_FONT_##NAME
+#define SGUI_FONT_REF(NAME)                                 &SGUI_FONT(NAME)
+#define SGUI_FONT_RESOURCE_DECLARE(NAME)                    extern const SGUI_FONT_RES SGUI_FONT(NAME)
+#define SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(NAME,WIDTH,HEIGHT,DEPTH,BLOCKSIZE,DECODER,INDEXMAPPER,SCANMODE,...) \
+static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun);\
+const SGUI_BYTE     DATA_##NAME[]={__VA_ARGS__};\
+const SGUI_FONT_RES SGUI_FONT_##NAME={HEIGHT,DEPTH,SGUI_Resource_GetBitmap_##NAME,DECODER};\
+static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun)\
+{\
+    SGUI_INT iCharIndex = INDEXMAPPER(uiCode);\
+    if(NULL != pBitmapData) {\
+        pBitmapData->iHeight    = SGUI_FONT_##NAME.iHeight;\
+        pBitmapData->iWidth     = WIDTH;\
+        pBitmapData->iDepthBits = SGUI_FONT_##NAME.iDepthBits;\
+        if(!bDryRun) {\
+            pBitmapData->fnGetPixel = SCANMODE;\
+            pBitmapData->pData      = DATA_##NAME + iCharIndex*BLOCKSIZE;\
+        }\
+    }\
+}\
+// end #define
+
 //=======================================================================//
 //= Data type definition.											    =//
 //=======================================================================//
@@ -122,10 +145,6 @@ SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_REFRESH,					(void));
 
 // System function interface type declare.
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_GET_RTC,					(SGUI_INT iYear, SGUI_INT iMounth, SGUI_INT iDay, SGUI_INT iWeekDay, SGUI_INT iHour, SGUI_INT iMinute, SGUI_INT iSecond));
-SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_GET_CHAR_INDEX,			(SGUI_UINT32 uiCode));
-SGUI_DEVPF_IF_DEFINE(SGUI_CSZSTR,       SGUI_FN_IF_STEP_NEXT,               (SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode));
-SGUI_DEVPF_IF_DEFINE(SGUI_SIZE,         SGUI_FN_IF_GET_DATA,                (SGUI_SIZE sStartAddr, SGUI_BYTE* pDataBuffer, SGUI_SIZE sReadSize));
-SGUI_DEVPF_IF_DEFINE(SGUI_BOOL,         SGUI_FN_IF_IS_FULL_WIDTH,           (SGUI_UINT32 uiCode));
 
 typedef struct
 {
@@ -146,23 +165,31 @@ typedef struct
     // Sync display buffer data to screen device.
     SGUI_FN_IF_REFRESH					fnSyncBuffer;
 }SGUI_SCR_DEV;
-
-typedef struct
-{
-    SGUI_INT							iHalfWidth;
-    SGUI_INT							iFullWidth;
-    SGUI_INT							iHeight;
-	SGUI_FN_IF_GET_CHAR_INDEX			fnGetIndex;
-	SGUI_FN_IF_GET_DATA                 fnGetData;
-	SGUI_FN_IF_STEP_NEXT                fnStepNext;
-	SGUI_FN_IF_IS_FULL_WIDTH            fnIsFullWidth;
-}SGUI_FONT_RES;
-
-typedef struct
+// Bitmap operation Interface type declare
+struct _bmp_res;
+SGUI_DEVPF_IF_DEFINE(SGUI_COLOR,        SGUI_FN_IF_BMP_GET_PIXEL,   (const struct _bmp_res* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY));
+typedef struct _bmp_res
 {
 	SGUI_INT							iWidth;
     SGUI_INT							iHeight;
+    SGUI_INT                            iDepthBits;
+    SGUI_FN_IF_BMP_GET_PIXEL            fnGetPixel;
+    //SGUI_COLOR                          (*fnGetPixel)(const struct _bmp_res* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY);
     const SGUI_BYTE*					pData;
 }SGUI_BMP_RES;
+
+// Font operation Interface type declare
+struct _font_res;
+SGUI_DEVPF_IF_DEFINE(SGUI_CSZSTR,       SGUI_FN_IF_STEP_NEXT,               (SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode));
+SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_GET_BITMAP,              (SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun));
+
+typedef struct _font_res
+{
+    SGUI_INT							iHeight;
+    SGUI_INT                            iDepthBits;
+	SGUI_FN_IF_GET_BITMAP               fnGetBitmap;
+	SGUI_FN_IF_STEP_NEXT                fnStepNext;
+}SGUI_FONT_RES;
+
 
 #endif // _INCLUDE_GUI_TYPEDEF_H_

@@ -83,7 +83,7 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
     // Initialize list data.
     SGUI_SystemIF_MemorySet(&s_stDemoMenuObject, 0x00, sizeof(SGUI_MENU_STRUCT));
      //Initialize list object.
-	SGUI_Menu_Initialize(&s_stDemoMenuObject, &SGUI_DEFAULT_FONT_8, &stLayout, s_arrstMenuItems, sizeof(s_arrstMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+	SGUI_Menu_Initialize(&s_stDemoMenuObject, SGUI_FONT_REF(FONT_8), &stLayout, s_arrstMenuItems, sizeof(s_arrstMenuItems)/sizeof(SGUI_ITEMS_ITEM));
 	return HMI_RET_NORMAL;
 }
 
@@ -148,7 +148,7 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 					{
 						SGUI_ItemsBase_GetItemExtent(&(s_pstActivedMenu->stItems), s_pstActivedMenu->stItems.iSelection, &stItemArea);
 						s_pstActivedMenu = &s_stDemoSubMenuObject;
-						SGUI_Menu_Initialize(&s_stDemoSubMenuObject, &SGUI_DEFAULT_FONT_8, &stItemArea, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+						SGUI_Menu_Initialize(&s_stDemoSubMenuObject, SGUI_FONT_REF(FONT_8), &stItemArea, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
 						SGUI_Menu_PopupSubMenu(pstDeviceIF, &s_stDemoSubMenuObject, &stItemArea);
 						SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
 					}

@@ -32,7 +32,7 @@ class Application : public wxApp
 {
     private:
         LCDFrame*					m_pclsMainFrame;
-
+        wxLogWindow*                m_pLogWindow;
     public:
 		bool						OnInit(void);
 		int							OnRun(void);

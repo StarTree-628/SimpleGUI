@@ -71,13 +71,13 @@ HMI_ENGINE_RESULT HMI_DemoNotice_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* 
 		SGUI_SystemIF_StringLengthCopy(s_szDemoNoticeText, (SGUI_SZSTR)pstParameters, NOTICE_TEXT_BUFFER_SIZE);
 		s_szDemoNoticeText[NOTICE_TEXT_BUFFER_SIZE] = '\0';
 	}
-	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, &GB2312_FZXS12, 0);
+	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, SGUI_FONT_REF(GB2312_FZXS12), 0);
 	return HMI_RET_NORMAL;
 }
 
 HMI_ENGINE_RESULT HMI_DemoNotice_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const void* pstParameters)
 {
-	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, &GB2312_FZXS12, 0);
+	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, SGUI_FONT_REF(GB2312_FZXS12), 0);
 	return HMI_RET_NORMAL;
 }
 

@@ -127,7 +127,7 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 		// Draw scroll bar edge.
 		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX, pstObj->stParam.stLayout.iY,
 									pstObj->stParam.stLayout.iWidth, pstObj->stParam.stLayout.iHeight,
-									SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+									pstObj->stParam.eBorderColor, pstObj->stParam.eBackgroundColor);
 
 		if(SGUI_SCROLLBAR_VERTICAL == pstObj->stParam.eDirection)
 		{
@@ -137,12 +137,12 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 				uiScrollBlockPos = pstObj->stParam.stLayout.iY+1+((pstObj->stParam.stLayout.iHeight-uiScrollBlockSize-2)*pstObj->stData.sValue/pstObj->stParam.sMaxValue);
 				// Redraw process block
 				SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX+1, uiScrollBlockPos,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstObj->stParam.eHandleColor, pstObj->stParam.eHandleColor);
 			}
 			else
 			{
 				SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX+1, pstObj->stParam.stLayout.iY+1,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstObj->stParam.eHandleColor, pstObj->stParam.eHandleColor);
 			}
 		}
 		else // Horizontal
@@ -153,12 +153,12 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 				uiScrollBlockPos = pstObj->stParam.stLayout.iX+1+((pstObj->stParam.stLayout.iWidth-uiScrollBlockSize-2)*pstObj->stData.sValue/pstObj->stParam.sMaxValue);
 				// Redraw process block
 				SGUI_Basic_DrawRectangle(pstDeviceIF, uiScrollBlockPos, pstObj->stParam.stLayout.iY+1,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstObj->stParam.eHandleColor, pstObj->stParam.eHandleColor);
 			}
 			else
 			{
 				SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX+1, pstObj->stParam.stLayout.iY+1,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstObj->stParam.eHandleColor, pstObj->stParam.eHandleColor);
 			}
 		}
 	}

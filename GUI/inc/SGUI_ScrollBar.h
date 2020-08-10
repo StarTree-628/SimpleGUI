@@ -20,6 +20,9 @@ typedef struct
 	SGUI_RECT					stLayout;
     SGUI_SIZE					sMaxValue;
     SGUI_SCROLLBAR_DIRECTION	eDirection;
+    SGUI_COLOR                  eBorderColor;
+    SGUI_COLOR                  eBackgroundColor;
+    SGUI_COLOR                  eHandleColor;
 }SGUI_SCROLLBAR_PARAM;
 
 typedef struct

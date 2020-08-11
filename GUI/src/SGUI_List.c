@@ -73,9 +73,10 @@ void SGUI_List_Initialize(SGUI_LIST_STRUCT* pstObj, const SGUI_FONT_RES* pstFont
 		stScrollBarParam.stLayout.iWidth = LIST_SCROLLBAR_WIDTH;
 		stScrollBarParam.stLayout.iHeight = pstObj->stItems.stLayout.iHeight;
 		stScrollBarParam.sMaxValue = (pstObj->stItems.iCount > pstObj->stItems.iVisibleItems)?(pstObj->stItems.iCount - pstObj->stItems.iVisibleItems):0;
-		stScrollBarParam.eBackgroundColor = 0x02;
-		stScrollBarParam.eBorderColor = 0x0F;
-		stScrollBarParam.eHandleColor = 0x0F;
+		stScrollBarParam.stPalette.uiDepthBits=4;
+		stScrollBarParam.stPalette.eBackgroundColor = 0x02;
+		stScrollBarParam.stPalette.eEdgeColor = 0x0F;
+		stScrollBarParam.stPalette.eHandleColor = 0x0F;
 		SGUI_ScrollBar_Initialize(&(pstObj->stScrollBar), &stScrollBarParam);
 	}
 }

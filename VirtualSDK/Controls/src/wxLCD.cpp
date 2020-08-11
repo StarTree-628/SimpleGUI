@@ -10,6 +10,7 @@
 #include "wxLCD.h"
 #include "SGUI_Typedef.h"
 #include <math.h>
+#include <wx/log.h>
 //=======================================================================//
 //= Function define.										            =//
 //=======================================================================//
@@ -68,28 +69,30 @@ void wxLCD::SetPixelDepth(const int depth)
     }
     // Generate a scaled Palette bettween the BackgroundColor and PixelColor
     m_clsPixelPalette = new wxColor[depth];
+    wxLogDebug("调色板初始化中...");
     unsigned char ucRH=this->m_clsPixelHColour.Red();
     unsigned char ucGH=this->m_clsPixelHColour.Green();
     unsigned char ucBH=this->m_clsPixelHColour.Blue();
-
+    wxLogDebug("颜色边界A(%d,%d,%d)",ucRH,ucGH,ucBH);
     unsigned char ucRL=m_clsPixelLColour.Red();
     unsigned char ucGL=m_clsPixelLColour.Green();
     unsigned char ucBL=m_clsPixelLColour.Blue();
-
-    double dbRDiff=(ucRH-ucRL)*1.0/depth;
-    double dbGDiff=(ucGH-ucGL)*1.0/depth;
-    double dbBDiff=(ucBH-ucBL)*1.0/depth;
-
+    wxLogDebug("颜色边界B(%d,%d,%d)",ucRL,ucGL,ucBL);
+    double dbRDiff=(ucRH-ucRL)*1.0/(depth-1);
+    double dbGDiff=(ucGH-ucGL)*1.0/(depth-1);
+    double dbBDiff=(ucBH-ucBL)*1.0/(depth-1);
+    wxLogDebug("色差(%.2f,%.2f,%.2f)",dbRDiff,dbGDiff,dbBDiff);
     double dbR=(int)ucRL*1.0;
     double dbG=(int)ucGL*1.0;
     double dbB=(int)ucBL*1.0;
 
     for(int i=0; i<depth; i++)
     {
+        wxLogDebug("颜色0x%02X被映射为(%d,%d,%d)",i,(unsigned char)floor(dbR+0.5),(unsigned char)floor(dbG+0.5),(unsigned char)floor(dbB+0.5));
+        m_clsPixelPalette[i]=wxColor((unsigned char)floor(dbR+0.5),(unsigned char)floor(dbG+0.5),(unsigned char)floor(dbB+0.5));
         dbR+=dbRDiff;
         dbG+=dbGDiff;
         dbB+=dbBDiff;
-        m_clsPixelPalette[i]=wxColor((unsigned char)floor(dbR+0.5),(unsigned char)floor(dbG+0.5),(unsigned char)floor(dbB+0.5));
     }
 }
 int wxLCD::GetPixel(const int iX, const int iY)

@@ -799,5 +799,5 @@ SGUI_COLOR SGUI_Basic_MapColor(const SGUI_UINT8 uiOriginDepthBits,const SGUI_COL
 {
 	SGUI_UINT16 uiOriginSpace=(1<<uiOriginDepthBits)-1;
 	SGUI_UINT16 uiTargetSpace=(1<<uiTargetDepthBits)-1;
-	return (SGUI_COLOR)floor(eOriginColor*1.0/uiOriginSpace*uiTargetSpace);
+	return (SGUI_COLOR)(eOriginColor*1.0/uiOriginSpace*uiTargetSpace);
 }

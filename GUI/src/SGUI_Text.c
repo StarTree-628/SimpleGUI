@@ -331,7 +331,7 @@ SGUI_CSZSTR SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_Resource_StepNext_GB2312									    **/
+/** Function Name:	SGUI_Resource_StepNext_GB2312						**/
 /** Purpose:		Read current character code order by input pointer  **/
 /**                 and step to next character start pointer in GB2312. **/
 /** Resources:		None.												**/
@@ -373,5 +373,53 @@ SGUI_CSZSTR SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 	}
 	*puiCode = uiCode;
 
+	return pcNextChar;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Resource_StepNext_UTF8 						**/
+/** Purpose:		Read current character code order by input pointer  **/
+/**                 and step to next character start pointer in UTF8.   **/
+/** Resources:		None.												**/
+/** Params:																**/
+/**	@ cszSrc[in]:	Current char pointer.								**/
+/**	@ puiCode[out]:	Character code read from string.    				**/
+/** Return:			Next character start pointer.   					**/
+/*************************************************************************/
+SGUI_CSZSTR SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	const SGUI_CHAR*            pcNextChar;
+	SGUI_UINT32					uiCode;
+    SGUI_UINT8                  uiTempByte;
+    SGUI_UINT8                  uiCharacterLength;
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	pcNextChar =                cszSrc;
+	uiCode     =				0;
+
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	if(NULL != pcNextChar)
+	{
+	    uiTempByte = *pcNextChar++;
+	    if(uiTempByte < 0x7F){
+            uiCode = uiTempByte;
+	    }else{
+	        while(uiTempByte & 0x80){
+                uiCharacterLength ++;
+                uiTempByte <<= 1;
+	        }
+	        uiCode |= uiTempByte >> uiCharacterLength;
+	        while((--uiCharacterLength)>0){
+                uiCode = (uiCode)<<6 | ((*pcNextChar++) & 0x3F);
+	        }
+	    }
+	}
+	*puiCode = uiCode;
 	return pcNextChar;
 }

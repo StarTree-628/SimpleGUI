@@ -17,6 +17,7 @@
 
 #define SGUI_TEXT_DECODER_ASCII         SGUI_Text_StepNext_ASCII
 #define SGUI_TEXT_DECODER_GB2312        SGUI_Text_StepNext_GB2312
+#define SGUI_TEXT_DECODER_UTF8          SGUI_Text_StepNext_UTF8
 
 #define SGUI_TEXT_INDEXMAPPER_DIRECT    SGUI_Text_IndexMapper_Direct
 
@@ -38,6 +39,7 @@ SGUI_SIZE		SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZST
 SGUI_SIZE		SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_SIZE uiDisplayAreaWidth);
 SGUI_CSZSTR     SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
 SGUI_CSZSTR     SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
+SGUI_CSZSTR     SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
 SGUI_UINT32     SGUI_Text_IndexMapper_Direct(SGUI_UINT32 uiCode);
 
 #endif

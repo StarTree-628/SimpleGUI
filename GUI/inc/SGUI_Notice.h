@@ -12,15 +12,22 @@
 //=======================================================================//
 typedef struct
 {
+    SGUI_UINT8              uiDepthBits;
+    SGUI_COLOR              eEdgeColor;
+    SGUI_COLOR              eFillColor;
+}SGUI_NOTICE_PALETTE;
+typedef struct
+{
     SGUI_CSZSTR				cszNoticeText;
     const SGUI_BMP_RES*		pstIcon;
     SGUI_RECT				stLayout;
-}SGUI_NOTICT_BOX;
+    SGUI_NOTICE_PALETTE     stPalette;
+}SGUI_NOTICE_BOX;
 
 //=======================================================================//
 //= Public function declaration.									    =//
 //=======================================================================//
-SGUI_SIZE	SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICT_BOX* pstObject, const SGUI_FONT_RES* pstFontRes, SGUI_INT uiTextOffset);
+SGUI_SIZE	SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICE_BOX* pstObject, const SGUI_FONT_RES* pstFontRes, SGUI_INT uiTextOffset);
 void		SGUI_Notice_FitArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstFitArea);
 
 #endif // __INCLUDE_GUI_NOTICE_H__

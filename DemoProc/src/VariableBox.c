@@ -112,13 +112,17 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Prepare(SGUI_SCR_DEV* pstDeviceIF, const v
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_NOTICT_BOX           	stNoticeBox;
+	SGUI_NOTICE_BOX           	stNoticeBox;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
 	stNoticeBox.pstIcon = &SGUI_RES_ICON_INFORMATION_16;
 	stNoticeBox.cszNoticeText = s_szHelpNoticeText;
+
+	stNoticeBox.stPalette.uiDepthBits = 4;
+	stNoticeBox.stPalette.eEdgeColor  = 0x0F;
+	stNoticeBox.stPalette.eFillColor  = 0x02;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/

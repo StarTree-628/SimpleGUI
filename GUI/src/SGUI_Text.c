@@ -398,9 +398,9 @@ SGUI_CSZSTR SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	pcNextChar =                cszSrc;
-	uiCode     =				0;
-
+	pcNextChar          = cszSrc;
+	uiCode              = 0;
+    uiCharacterLength   = 0;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/

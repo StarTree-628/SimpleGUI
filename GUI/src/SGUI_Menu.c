@@ -12,15 +12,15 @@
 //=======================================================================//
 //= User Macro definition.											    =//
 //=======================================================================//
-#define	SGUI_MENU_ICON_DECLARE(NAME)				extern const SGUI_BMP_RES NAME
-#define	SGUI_MENU_ICON_DEFINE(NAME, W, H, ...)		const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
-													const SGUI_BMP_RES NAME = {W, H, NAME##DATA}
+#define	SGUI_MENU_ICON_DECLARE(NAME)					extern const SGUI_BMP_RES NAME
+#define	SGUI_MENU_ICON_DEFINE(NAME, W, H, D, FGP,...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
+														const SGUI_BMP_RES NAME = {W, H, D, FGP, NAME##DATA}
 //=======================================================================//
 //= Static variable define.												=//
 //=======================================================================//
-static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEUP, 5, 3,
+static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEUP, 5, 3, 1, SGUI_BMP_SCAN_MODE_DHPV,
 0x04,0x06,0x07,0x06,0x04);
-static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEDOWN, 5, 3,
+static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEDOWN, 5, 3, 1, SGUI_BMP_SCAN_MODE_DHPV,
 0x01,0x03,0x07,0x03,0x01);
 
 //=======================================================================//

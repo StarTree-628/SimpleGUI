@@ -39,6 +39,7 @@ void SGUI_Text_GetTextExtent(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRe
 	/*----------------------------------*/
 	const SGUI_CHAR*            pcChar;
 	SGUI_UINT32					uiCharacterCode;
+	SGUI_BMP_RES                stCharBitmap;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -58,7 +59,8 @@ void SGUI_Text_GetTextExtent(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRe
 			pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
 			if('\0' !=uiCharacterCode)
 			{
-                pstTextExtent->iWidth+=(pstFontRes->fnIsFullWidth(uiCharacterCode)?pstFontRes->iFullWidth:pstFontRes->iHalfWidth);
+				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,true);
+				pstTextExtent->iWidth+=stCharBitmap.iWidth;
 			}
 		}
 	}
@@ -93,7 +95,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 	/*----------------------------------*/
 	// Initialize variable.
 	pcChar =				    (SGUI_CSZSTR)ENCODE(cszText);
-	eBackColor =				(eFontMode == SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR;
+	eBackColor =				SGUI_Basic_MapColor(1,(eFontMode == SGUI_DRAW_NORMAL)?0:1,pstDeviceIF->uiDepthBits);
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -110,7 +112,6 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 		RECT_X_START(stPaintPos) = RECT_X_START(*pstInnerPos);
 		RECT_Y_START(stPaintPos) = RECT_Y_START(*pstInnerPos);
 		RECT_HEIGHT(stCharBitmap) = pstFontRes->iHeight;
-		stCharBitmap.pData = pstDeviceIF->arrBmpDataBuffer;
 
 		// Loop for Each char.
 		while(((NULL != pcChar) && ('\0' != *pcChar)) && (RECT_X_START(stPaintPos) < RECT_WIDTH(*pstDisplayArea)))
@@ -119,10 +120,10 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
             pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
             //if(SGUI_IS_VISIBLE_CHAR(uiCharacterCode))
 			{
-				RECT_WIDTH(stCharBitmap) = pstFontRes->fnIsFullWidth(uiCharacterCode)?pstFontRes->iFullWidth:pstFontRes->iHalfWidth;
+				stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
+				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 				if((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0)
 				{
-					SGUI_Text_GetCharacterData(pstFontRes, uiCharacterCode, pstDeviceIF->arrBmpDataBuffer, SGUI_BMP_DATA_BUFFER_SIZE);
 					SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
 				}
 				RECT_X_START(stPaintPos) += RECT_WIDTH(stCharBitmap);
@@ -163,7 +164,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 	pcChar =					(SGUI_CSZSTR)ENCODE(cszText);
 	uiCharacterCode =			0;
 	uiLines =					0;
-	eBackColor =				(eFontMode == SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR;
+	eBackColor =				SGUI_Basic_MapColor(1,(eFontMode == SGUI_DRAW_NORMAL)?0:1,pstDeviceIF->uiDepthBits);
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -200,8 +201,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 				uiLines ++;
 				continue;
 			}
-			// Get character width;
-			RECT_WIDTH(stCharBitmap) = pstFontRes->fnIsFullWidth(uiCharacterCode)?pstFontRes->iFullWidth:pstFontRes->iHalfWidth;
 
 			// Judge change line
 			if((stPaintPos.iX+stCharBitmap.iWidth-1) >= RECT_WIDTH(*pstDisplayArea))
@@ -215,7 +214,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 			if(((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0) && (RECT_Y_START(stPaintPos) < RECT_HEIGHT(*pstDisplayArea)))
 			{
 				// Draw character.
-				SGUI_Text_GetCharacterData(pstFontRes, uiCharacterCode, pstDeviceIF->arrBmpDataBuffer, SGUI_BMP_DATA_BUFFER_SIZE);
+				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
                 SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
 			}
 			else
@@ -245,8 +244,8 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 	/*----------------------------------*/
 	SGUI_SIZE					uiLineNumber, uiLineLength;
 	SGUI_UINT32					uiCharacterCode;
-	SGUI_UINT16					uiCharWidth;
 	SGUI_CSZSTR					pcChar;
+	SGUI_BMP_RES                stCharBitmap;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -269,15 +268,15 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 		}
 		else
 		{
-			uiCharWidth = pstFontRes->fnIsFullWidth(uiCharacterCode)?pstFontRes->iFullWidth:pstFontRes->iHalfWidth;
-            if((uiLineLength+uiCharWidth)>uiDisplayAreaWidth)
+			pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,true);
+            if((uiLineLength+stCharBitmap.iWidth)>uiDisplayAreaWidth)
 			{
 				uiLineNumber++;
-				uiLineLength = uiCharWidth;
+				uiLineLength  = stCharBitmap.iWidth;
 			}
 			else
 			{
-				uiLineLength+=uiCharWidth;
+				uiLineLength += stCharBitmap.iWidth;
 			}
 		}
 	}
@@ -285,43 +284,142 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 }
 
 /*****************************************************************************/
-/** Function Name:	SGUI_Text_GetCharacterData								**/
-/** Purpose:		Get character data form font resource by char code.     **/
+/** Function Name:	SGUI_Text_IndexMapper_Direct						    **/
+/** Purpose:		Directly use character code as the index while getting  **/
+/**                 character index inside the mono space font library.     **/
 /** Params:																	**/
-/**	@ pstFontRes[in]:	Font resource structure pointer.					**/
 /**	@ uiCode[in]:       Character code.										**/
-/**	@ pDataBuffer[out]:	Buffer for output char data.					    **/
-/**	@ sBufferSize[in]:	Output buffer size.             					**/
-/** Return:				Number of read data, return 0 when error occurred.  **/
+/** Return:				The char block index inside of the library.         **/
 /*****************************************************************************/
-SGUI_SIZE SGUI_Text_GetCharacterData(const SGUI_FONT_RES* pstFontRes, SGUI_UINT32 uiCode, SGUI_BYTE* pDataBuffer, SGUI_SIZE sBufferSize)
+SGUI_UINT32 SGUI_Text_IndexMapper_Direct(SGUI_UINT32 uiCode)
 {
-    /*----------------------------------*/
+	return uiCode;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Text_StepNext_ASCII							**/
+/** Purpose:		Read current character code order by input pointer  **/
+/**                 and step to next character start pointer in ASCII.  **/
+/** Resources:		None.												**/
+/** Params:																**/
+/**	@ cszSrc[in]:	Current char pointer.								**/
+/**	@ puiCode[in]:	Character code read from string(ASCII). 			**/
+/** Return:			Next character start pointer.   					**/
+/*************************************************************************/
+SGUI_CSZSTR SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
+{
+	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_SIZE                   sGetDataSize;
-	SGUI_SIZE					sReadDataSize;
-	SGUI_SIZE                   sDataBlockSize;
-	SGUI_INT                   	iCharIndex;
+	const SGUI_CHAR*            pcNextChar;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	sGetDataSize =              0;
+	pcNextChar =                cszSrc;
 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstFontRes) && (NULL != pDataBuffer) && (0 != sBufferSize))
-    {
-		iCharIndex = pstFontRes->fnGetIndex(uiCode);
-        if(SGUI_INVALID_INDEX != iCharIndex)
-        {
-            sDataBlockSize = SGUI_USED_BYTE(pstFontRes->iHeight)*(pstFontRes->iHalfWidth);
-            sReadDataSize = pstFontRes->fnIsFullWidth(uiCode)?(sDataBlockSize*2):sDataBlockSize;
-            sGetDataSize = pstFontRes->fnGetData(iCharIndex*sDataBlockSize, pDataBuffer, sReadDataSize>sBufferSize?sBufferSize:sReadDataSize);
-        }
-    }
+	if(NULL != pcNextChar)
+	{
+		*puiCode = *pcNextChar;
+		pcNextChar++;
+	}
 
-	return sGetDataSize;
+	return pcNextChar;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Resource_StepNext_GB2312						**/
+/** Purpose:		Read current character code order by input pointer  **/
+/**                 and step to next character start pointer in GB2312. **/
+/** Resources:		None.												**/
+/** Params:																**/
+/**	@ cszSrc[in]:	Current char pointer.								**/
+/**	@ puiCode[out]:	Character code read from string.    				**/
+/** Return:			Next character start pointer.   					**/
+/*************************************************************************/
+SGUI_CSZSTR SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	const SGUI_CHAR*            pcNextChar;
+	SGUI_UINT32					uiCode;
+
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	pcNextChar =                cszSrc;
+	uiCode =					0;
+
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	if(NULL != pcNextChar)
+	{
+		do
+		{
+			uiCode = (SGUI_BYTE)(*pcNextChar++);
+			if(uiCode < 0x7F)
+			{
+				break;
+			}
+			uiCode = uiCode<<8;
+			uiCode |= (SGUI_BYTE)(*pcNextChar++);
+		}
+		while(0);
+	}
+	*puiCode = uiCode;
+
+	return pcNextChar;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Resource_StepNext_UTF8 						**/
+/** Purpose:		Read current character code order by input pointer  **/
+/**                 and step to next character start pointer in UTF8.   **/
+/** Resources:		None.												**/
+/** Params:																**/
+/**	@ cszSrc[in]:	Current char pointer.								**/
+/**	@ puiCode[out]:	Character code read from string.    				**/
+/** Return:			Next character start pointer.   					**/
+/*************************************************************************/
+SGUI_CSZSTR SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	const SGUI_CHAR*            pcNextChar;
+	SGUI_UINT32					uiCode;
+    SGUI_UINT8                  uiTempByte;
+    SGUI_UINT8                  uiCharacterLength;
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	pcNextChar          = cszSrc;
+	uiCode              = 0;
+    uiCharacterLength   = 0;
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	if(NULL != pcNextChar)
+	{
+	    uiTempByte = *pcNextChar++;
+	    if(uiTempByte < 0x7F){
+            uiCode = uiTempByte;
+	    }else{
+	        while(uiTempByte & 0x80){
+                uiCharacterLength ++;
+                uiTempByte <<= 1;
+	        }
+	        uiCode |= uiTempByte >> uiCharacterLength;
+	        while((--uiCharacterLength)>0){
+                uiCode = (uiCode)<<6 | ((*pcNextChar++) & 0x3F);
+	        }
+	    }
+	}
+	*puiCode = uiCode;
+	return pcNextChar;
 }

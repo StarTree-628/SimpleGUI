@@ -5,7 +5,7 @@
 //=======================================================================//
 #include <stdint.h>
 #include <stdbool.h>
-
+#include <SGUI_Typedef.h>
 //=======================================================================//
 //= Data type definition.											    =//
 //=======================================================================//
@@ -33,8 +33,8 @@ void			SGUI_SDK_SyncKeyEventData(unsigned int uiKeyCode);
 unsigned int	SGUI_SDK_GetKeyEventData(void);
 bool			SGUI_SDK_GetEventSyncFlag(ENV_FLAG_INDEX eIndex);
 bool			SGUI_SDK_Initialize(void);
-void			SGUI_SDK_SetPixel(int uiPosX, int uiY, int uiPixelValue);
-int				SGUI_SDK_GetPixel(int uiPosX, int uiY);
+void			SGUI_SDK_SetPixel(SGUI_INT uiPosX, SGUI_INT uiY, SGUI_COLOR uiPixelValue);
+SGUI_COLOR		SGUI_SDK_GetPixel(SGUI_INT uiPosX, SGUI_INT uiY);
 void			SGUI_SDK_RefreshDisplay(void);
 void			SGUI_SDK_ClearDisplay(void);
 bool			SGUI_SDK_ConfigHearBeatTimer(unsigned int uiIntervalMs);

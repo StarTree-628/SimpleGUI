@@ -45,7 +45,7 @@ static wxCriticalSection	s_clsEventSyncCS;
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_SetPixel(int iX, int iY, int iPixelValue)
+void SGUI_SDK_SetPixel(SGUI_INT iX, SGUI_INT iY, SGUI_COLOR iPixelValue)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -75,13 +75,13 @@ void SGUI_SDK_SetPixel(int iX, int iY, int iPixelValue)
 /** Return:			Pixel state, 0 for cleared, 1 for set.              **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-int SGUI_SDK_GetPixel(int iX, int iY)
+SGUI_COLOR SGUI_SDK_GetPixel(SGUI_INT iX, SGUI_INT iY)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
     /*----------------------------------*/
     LCDFrame*           pclsMainFrameObjectPtr;
-    int					iPixelValue;
+    SGUI_COLOR			iPixelValue;
 
     /*----------------------------------*/
     /* Initialize						*/

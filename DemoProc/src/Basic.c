@@ -1,4 +1,4 @@
-﻿/*************************************************************************/
+/*************************************************************************/
 /** Copyright.															**/
 /** FileName: RTCNotice.c												**/
 /** Author: Polarix														**/
@@ -65,10 +65,17 @@ HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 10, 96, 10, SGUI_COLOR_FRGCLR);
-	SGUI_Basic_DrawRectangle(pstDeviceIF, 5, 5, 50, 50, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-	SGUI_Basic_DrawCircle(pstDeviceIF, 32, 32, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
-	SGUI_Basic_DrawCircle(pstDeviceIF, 96, 32, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
+	SGUI_Basic_DrawRectangle(pstDeviceIF, 5, 16, 40, 40, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 30, 30, 12, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 96, 40, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
+
+    // GrayScale Demos
+	SGUI_Basic_DrawLine(pstDeviceIF, 0, 2, 50, 2, 0x02);
+	SGUI_Basic_DrawLine(pstDeviceIF, 0, 4, 60, 4, 0x04);
+	SGUI_Basic_DrawLine(pstDeviceIF, 0, 6, 70, 6, 0x06);
+	SGUI_Basic_DrawLine(pstDeviceIF, 0, 8, 80, 8, 0x08);
+	SGUI_Basic_DrawLine(pstDeviceIF, 0, 10, 90, 10, 0x0B);
+	SGUI_Basic_DrawLine(pstDeviceIF, 0, 12, 100, 12, 0x0E);
 	return HMI_RET_NORMAL;
 }
 

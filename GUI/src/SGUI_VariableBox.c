@@ -158,7 +158,8 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
 		// Clear background.
 		SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
 		// Get font graphics size.
-		uiFontWidth =		pstObj->stParam.pstFontRes->iHalfWidth;
+		// TODO: Calculate which char is to be focused
+		uiFontWidth =		0;//pstObj->stParam.pstFontRes->iHalfWidth;
 		uiFontHeight =		pstObj->stParam.pstFontRes->iHeight;
 
 		// Get max text length and graphics width.

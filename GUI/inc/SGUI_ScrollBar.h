@@ -17,9 +17,18 @@ typedef enum
 
 typedef struct
 {
+    SGUI_COLOR                  eHandleColor;
+    SGUI_UINT8                  uiDepthBits;
+    SGUI_COLOR                  eEdgeColor;
+    SGUI_COLOR                  eBackgroundColor;
+} SGUI_SCROLLBAR_PALETTE;
+
+typedef struct
+{
 	SGUI_RECT					stLayout;
     SGUI_SIZE					sMaxValue;
     SGUI_SCROLLBAR_DIRECTION	eDirection;
+    SGUI_SCROLLBAR_PALETTE      stPalette;
 }SGUI_SCROLLBAR_PARAM;
 
 typedef struct

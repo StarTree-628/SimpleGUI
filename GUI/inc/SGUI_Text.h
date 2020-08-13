@@ -15,6 +15,12 @@
 #define TEXT_PLACEHOLDER_CHARACTER		('*')
 #define SGUI_IS_VISIBLE_CHAR(C)			((C>0x1F) && (C<0x7F))
 
+#define SGUI_TEXT_DECODER_ASCII         SGUI_Text_StepNext_ASCII
+#define SGUI_TEXT_DECODER_GB2312        SGUI_Text_StepNext_GB2312
+#define SGUI_TEXT_DECODER_UTF8          SGUI_Text_StepNext_UTF8
+
+#define SGUI_TEXT_INDEXMAPPER_DIRECT    SGUI_Text_IndexMapper_Direct
+
 //=======================================================================//
 //= Data type definition.											    =//
 //=======================================================================//
@@ -31,6 +37,9 @@ void			SGUI_Text_GetTextExtent(SGUI_CSZSTR cszTextBuffer, const SGUI_FONT_RES* p
 void			SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, SGUI_DRAW_MODE eFontMode);
 SGUI_SIZE		SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR szTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_INT iTopOffset, SGUI_DRAW_MODE eFontMode);
 SGUI_SIZE		SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_SIZE uiDisplayAreaWidth);
-SGUI_SIZE       SGUI_Text_GetCharacterData(const SGUI_FONT_RES* pstFontRes, SGUI_UINT32 uiCode, SGUI_BYTE* pDataBuffer, SGUI_SIZE sBufferSize);
+SGUI_CSZSTR     SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
+SGUI_CSZSTR     SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
+SGUI_CSZSTR     SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
+SGUI_UINT32     SGUI_Text_IndexMapper_Direct(SGUI_UINT32 uiCode);
 
 #endif

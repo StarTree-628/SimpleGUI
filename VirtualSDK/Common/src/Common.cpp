@@ -27,5 +27,6 @@ void SetLCDPanelParameter(PixelPanelParameter* pstParameter)
 		pstParameter->PanelColor = LCD_COLOR_OBJ_BKG;
 		pstParameter->PixelColor = LCD_COLOR_OBJ_PIX;
 		pstParameter->GridColor = LCD_COLOR_OBJ_GRID;
+		pstParameter->PixelUnitDepth = PARAM_DEFAULT_PIXEL_DEPTH;
 	}
 }

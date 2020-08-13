@@ -58,6 +58,8 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-D_SIMPLE_GUI_ENCODE_TEXT_" />
+			<Add option="-D_SIMPLE_GUI_IN_VIRTUAL_SDK_" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add option="-g" />
@@ -98,6 +100,9 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="../../../DemoProc/src/Basic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../DemoProc/src/Curve.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../DemoProc/src/DemoProc.c">

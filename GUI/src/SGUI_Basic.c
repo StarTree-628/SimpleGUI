@@ -8,7 +8,7 @@
 //= Include files.													    =//
 //=======================================================================//
 #include "SGUI_Basic.h"
-
+#include "math.h"
 //=======================================================================//
 //= User Macro definition.											    =//
 //=======================================================================//
@@ -41,13 +41,9 @@ void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinateX, SG
 		{
 			/* Action function is unspecified, no actions. */
 		}
-        else if(SGUI_COLOR_FRGCLR == eColor)
+        else
         {
-            pstDeviceIF->fnSetPixel(uiCoordinateX, uiCoordinateY, 1);
-        }
-        else if(SGUI_COLOR_BKGCLR == eColor)
-        {
-            pstDeviceIF->fnSetPixel(uiCoordinateX, uiCoordinateY, 0);
+            pstDeviceIF->fnSetPixel(uiCoordinateX,uiCoordinateY,eColor);
         }
     }
 }
@@ -68,13 +64,11 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinate
     /* Variable Declaration				*/
     /*----------------------------------*/
     SGUI_COLOR					eColor;
-    SGUI_UINT					uiPixValue;
 
     /*----------------------------------*/
     /* Initialize						*/
     /*----------------------------------*/
     eColor =					SGUI_COLOR_BKGCLR;
-    uiPixValue =				0;
 
     /*----------------------------------*/
     /* Process							*/
@@ -87,16 +81,8 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinate
 		}
 		else
 		{
-			uiPixValue = pstDeviceIF->fnGetPixel(uiCoordinateX, uiCoordinateY);
-			if(0 == uiPixValue)
-			{
-				eColor = SGUI_COLOR_BKGCLR;
-			}
-			else
-			{
-				eColor = SGUI_COLOR_FRGCLR;
-			}
-		}
+			eColor = pstDeviceIF->fnGetPixel(uiCoordinateX, uiCoordinateY);
+        }
     }
 
     return eColor;
@@ -440,15 +426,16 @@ void SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCx, SGUI_UINT 
                 // Fill the circle
                 if((uiRadius > 1) && (eFillColor != SGUI_COLOR_TRANS) && (uiPosXOffset_Old != uiPosXOffset))
                 {
-
                     SGUI_Basic_DrawLine(pstDeviceIF, uiCx-uiPosXOffset, uiCy-uiYOffset+1, uiCx-uiPosXOffset, uiCy+uiYOffset-1, eFillColor);
                     SGUI_Basic_DrawLine(pstDeviceIF, uiCx+uiPosXOffset, uiCy-uiYOffset+1, uiCx+uiPosXOffset, uiCy+uiYOffset-1, eFillColor);
                     uiPosXOffset_Old = uiPosXOffset;
                 }
-                SGUI_Basic_DrawLine(pstDeviceIF, uiCx-uiYOffset, uiCy-uiPosXOffset+1, uiCx-uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
-                SGUI_Basic_DrawLine(pstDeviceIF, uiCx+uiYOffset, uiCy-uiPosXOffset+1, uiCx+uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
-                uiYOffset_Old = uiYOffset;
-
+				if ((uiRadius > 1) && (eFillColor != SGUI_COLOR_TRANS) && (uiYOffset_Old != uiYOffset))
+				{
+                    SGUI_Basic_DrawLine(pstDeviceIF, uiCx-uiYOffset, uiCy-uiPosXOffset+1, uiCx-uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
+                    SGUI_Basic_DrawLine(pstDeviceIF, uiCx+uiYOffset, uiCy-uiPosXOffset+1, uiCx+uiYOffset, uiCy+uiPosXOffset-1, eFillColor);
+                    uiYOffset_Old = uiYOffset;
+                }
                 // Draw edge.
                 SGUI_Basic_DrawPoint(pstDeviceIF, uiCx+uiPosXOffset, uiCy+uiYOffset, eEdgeColor);
                 SGUI_Basic_DrawPoint(pstDeviceIF, uiCx-uiPosXOffset, uiCy+uiYOffset, eEdgeColor);
@@ -490,6 +477,7 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX,
     /* Variable Declaration				*/
     /*----------------------------------*/
     SGUI_UINT					i_W, i_H;
+    SGUI_COLOR 					eColor;
 
     /*----------------------------------*/
     /* Process							*/
@@ -498,14 +486,9 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX,
     {
         for(i_H=0; i_H<uiHeight; i_H++)
         {
-            if(SGUI_Basic_GetPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H) == SGUI_COLOR_FRGCLR)
-            {
-                SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, SGUI_COLOR_BKGCLR);
-            }
-            else
-            {
-                SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, SGUI_COLOR_FRGCLR);
-            }
+            eColor=SGUI_Basic_GetPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H);
+            eColor=SGUI_Basic_GetReverseColor(pstDeviceIF->uiDepthBits,eColor);
+			SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX + i_W, uiStartY + i_H, eColor);
         }
     }
 }
@@ -517,7 +500,7 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX,
 /**	@ pstDeviceIF[in]:	SimpleGUI object pointer.						**/
 /**	@ pstDisplayArea[in]: Display area position and size.				**/
 /**	@ pstInnerPos[in]:	Data area size and display offset.				**/
-/**	@ pstBitmapData[in]: Bitmap object, include size and data.			**/
+/**	@ pstBitmapData[in]: Bitmap object, include size, depth and data.	**/
 /**	@ eDrawMode[in]		Bit map display mode(normal or reverse color).	**/
 /** Return:			None.												**/
 /** Notice:			None.												**/
@@ -530,8 +513,7 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 	SGUI_INT					iDrawPixX, iDrawPixY;
 	SGUI_INT					iBmpPixX, iBmpPixY;
 	SGUI_UINT					uiDrawnWidthIndex, uiDrawnHeightIndex;
-	SGUI_UINT					uiPixIndex;
-	const SGUI_BYTE*			pData;
+	SGUI_COLOR                  eColor;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -566,8 +548,6 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 			// Loop for x coordinate;
 			while((uiDrawnWidthIndex<RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=RECT_X_END(*pstDisplayArea)) && (iDrawPixX<RECT_WIDTH(pstDeviceIF->stSize)))
 			{
-				// Redirect to data array for column.
-				pData = pstBitmapData->pData+iBmpPixX;
 				// Set loop start parameter of y coordinate
 				iDrawPixY = RECT_Y_START(*pstDisplayArea);
 				iBmpPixY = 0;
@@ -580,26 +560,28 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 					iBmpPixY -= RECT_Y_START(*pstInnerPos);
 				}
 				uiDrawnHeightIndex = iBmpPixY;
-				uiPixIndex = iBmpPixY % 8;
-				pData += (iBmpPixY / 8) * RECT_WIDTH(*pstBitmapData);
 				// Loop for y coordinate;
 				while((uiDrawnHeightIndex<RECT_HEIGHT(*pstBitmapData)) && (iDrawPixY<=RECT_Y_END(*pstDisplayArea)) && (iDrawPixY<RECT_HEIGHT(pstDeviceIF->stSize)))
 				{
-					if(uiPixIndex == 8)
+					if(pstBitmapData->fnGetPixel!=NULL)
 					{
-						uiPixIndex = 0;
-						pData += RECT_WIDTH(*pstBitmapData);
-					}
-					if(SGUI_GET_PAGE_BIT(*pData, uiPixIndex) != eDrawMode)
-					{
-						SGUI_Basic_DrawPoint(pstDeviceIF, iDrawPixX, iDrawPixY, SGUI_COLOR_FRGCLR);
+						eColor = pstBitmapData->fnGetPixel(pstBitmapData,iBmpPixX,iBmpPixY);
 					}
 					else
 					{
-						SGUI_Basic_DrawPoint(pstDeviceIF, iDrawPixX, iDrawPixY, SGUI_COLOR_BKGCLR);
+						eColor = SGUI_Basic_BitMapScanDVPV(pstBitmapData,iBmpPixX,iBmpPixY);
 					}
+
+					if(eDrawMode == SGUI_DRAW_REVERSE)
+					{
+						eColor = SGUI_Basic_GetReverseColor(pstBitmapData->iDepthBits,eColor);
+					}
+					if(pstDeviceIF->uiDepthBits != pstBitmapData->iDepthBits)
+					{
+						eColor = SGUI_Basic_MapColor(pstBitmapData->iDepthBits,eColor,pstDeviceIF->uiDepthBits);
+					}
+					SGUI_Basic_DrawPoint(pstDeviceIF,iDrawPixX,iDrawPixY,eColor);
 					uiDrawnHeightIndex ++;
-					uiPixIndex ++;
 					iDrawPixY ++;
 					iBmpPixY ++;
 				}
@@ -609,6 +591,181 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 			}
 		}
 	}
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_BitMapScanDHPH   						**/
+/** Purpose:		Scan the BitMap data by Data Horizontally and Pixel	**/
+/**                 Horizontally and return the Pixel Data              **/
+/** Params:																**/
+/**	@ pDataBuffer[in]:  the raw BitMap data.						    **/
+/**	@ uiDepth[in]:      the pixel depth.                				**/
+/**	@ uiX[in]:	        the coordinate X of BitMap.                     **/
+/**	@ uiY[in]:	        the coordinate Y of BitMap.                     **/
+/** Return:			the Pixel Color at (uiX,uiY).				        **/
+/** Notice:			None.												**/
+/*************************************************************************/
+SGUI_COLOR   SGUI_Basic_BitMapScanDHPH(const SGUI_BMP_RES* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_COLOR          eColor;
+	SGUI_UINT8          uiBytesPerRow;
+	SGUI_CBYTE*         pData;
+	SGUI_BYTE           cTemp;
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	eColor              = 0;
+	uiBytesPerRow       = (pstBitmapData->iWidth * pstBitmapData->iDepthBits + 7)/8;
+	pData               = pstBitmapData->pData;
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	if( pstBitmapData->iDepthBits == 1 ||
+        pstBitmapData->iDepthBits == 2 ||
+        pstBitmapData->iDepthBits == 4 ||
+        pstBitmapData->iDepthBits == 8 )
+	{
+        pData += uiBytesPerRow * uiY + (uiX*pstBitmapData->iDepthBits)/8;
+        cTemp  = (*pData)>>((uiX*pstBitmapData->iDepthBits)%8);
+        eColor = cTemp & ((0x1<<pstBitmapData->iDepthBits)-1);
+	}
+	return eColor;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_BitMapScanDHPV   						**/
+/** Purpose:		Scan the BitMap data by Data Horizontally and Pixel	**/
+/**                 Vertically and return the Pixel Data                **/
+/** Params:																**/
+/**	@ pDataBuffer[in]:  the raw BitMap data.						    **/
+/**	@ uiDepth[in]:      the pixel depth.                				**/
+/**	@ uiX[in]:	        the coordinate X of BitMap.                     **/
+/**	@ uiY[in]:	        the coordinate Y of BitMap.                     **/
+/** Return:			the Pixel Color at (uiX,uiY).				        **/
+/** Notice:			None.												**/
+/*************************************************************************/
+SGUI_COLOR   SGUI_Basic_BitMapScanDHPV(const SGUI_BMP_RES* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_COLOR          eColor;
+	SGUI_UINT8          uiPixelPerByte;
+	SGUI_UINT8          uiByteRow;
+	SGUI_CBYTE*         pData;
+	SGUI_BYTE           cTemp;
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	eColor              = 0;
+	pData               = pstBitmapData->pData;
+
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	if( pstBitmapData->iDepthBits == 1 ||
+        pstBitmapData->iDepthBits == 2 ||
+        pstBitmapData->iDepthBits == 4 ||
+        pstBitmapData->iDepthBits == 8 )
+	{
+		uiPixelPerByte      = 8 / pstBitmapData->iDepthBits;
+		uiByteRow           = uiY / uiPixelPerByte;
+		pData              += uiByteRow * pstBitmapData->iWidth + uiX;
+		cTemp               = (*pData)>>(uiY%uiPixelPerByte*pstBitmapData->iDepthBits);
+		eColor             |= cTemp & ((0x1<<pstBitmapData->iDepthBits)-1);
+	}
+	return eColor;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_BitMapScanDVPH   						**/
+/** Purpose:		Scan the BitMap data by Data Vertically and Pixel   **/
+/**                 Horizontally and return the Pixel Data              **/
+/** Params:																**/
+/**	@ pDataBuffer[in]:  the raw BitMap data.						    **/
+/**	@ uiDepth[in]:      the pixel depth.                				**/
+/**	@ uiX[in]:	        the coordinate X of BitMap.                     **/
+/**	@ uiY[in]:	        the coordinate Y of BitMap.                     **/
+/** Return:			the Pixel Color at (uiX,uiY).				        **/
+/** Notice:			None.												**/
+/*************************************************************************/
+SGUI_COLOR   SGUI_Basic_BitMapScanDVPH(const SGUI_BMP_RES* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_COLOR          eColor;
+	SGUI_UINT8          uiPixelPerByte;
+	SGUI_UINT8          uiByteColumn;
+	SGUI_CBYTE*         pData;
+	SGUI_BYTE           cTemp;
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	eColor              = 0;
+	pData               = pstBitmapData->pData;
+
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	if( pstBitmapData->iDepthBits == 1 ||
+        pstBitmapData->iDepthBits == 2 ||
+        pstBitmapData->iDepthBits == 4 ||
+        pstBitmapData->iDepthBits == 8 )
+	{
+		uiPixelPerByte      = 8 / pstBitmapData->iDepthBits;
+		uiByteColumn        = uiX / uiPixelPerByte;
+		pData              += uiByteColumn * pstBitmapData->iHeight + uiY;
+		cTemp               = (*pData)>>(uiX%uiPixelPerByte*pstBitmapData->iDepthBits);
+		eColor             |= cTemp & ((0x1<<pstBitmapData->iDepthBits)-1);
+	}
+	return eColor;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_BitMapScanDVPV   						**/
+/** Purpose:		Scan the BitMap data by Data Vertically and Pixel	**/
+/**                 Vertically and return the Pixel Data                **/
+/** Params:																**/
+/**	@ pDataBuffer[in]:  the raw BitMap data.						    **/
+/**	@ uiDepth[in]:      the pixel depth.                				**/
+/**	@ uiX[in]:	        the coordinate X of BitMap.                     **/
+/**	@ uiY[in]:	        the coordinate Y of BitMap.                     **/
+/** Return:			the Pixel Color at (uiX,uiY).				        **/
+/** Notice:			None.												**/
+/*************************************************************************/
+SGUI_COLOR   SGUI_Basic_BitMapScanDVPV(const SGUI_BMP_RES* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_COLOR          eColor;
+	SGUI_UINT8          uiBytesPerColomn;
+	SGUI_CBYTE*         pData;
+	SGUI_BYTE           cTemp;
+
+	/*----------------------------------*/
+	/* Initialize       				*/
+	/*----------------------------------*/
+	eColor = 0;
+	uiBytesPerColomn    = (pstBitmapData->iDepthBits * pstBitmapData->iHeight + 7)/8;
+	pData               = pstBitmapData->pData;
+	/*----------------------------------*/
+	/* Process          				*/
+	/*----------------------------------*/
+	if( pstBitmapData->iDepthBits == 1 ||
+	        pstBitmapData->iDepthBits == 2 ||
+	        pstBitmapData->iDepthBits == 4 ||
+	        pstBitmapData->iDepthBits == 8 )
+	{
+	    pData += uiBytesPerColomn * uiX + (uiY*pstBitmapData->iDepthBits)/8;
+	    cTemp  = (*pData) >> ((uiY*pstBitmapData->iDepthBits)%8);
+	    eColor = cTemp & ((0x01 << pstBitmapData->iDepthBits)-1);
+	}
+	return eColor;
 }
 
 /*************************************************************************/
@@ -651,4 +808,37 @@ SGUI_BOOL SGUI_Basic_PointIsInArea(const SGUI_RECT* pstArea, const SGUI_POINT* p
 		}
 	}
 	return bReturn;
+}
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_GetReverseColor							**/
+/** Purpose:		Calculate the reverse color of eOriginColor when 	**/
+/**                 there is uiDepthBits bits is used to present depth  **/
+/** Params:																**/
+/**	@ uiDepthBits[in]:	Specified current depth bit count.  			**/
+/**	@ eOriginColor[in]:	Specified the origin color which will be        **/
+/**                     reverted.									    **/
+/** Return:			The revert color of eOriginColor                	**/
+/** Notice:			Author:Jerry    									**/
+/*************************************************************************/
+SGUI_COLOR SGUI_Basic_GetReverseColor(const SGUI_UINT8 uiDepthBits,SGUI_COLOR eOriginColor)
+{
+	return (1<<uiDepthBits)-1-eOriginColor;
+}
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_MapColor     							**/
+/** Purpose:		Calculate the mapped color in uiTargetDepthBits     **/
+/**                 color space of eOriginColor in uiOriginDepthBits    **/
+/**                 color space.                                        **/
+/** Params:																**/
+/**	@ uiOriginDepthBits[in]:    Origin color space depth bit count.		**/
+/**	@ eOriginColor[in]:         Origin color.                    		**/
+/**	@ uiTargetDepthBits[in]:	Target color space depth bit count.     **/
+/** Return:			The target color of eOriginColor                	**/
+/** Notice:			Author:Jerry    									**/
+/*************************************************************************/
+SGUI_COLOR SGUI_Basic_MapColor(const SGUI_UINT8 uiOriginDepthBits,const SGUI_COLOR eOriginColor,const SGUI_UINT8 uiTargetDepthBits)
+{
+	SGUI_UINT16 uiOriginSpace=(1<<uiOriginDepthBits)-1;
+	SGUI_UINT16 uiTargetSpace=(1<<uiTargetDepthBits)-1;
+	return (SGUI_COLOR)(eOriginColor*1.0/uiOriginSpace*uiTargetSpace);
 }

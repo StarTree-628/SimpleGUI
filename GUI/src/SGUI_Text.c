@@ -201,6 +201,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 				uiLines ++;
 				continue;
 			}
+            pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 
 			// Judge change line
 			if((stPaintPos.iX+stCharBitmap.iWidth-1) >= RECT_WIDTH(*pstDisplayArea))
@@ -214,7 +215,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 			if(((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0) && (RECT_Y_START(stPaintPos) < RECT_HEIGHT(*pstDisplayArea)))
 			{
 				// Draw character.
-				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
                 SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
 			}
 			else

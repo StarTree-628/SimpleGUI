@@ -1,7 +1,7 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_Text.c												**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Text display interface									**/
 /*************************************************************************/
 

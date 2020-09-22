@@ -1,7 +1,7 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_Notice.c												**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Notice box display interface.							**/
 /*************************************************************************/
 

@@ -1,7 +1,7 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_FontResource.c										**/
-/** Author: Polarix														**/
+/** Author: Polarix,Jerry												**/
 /** Description: Internal font data.									**/
 /*************************************************************************/
 //=======================================================================//
@@ -34,13 +34,13 @@
 //=======================================================================//
 //= Static function declaration.									    =//
 //=======================================================================//
+static SGUI_UINT32 SGUI_Resource_IndexMapper_MiniNum(SGUI_UINT32 uiCode);
+static SGUI_UINT32 SGUI_Resource_IndexMapper_Default(SGUI_UINT32 uiCode);
 
 //=======================================================================//
 //= Static variable declaration.									    =//
 //=======================================================================//
 
-static SGUI_UINT32 SGUI_Resource_IndexMapper_MiniNum(SGUI_UINT32 uiCode);
-static SGUI_UINT32 SGUI_Resource_IndexMapper_Default(SGUI_UINT32 uiCode);
 
 //======================================================================//
 //= 5 Pix mono space font library.								   =//
@@ -69,7 +69,7 @@ SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(MiniNum,4,5,1,4,
         0x00, 0x00, 0x00, 0x00, //space
         0x1A, 0x04, 0x0B, 0x00, //%
         0x0A, 0x0A, 0x0A, 0x00, //=
-                                            );
+);
 //======================================================================//
 //= 8 Pix mono space font library.													//
 //======================================================================//
@@ -172,7 +172,7 @@ SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(FONT_8,6,8,1,6,
         0x00, 0x00, 0x7F, 0x00, 0x00, 0x00,	// |
         0x00, 0x41, 0x36, 0x08, 0x00, 0x00,	// }
         0x00, 0x01, 0x02, 0x00, 0x00, 0x00	// `		index 94
-                                            );
+);
 //======================================================================//
 //= 12 Pix mono space font library.									   =//
 //======================================================================//

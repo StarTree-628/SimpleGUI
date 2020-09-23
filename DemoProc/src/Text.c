@@ -80,28 +80,29 @@ HMI_ENGINE_RESULT HMI_DemoText_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const vo
 	stDisplayArea.iY = 1;
 	stDisplayArea.iWidth = 62;
 	stDisplayArea.iHeight = SGUI_FONT(MiniNum).iHeight+1;
-	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_MIN_NUM, SGUI_FONT_REF(MiniNum), &stDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_MIN_NUM, SGUI_FONT_REF(MiniNum), &stDisplayArea, &stInnerPos, 0x0D);
 
 	stDisplayArea.iY += stDisplayArea.iHeight;
 	stDisplayArea.iWidth = 62;
 	stDisplayArea.iHeight = SGUI_FONT(FONT_8).iHeight+1;
-	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_INNER_8, SGUI_FONT_REF(FONT_8), &stDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_INNER_8, SGUI_FONT_REF(FONT_8), &stDisplayArea, &stInnerPos, 0x0E);
 
 	stDisplayArea.iY += stDisplayArea.iHeight;
 	stDisplayArea.iWidth = 62;
 	stDisplayArea.iHeight = SGUI_FONT(FONT_12).iHeight+1;
-	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_INNER_12, SGUI_FONT_REF(FONT_12), &stDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_INNER_12, SGUI_FONT_REF(FONT_12), &stDisplayArea, &stInnerPos, 0x0F);
 
 	stDisplayArea.iY += stDisplayArea.iHeight;
 	stDisplayArea.iWidth = 62;
 	stDisplayArea.iHeight = SGUI_FONT(FONT_16).iHeight+1;
-	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_EXTEN_12, SGUI_FONT_REF(GB2312_FZXS12), &stDisplayArea, &stInnerPos, SGUI_DRAW_REVERSE);
+	SGUI_Basic_DrawRectangle(pstDeviceIF,stDisplayArea.iX,stDisplayArea.iY,stDisplayArea.iWidth,stDisplayArea.iHeight,0x0D,0x0D);
+	SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_EXTEN_12, SGUI_FONT_REF(GB2312_FZXS12), &stDisplayArea, &stInnerPos, 0x00);
 
 	stDisplayArea.iX = 64;
 	stDisplayArea.iY = 1;
 	stDisplayArea.iWidth = 62;
 	stDisplayArea.iHeight = 62;
-	SGUI_Text_DrawMultipleLinesText(pstDeviceIF, SCR3_TEXT_MULTILINE_12, SGUI_FONT_REF(GB2312_FZXS12), &stDisplayArea, 0, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawMultipleLinesText(pstDeviceIF, SCR3_TEXT_MULTILINE_12, SGUI_FONT_REF(GB2312_FZXS12), &stDisplayArea, 0, 0x0A);
 	return HMI_RET_NORMAL;
 }
 

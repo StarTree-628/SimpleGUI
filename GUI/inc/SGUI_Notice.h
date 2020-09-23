@@ -15,6 +15,7 @@ typedef struct
     SGUI_UINT8              uiDepthBits;
     SGUI_COLOR              eEdgeColor;
     SGUI_COLOR              eFillColor;
+    SGUI_COLOR              eTextColor;
 }SGUI_NOTICE_PALETTE;
 typedef struct
 {

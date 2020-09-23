@@ -34,7 +34,7 @@
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_List_Initialize(SGUI_LIST_STRUCT* pstObj, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
+void SGUI_List_Initialize(SGUI_LIST_STRUCT* pstObj, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount, SGUI_LIST_PALETTE* pstPalette)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -48,9 +48,14 @@ void SGUI_List_Initialize(SGUI_LIST_STRUCT* pstObj, const SGUI_FONT_RES* pstFont
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstObj) && (NULL != pstFontRes))
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL!=pstPalette))
 	{
+	    // Initialize palette
+	    pstPalette->stScrollBar.uiDepthBits = pstPalette->uiDepthBits;
+	    pstPalette->stItemBase.uiDepthBits = pstPalette->uiDepthBits;
+
 		// Initialize member object pointer.
+		pstObj->stPallete = *pstPalette;
 		pstObj->pstFontRes = pstFontRes;
 		pstObj->stItems.pstItems = NULL;
 		pstObj->stItems.stLayout.iX = pstObj->stLayout.iX+2;
@@ -65,7 +70,7 @@ void SGUI_List_Initialize(SGUI_LIST_STRUCT* pstObj, const SGUI_FONT_RES* pstFont
 			pstObj->stItems.stLayout.iY = pstObj->stLayout.iY+LIST_TITLE_HEIGHT(pstObj->pstFontRes)+2;
 			pstObj->stItems.stLayout.iHeight = pstObj->stLayout.iHeight-LIST_TITLE_HEIGHT(pstObj->pstFontRes)-3;
 		}
-		SGUI_ItemsBase_Initialize(&(pstObj->stItems), pstObj->pstFontRes, pstItemsData, iItemsCount);
+		SGUI_ItemsBase_Initialize(&(pstObj->stItems), pstObj->pstFontRes, pstItemsData, iItemsCount, &pstPalette->stItemBase);
 		// Initialize scroll bar.
 		stScrollBarParam.eDirection = SGUI_SCROLLBAR_VERTICAL;
 		stScrollBarParam.stLayout.iX = pstObj->stItems.stLayout.iX+pstObj->stItems.stLayout.iWidth+1;
@@ -73,10 +78,7 @@ void SGUI_List_Initialize(SGUI_LIST_STRUCT* pstObj, const SGUI_FONT_RES* pstFont
 		stScrollBarParam.stLayout.iWidth = LIST_SCROLLBAR_WIDTH;
 		stScrollBarParam.stLayout.iHeight = pstObj->stItems.stLayout.iHeight;
 		stScrollBarParam.sMaxValue = (pstObj->stItems.iCount > pstObj->stItems.iVisibleItems)?(pstObj->stItems.iCount - pstObj->stItems.iVisibleItems):0;
-		stScrollBarParam.stPalette.uiDepthBits=4;
-		stScrollBarParam.stPalette.eBackgroundColor = 0x02;
-		stScrollBarParam.stPalette.eEdgeColor = 0x0F;
-		stScrollBarParam.stPalette.eHandleColor = 0x0F;
+		stScrollBarParam.stPalette = pstPalette->stScrollBar;
 		SGUI_ScrollBar_Initialize(&(pstObj->stScrollBar), &stScrollBarParam);
 	}
 }
@@ -105,7 +107,7 @@ void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST_STRUCT* pstObj)
 	if(NULL != pstObj)
 	{
 		// Clear list item display area.
-		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstObj->stPallete.eBorderColor, pstObj->stPallete.eBackgroundColor);
 		// Paint title.
 		if(NULL != pstObj->szTitle)
 		{
@@ -115,8 +117,8 @@ void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST_STRUCT* pstObj)
 			stTitleTextDisplayArea.iHeight = pstObj->pstFontRes->iHeight;
 			stInnerPos.iX = 0;
 			stInnerPos.iY = 0;
-			SGUI_Text_DrawText(pstDeviceIF, pstObj->szTitle, pstObj->pstFontRes, &stTitleTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
-			SGUI_Basic_DrawLine(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stLayout.iX+pstObj->stLayout.iWidth-1, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, SGUI_COLOR_FRGCLR);
+			SGUI_Text_DrawText(pstDeviceIF, pstObj->szTitle, pstObj->pstFontRes, &stTitleTextDisplayArea, &stInnerPos, pstObj->stPallete.eTitleTextColor);
+			SGUI_Basic_DrawLine(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stLayout.iX+pstObj->stLayout.iWidth-1, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stPallete.eBorderColor);
 		}
 		// Paint items.
 		SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));

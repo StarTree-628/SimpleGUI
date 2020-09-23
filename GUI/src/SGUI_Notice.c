@@ -77,7 +77,7 @@ SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICE_BOX* pstObj
 			SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconDisplayArea, &stIconPosition, pstObject->pstIcon, SGUI_DRAW_NORMAL);
 		}
 		// Draw text;
-		uiTextLines = SGUI_Text_DrawMultipleLinesText(pstDeviceIF, pstObject->cszNoticeText, pstFontRes, &stTextDisplayArea, uiTextOffset, SGUI_DRAW_NORMAL);
+		uiTextLines = SGUI_Text_DrawMultipleLinesText(pstDeviceIF, pstObject->cszNoticeText, pstFontRes, &stTextDisplayArea, uiTextOffset, pstObject->stPalette.eTextColor);
 	}
     return uiTextLines;
 }

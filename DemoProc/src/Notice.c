@@ -56,8 +56,9 @@ HMI_ENGINE_RESULT HMI_DemoNotice_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	SGUI_Notice_FitArea(pstDeviceIF, &(s_stDemoNoticeBox.stLayout));
 
 	s_stDemoNoticeBox.stPalette.uiDepthBits = 4;
-	s_stDemoNoticeBox.stPalette.eEdgeColor  = 0x0F;
-	s_stDemoNoticeBox.stPalette.eFillColor  = 0x02;
+	s_stDemoNoticeBox.stPalette.eEdgeColor  = 0x0A;
+	s_stDemoNoticeBox.stPalette.eTextColor  = 0x0F;
+	s_stDemoNoticeBox.stPalette.eFillColor  = 0x01;
 	return HMI_RET_NORMAL;
 }
 

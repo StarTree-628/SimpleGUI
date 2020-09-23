@@ -492,7 +492,110 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX,
         }
     }
 }
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_DrawAlphaBitMap							**/
+/** Purpose:		Draw a rectangular area alpha bit map on LCD screen.**/
+/** Params:																**/
+/**	@ pstDeviceIF[in]:	SimpleGUI object pointer.						**/
+/**	@ pstDisplayArea[in]: Display area position and size.				**/
+/**	@ pstInnerPos[in]:	Data area size and display offset.				**/
+/**	@ pstBitmapData[in]: Bitmap object, include size, depth and data.	**/
+/**	@ eTargetColor[in]:	Target color, which will be render with         **/
+/**                     background.	                                    **/
+/** Return:			None.												**/
+/** Notice:			None.												**/
+/*************************************************************************/
+void SGUI_Basic_DrawAlphaBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,SGUI_POINT* pstInnerPos, const SGUI_BMP_RES* pstBitmapData, SGUI_COLOR eTargetColor)
+{
+    /*----------------------------------*/
+    /* Variable Declaration				*/
+    /*----------------------------------*/
+    SGUI_INT					iDrawPixX, iDrawPixY;
+    SGUI_INT					iBmpPixX, iBmpPixY;
+    SGUI_UINT					uiDrawnWidthIndex, uiDrawnHeightIndex;
+    SGUI_COLOR                  eAlpha,eColor,eMaxColor;
 
+    /*----------------------------------*/
+    /* Initialize						*/
+    /*----------------------------------*/
+    uiDrawnWidthIndex			= 0;
+    uiDrawnHeightIndex			= 0;
+
+    /*----------------------------------*/
+    /* Process							*/
+    /*----------------------------------*/
+    // Only draw in visible area of screen.
+    if(	(RECT_X_START(*pstDisplayArea) < RECT_WIDTH(pstDeviceIF->stSize)) && (RECT_Y_START(*pstDisplayArea) < RECT_HEIGHT(pstDeviceIF->stSize)) &&
+            (RECT_X_END(*pstDisplayArea) > 0) && (RECT_Y_END(*pstDisplayArea) > 0))
+    {
+        // Adapt text display area and data area.
+        SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
+        // Only process drawing when valid display data existed
+        if((RECT_VALID_WIDTH(*pstBitmapData, *pstInnerPos) > 0) && (RECT_VALID_HEIGHT(*pstBitmapData, *pstInnerPos) > 0))
+        {
+            // Set loop start parameter of x coordinate
+            iDrawPixX = RECT_X_START(*pstDisplayArea);
+            iBmpPixX = 0;
+            if(RECT_X_START(*pstInnerPos) > 0)
+            {
+                iDrawPixX += RECT_X_START(*pstInnerPos);
+            }
+            else
+            {
+                iBmpPixX -= RECT_X_START(*pstInnerPos);
+            }
+            uiDrawnWidthIndex = iBmpPixX;
+            eMaxColor = (1<<pstDeviceIF->uiDepthBits)-1;
+            // Loop for x coordinate;
+            while((uiDrawnWidthIndex<RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=RECT_X_END(*pstDisplayArea)) && (iDrawPixX<RECT_WIDTH(pstDeviceIF->stSize)))
+            {
+                // Set loop start parameter of y coordinate
+                iDrawPixY = RECT_Y_START(*pstDisplayArea);
+                iBmpPixY = 0;
+                if(RECT_Y_START(*pstInnerPos) > 0)
+                {
+                    iDrawPixY += RECT_Y_START(*pstInnerPos);
+                }
+                else
+                {
+                    iBmpPixY -= RECT_Y_START(*pstInnerPos);
+                }
+                uiDrawnHeightIndex = iBmpPixY;
+                // Loop for y coordinate;
+                while((uiDrawnHeightIndex<RECT_HEIGHT(*pstBitmapData)) && (iDrawPixY<=RECT_Y_END(*pstDisplayArea)) && (iDrawPixY<RECT_HEIGHT(pstDeviceIF->stSize)))
+                {
+                    if(pstBitmapData->fnGetPixel!=NULL)
+                    {
+                        eAlpha = pstBitmapData->fnGetPixel(pstBitmapData,iBmpPixX,iBmpPixY);
+                    }
+                    else
+                    {
+                        eAlpha = SGUI_Basic_BitMapScanDVPV(pstBitmapData,iBmpPixX,iBmpPixY);
+                    }
+
+                    if(pstDeviceIF->uiDepthBits != pstBitmapData->iDepthBits)
+                    {
+                        eAlpha = SGUI_Basic_MapColor(pstBitmapData->iDepthBits,eAlpha,pstDeviceIF->uiDepthBits);
+                    }
+
+                    eColor = SGUI_Basic_GetPoint(pstDeviceIF,iDrawPixX,iDrawPixY);
+
+                    // calculate the mixed color
+
+                    eColor = (eTargetColor * eAlpha + (eMaxColor - eAlpha)*eColor)/eMaxColor;
+
+                    SGUI_Basic_DrawPoint(pstDeviceIF,iDrawPixX,iDrawPixY,eColor);
+                    uiDrawnHeightIndex ++;
+                    iDrawPixY ++;
+                    iBmpPixY ++;
+                }
+                uiDrawnWidthIndex ++;
+                iDrawPixX ++;
+                iBmpPixX ++;
+            }
+        }
+    }
+}
 /*************************************************************************/
 /** Function Name:	SGUI_Basic_DrawBitMap								**/
 /** Purpose:		Draw a rectangular area bit map on LCD screen.		**/

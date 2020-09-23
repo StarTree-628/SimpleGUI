@@ -36,6 +36,7 @@ void SGUI_NumberVariableBox_Initialize(SGUI_NUM_VARBOX_STRUCT* pstObj, const SGU
 	{
 		SGUI_SystemIF_MemorySet(pstObj, 0x00, sizeof(SGUI_NUM_VARBOX_STRUCT));
 		SGUI_SystemIF_MemoryCopy(&(pstObj->stParam), (void*)pcstInitParam, sizeof(SGUI_NUM_VARBOX_PARAM));
+        pstObj->stData.iFocused=SGUI_FALSE;
 	}
 }
 
@@ -50,21 +51,21 @@ void SGUI_NumberVariableBox_Initialize(SGUI_NUM_VARBOX_STRUCT* pstObj, const SGU
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstObj, SGUI_DRAW_MODE eMode)
+void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstObj)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
 	SGUI_AREA_SIZE				stTextExtentSize;
 	SGUI_POINT					stTextInnerPos;
-	SGUI_COLOR					eBackColor;
 	SGUI_CHAR					szTextBuffer[VARBOX_TEXT_BUFFER_SIZE];
+	SGUI_VARBOX_PALETTE*        pstPalette;
+	SGUI_VARBOX_SUB_PALETTE*    pstSubPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
 	SGUI_SystemIF_MemorySet(szTextBuffer, 0x00, VARBOX_TEXT_BUFFER_SIZE);
-	eBackColor =				((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -72,8 +73,21 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
 
 	if(NULL != pstObj)
 	{
+        pstPalette = &(pstObj->stParam.stPalette);
+
+        if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
+        {
+            pstPalette->stNormal.eBackgroundColor   = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stNormal.eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->stNormal.eTextColor         = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stNormal.eTextColor,pstDeviceIF->uiDepthBits);
+            pstPalette->stFocus.eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stFocus.eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->stFocus.eTextColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stFocus.eTextColor,pstDeviceIF->uiDepthBits);
+            pstPalette->uiDepthBits                 = pstDeviceIF->uiDepthBits;
+        }
+        // select sub palette
+        pstSubPalette = pstObj->stData.iFocused ? &(pstPalette->stFocus) : &(pstPalette->stNormal);
+
 		// Draw edge
-		SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
+		SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, pstSubPalette->eBackgroundColor, pstSubPalette->eBackgroundColor);
 
 		// Convert number to string
 		(void)SGUI_Common_IntegerToString(pstObj->stData.iValue, szTextBuffer, 10, -1, ' ');
@@ -96,7 +110,7 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
 			}
 		}
 		stTextInnerPos.iY = 0;
-		SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, pstObj->stParam.pstFontRes, &(LAYOUT(pstObj)), &stTextInnerPos, eMode);
+		SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, pstObj->stParam.pstFontRes, &(LAYOUT(pstObj)), &stTextInnerPos, pstSubPalette->eTextColor);
 	}
 }
 
@@ -134,64 +148,101 @@ void SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGUI
 /** Return:			None.												**/
 /** Notice:			Static function, call by others interface.			**/
 /*************************************************************************/
-void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_DRAW_MODE eMode)
+void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_COLOR				eBackColor;
-	SGUI_POINT				stTextInnerPos;
-	SGUI_RECT				stFocusArea;
-	SGUI_UINT16				uiFontWidth, uiFontHeight;
-	SGUI_SIZE				uiTextLength, uiFocusIndexMax;
+	SGUI_POINT					stTextInnerPos;
+	SGUI_RECT					stFocusArea;
+	SGUI_SIZE					uiTextLength, uiFocusIndexMax;
+	SGUI_SZSTR					pstStrPointer;
+    SGUI_SIZE					uiTextIndex;
+    SGUI_UINT32					uiCharCode;
+    SGUI_BMP_RES				stBmpRes;
+    SGUI_VARBOX_PALETTE*		pstPalette;
+    SGUI_VARBOX_SUB_PALETTE*	pstNormalPalette;
+	SGUI_VARBOX_SUB_PALETTE*	pstFocusPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	eBackColor =			((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	if((NULL != pstObj) && (NULL != pstObj->stData.szValue))
 	{
+        pstPalette = &(pstObj->stParam.stPalette);
+
+        if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
+        {
+            pstPalette->stNormal.eBackgroundColor   = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stNormal.eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->stNormal.eTextColor         = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stNormal.eTextColor,pstDeviceIF->uiDepthBits);
+            pstPalette->stFocus.eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stFocus.eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->stFocus.eTextColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->stFocus.eTextColor,pstDeviceIF->uiDepthBits);
+            pstPalette->uiDepthBits                 = pstDeviceIF->uiDepthBits;
+        }
+
+        pstNormalPalette    = &(pstPalette->stNormal);
+        pstFocusPalette     = &(pstPalette->stFocus);
+
 		// Clear background.
-		SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
-		// Get font graphics size.
-		// TODO: Calculate which char is to be focused
-		uiFontWidth =		0;//pstObj->stParam.pstFontRes->iHalfWidth;
-		uiFontHeight =		pstObj->stParam.pstFontRes->iHeight;
+		SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, pstNormalPalette->eBackgroundColor, pstNormalPalette->eBackgroundColor);
 
 		// Get max text length and graphics width.
 		uiFocusIndexMax = pstObj->stParam.sTextLengthMax-1;
 		// Ignore too long text string.
-		uiTextLength = SGUI_SystemIF_StringLength(pstObj->stData.szValue);
+		uiTextLength = SGUI_Text_StringLength(pstObj->stData.szValue,pstObj->stParam.pstFontRes);
 		if(uiTextLength > pstObj->stParam.sTextLengthMax)
 		{
 			uiTextLength = pstObj->stParam.sTextLengthMax;
-			*(pstObj->stData.szValue+uiTextLength) = '\0';
-            // Point at to last character position if index is more then string length.
-			if(pstObj->stData.sFocusIndex > uiFocusIndexMax)
+			pstStrPointer= ENCODE(pstObj->stData.szValue);
+            while(uiTextLength-->0)
 			{
-				pstObj->stData.sFocusIndex = uiFocusIndexMax;
+				pstStrPointer = (SGUI_SZSTR)pstObj->stParam.pstFontRes->fnStepNext(pstStrPointer,&uiCharCode);
 			}
+			*(pstStrPointer) = '\0';
+			// Point at to last character position if index is more then string length.
+			pstObj->stData.sFocusIndex = SGUI_MIN_OF(uiFocusIndexMax,pstObj->stData.sFocusIndex);
 		}
 		// Set text display area.
 		stTextInnerPos.iX = 0;
 		stTextInnerPos.iY = 0;
 		// Set focus character area.
-		stFocusArea.iX = LAYOUT(pstObj).iX+pstObj->stData.sFocusIndex*uiFontWidth;
+		stFocusArea.iX = LAYOUT(pstObj).iX;
 		stFocusArea.iY = LAYOUT(pstObj).iY;
-		stFocusArea.iWidth = uiFontWidth;
-		stFocusArea.iHeight = uiFontHeight;
+		pstStrPointer = (SGUI_SZSTR)ENCODE(pstObj->stData.szValue);
+		stFocusArea.iWidth  = 0;
+		stFocusArea.iHeight = pstObj->stParam.pstFontRes->iHeight;
+		uiTextIndex = 0;
+		do
+		{
+            uiTextIndex++;
+            pstStrPointer=(SGUI_SZSTR)pstObj->stParam.pstFontRes->fnStepNext(pstStrPointer,&uiCharCode);
+            stBmpRes.pData = pstDeviceIF->arrBmpDataBuffer;
+            pstObj->stParam.pstFontRes->fnGetBitmap(&stBmpRes,uiCharCode,(uiTextIndex<pstObj->stData.sFocusIndex));
+            stFocusArea.iX += stFocusArea.iWidth;
+            stFocusArea.iWidth = stBmpRes.iWidth;
+        }
+        while(uiTextIndex <= pstObj->stData.sFocusIndex);
+
 		if(RECT_X_END(stFocusArea) > RECT_X_END(LAYOUT(pstObj)))
 		{
 			stTextInnerPos.iX = RECT_X_END(LAYOUT(pstObj)) - RECT_X_END(stFocusArea);
 			stFocusArea.iX = stFocusArea.iX + stTextInnerPos.iX;
 		}
-		// Display text.
-		SGUI_Text_DrawText(pstDeviceIF, pstObj->stData.szValue, pstObj->stParam.pstFontRes, &LAYOUT(pstObj), &stTextInnerPos, eMode);
-		// Focus first character.
-        SGUI_Basic_ReverseBlockColor(pstDeviceIF, stFocusArea.iX, stFocusArea.iY, stFocusArea.iWidth, stFocusArea.iHeight);
+		// Display text normally.
+		SGUI_Text_DrawText(pstDeviceIF, pstObj->stData.szValue, pstObj->stParam.pstFontRes, &LAYOUT(pstObj), &stTextInnerPos, pstNormalPalette->eTextColor);
+
+		// Focus character.
+        if(pstObj->stData.iFocused)
+		{
+			stTextInnerPos.iX = 0;
+			stTextInnerPos.iY = 0;
+
+			SGUI_Basic_DrawRectangle(pstDeviceIF, stFocusArea.iX,stFocusArea.iY,stFocusArea.iWidth,stFocusArea.iHeight,pstFocusPalette->eBackgroundColor,pstFocusPalette->eBackgroundColor);
+			SGUI_Basic_DrawAlphaBitMap(pstDeviceIF,&stFocusArea,&stTextInnerPos,&stBmpRes,pstFocusPalette->eTextColor);
+		}
 	}
 }

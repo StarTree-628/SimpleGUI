@@ -28,12 +28,12 @@
 /** @ iItemsCount[in]: Number of list item data.						**/
 /** Return:			None.												**/
 /*************************************************************************/
-void SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
+void SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount, SGUI_ITEMS_BASE_PALETTE* pstPalette)
 {
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstObj) && (NULL != pstFontRes))
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL != pstPalette))
 	{
 		pstObj->pstItems = pstItemsData;
 		pstObj->iCount = iItemsCount;
@@ -43,6 +43,7 @@ void SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_FONT_RES* pst
 		pstObj->iPageStartIndex = 0;
 		pstObj->iPageEndIndex = pstObj->iVisibleItems - 1;
 		pstObj->iItemPaintOffset = 0;
+		pstObj->stPallete = *pstPalette;
 	}
 }
 
@@ -59,11 +60,11 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_RECT				stItemPaintArea;
-	SGUI_POINT				stItemTextPos;
-	SGUI_INT				iItemIndex;
-	SGUI_CSZSTR				cszItemText;
-
+	SGUI_RECT					stItemPaintArea;
+	SGUI_POINT					stItemTextPos;
+	SGUI_INT					iItemIndex;
+	SGUI_CSZSTR					cszItemText;
+    SGUI_ITEMS_BASE_PALETTE*    pstPalette;
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
@@ -74,8 +75,19 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 	/*----------------------------------*/
 	if((NULL != pstDeviceIF) && (NULL != pstObj))
 	{
+        // Map color
+        pstPalette = &(pstObj->stPallete);
+        if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
+        {
+            pstPalette->eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->eFocusColor         = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eFocusColor,pstDeviceIF->uiDepthBits);
+            pstPalette->eFocusTextColor     = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->eTextColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+            pstPalette->uiDepthBits         = pstDeviceIF->uiDepthBits;
+        }
+
 		// Clear background
-		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstPalette->eBackgroundColor, pstPalette->eBackgroundColor);
 		if((pstObj->iSelection > SGUI_INVALID_INDEX) && (pstObj->iSelection < pstObj->iCount))
 		{
 			stItemPaintArea.iX =	pstObj->stLayout.iX;
@@ -112,7 +124,18 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 			iItemIndex=pstObj->iPageStartIndex;
 			stItemTextPos.iY = pstObj->iItemPaintOffset+1;
 			cszItemText = (NULL==pstObj->pstItems[iItemIndex].szVariableText)?pstObj->pstItems[iItemIndex].cszLabelText:pstObj->pstItems[iItemIndex].szVariableText;
-			SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, iItemIndex==pstObj->iSelection?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+
+            if(iItemIndex==pstObj->iSelection)
+            {
+                SGUI_Basic_DrawRectangle(pstDeviceIF,stItemPaintArea.iX,stItemPaintArea.iY,stItemPaintArea.iWidth,stItemPaintArea.iHeight,pstObj->stPallete.eFocusColor,pstObj->stPallete.eFocusColor);
+                SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstObj->stPallete.eFocusTextColor);
+            }
+            else
+            {
+                SGUI_Basic_DrawRectangle(pstDeviceIF,stItemPaintArea.iX,stItemPaintArea.iY,stItemPaintArea.iWidth,stItemPaintArea.iHeight,pstObj->stPallete.eBackgroundColor,pstObj->stPallete.eBackgroundColor);
+                SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstObj->stPallete.eTextColor);
+            }
+
 			iItemIndex++;
 			stItemPaintArea.iHeight = ITEM_HEIGHT(pstObj->pstFontRes);
 			if(pstObj->iVisibleItems > 1)
@@ -122,7 +145,16 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 				while((iItemIndex != pstObj->iPageEndIndex) && (iItemIndex < pstObj->iCount))
 				{
 					cszItemText = (NULL==pstObj->pstItems[iItemIndex].szVariableText)?pstObj->pstItems[iItemIndex].cszLabelText:pstObj->pstItems[iItemIndex].szVariableText;
-					SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, iItemIndex==pstObj->iSelection?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+                    if(iItemIndex==pstObj->iSelection)
+                    {
+						SGUI_Basic_DrawRectangle(pstDeviceIF,stItemPaintArea.iX,stItemPaintArea.iY,stItemPaintArea.iWidth,stItemPaintArea.iHeight,pstObj->stPallete.eFocusColor,pstObj->stPallete.eFocusColor);
+						SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstObj->stPallete.eFocusTextColor);
+                    }
+                    else
+                    {
+						SGUI_Basic_DrawRectangle(pstDeviceIF,stItemPaintArea.iX,stItemPaintArea.iY,stItemPaintArea.iWidth,stItemPaintArea.iHeight,pstObj->stPallete.eBackgroundColor,pstObj->stPallete.eBackgroundColor);
+						SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstObj->stPallete.eTextColor);
+                    }
 					stItemPaintArea.iY += ITEM_HEIGHT(pstObj->pstFontRes);
 					iItemIndex++;
 				}
@@ -133,7 +165,16 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 					/* Correct last visible item height when items area height is an integer multiple of item height. */
 					stItemPaintArea.iHeight = (0==stItemPaintArea.iHeight)?ITEM_HEIGHT(pstObj->pstFontRes):stItemPaintArea.iHeight;
 					cszItemText = (NULL==pstObj->pstItems[iItemIndex].szVariableText)?pstObj->pstItems[iItemIndex].cszLabelText:pstObj->pstItems[iItemIndex].szVariableText;
-					SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, iItemIndex==pstObj->iSelection?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+					if(iItemIndex==pstObj->iSelection)
+					{
+                        SGUI_Basic_DrawRectangle(pstDeviceIF,stItemPaintArea.iX,stItemPaintArea.iY,stItemPaintArea.iWidth,stItemPaintArea.iHeight,pstObj->stPallete.eFocusColor,pstObj->stPallete.eFocusColor);
+                        SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstObj->stPallete.eFocusTextColor);
+                    }
+                    else
+                    {
+                        SGUI_Basic_DrawRectangle(pstDeviceIF,stItemPaintArea.iX,stItemPaintArea.iY,stItemPaintArea.iWidth,stItemPaintArea.iHeight,pstObj->stPallete.eBackgroundColor,pstObj->stPallete.eBackgroundColor);
+                        SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstObj->stPallete.eTextColor);
+                    }
 				}
 			}
 		}

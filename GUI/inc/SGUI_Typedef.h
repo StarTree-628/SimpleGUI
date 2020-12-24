@@ -53,7 +53,6 @@ typedef const char						SGUI_CCHAR;
 
 typedef void*							SGUI_PTR;
 
-typedef SGUI_SIZE						SGUI_INDEX;
 #define	SGUI_INVALID_INDEX				(-1)
 typedef	SGUI_UINT32						SGUI_ROM_ADDRESS;
 

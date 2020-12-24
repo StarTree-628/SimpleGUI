@@ -5,6 +5,7 @@
 //=======================================================================//
 #include "SGUI_Typedef.h"
 #include "SGUI_Common.h"
+#include <string.h>
 
 //=======================================================================//
 //= User Macro definition.											    =//
@@ -30,11 +31,15 @@
 //=======================================================================//
 //= Public function declaration.									    =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #ifdef _SIMPLE_GUI_ENCODE_TEXT_
 // Only used when running in simulated environment and text encode need convert to GB2312.
 SGUI_SZSTR				SGUI_SystemIF_EncodeConvert(SGUI_CSZSTR szSourceEncode, SGUI_SZSTR szDestinationEncode, SGUI_SZSTR szSource);
   #define		SGUI_ENCODE_BUFFER_SIZE			(512)
-  #define		ENCODE(S)						(SGUI_SystemIF_EncodeConvert(_SIMPLE_GUI_ENCODE_TEXT_SRC_, _SIMPLE_GUI_ENCODE_TEXT_DEST_, (char *)S))
+  #define		ENCODE(S)						(SGUI_SystemIF_EncodeConvert(_SIMPLE_GUI_ENCODE_TEXT_SRC_, _SIMPLE_GUI_ENCODE_TEXT_DEST_, (char *)(S)))
 #else
  #define		ENCODE(S)						(S)
 #endif
@@ -43,10 +48,19 @@ SGUI_SZSTR				SGUI_SystemIF_EncodeConvert(SGUI_CSZSTR szSourceEncode, SGUI_SZSTR
 SGUI_PTR				SGUI_SystemIF_Allocate(SGUI_SIZE sSize);
 void					SGUI_SystemIF_Free(SGUI_PTR pFreePointer);
 #endif
-SGUI_PTR				SGUI_SystemIF_MemoryCopy(SGUI_PTR pDest, const SGUI_PTR pSrc, SGUI_SIZE sSize);
-void                    SGUI_SystemIF_MemorySet(SGUI_PTR pMemoryPtr, SGUI_BYTE iSetValue, SGUI_SIZE sSize);
-SGUI_SIZE               SGUI_SystemIF_StringLength(SGUI_CSZSTR szString);
-SGUI_SZSTR				SGUI_SystemIF_StringCopy(SGUI_SZSTR szDest, SGUI_CSZSTR szSrc);
-SGUI_SZSTR				SGUI_SystemIF_StringLengthCopy(SGUI_SZSTR szDest, SGUI_CSZSTR szSrc, SGUI_SIZE sSize);
 
+#define					SGUI_SystemIF_MemoryCopy(DEST, SOURCE, SIZE) \
+                            (memcpy(DEST, SOURCE, SIZE))
+#define					SGUI_SystemIF_MemorySet(PTR, VAL, SIZE) \
+                            (memset(PTR, VAL, SIZE))
+#define                 SGUI_SystemIF_StringLength(/* SGUI_CSZSTR */STR) \
+                            ((NULL == (STR))?0:(strlen((STR))))
+#define 				SGUI_SystemIF_StringCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC) \
+                            (strcpy((DEST), (SRC)))
+#define                 SGUI_SystemIF_StringLengthCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC, /* SGUI_SIZE */SIZE) \
+                            (strncpy((DEST), (SRC), (SIZE)))
+
+#ifdef __cplusplus
+}
+#endif
 #endif // __INCLUDED_SGUI_INTERFACE_H__

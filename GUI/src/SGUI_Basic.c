@@ -30,12 +30,12 @@
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinateX, SGUI_UINT uiCoordinateY, SGUI_COLOR eColor)
+void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_INT iPosY, SGUI_COLOR eColor)
 {
     /*----------------------------------*/
     /* Process							*/
     /*----------------------------------*/
-    if((NULL != pstDeviceIF) && (uiCoordinateX < RECT_WIDTH(pstDeviceIF->stSize)) && (uiCoordinateY < RECT_HEIGHT(pstDeviceIF->stSize)))
+    if((NULL != pstDeviceIF) && (iPosX < RECT_WIDTH(pstDeviceIF->stSize)) && (iPosY < RECT_HEIGHT(pstDeviceIF->stSize)))
     {
     	if(NULL == pstDeviceIF->fnSetPixel)
 		{
@@ -43,11 +43,11 @@ void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinateX, SG
 		}
         else if(SGUI_COLOR_FRGCLR == eColor)
         {
-            pstDeviceIF->fnSetPixel(uiCoordinateX, uiCoordinateY, 1);
+            pstDeviceIF->fnSetPixel(iPosX, iPosY, 1);
         }
         else if(SGUI_COLOR_BKGCLR == eColor)
         {
-            pstDeviceIF->fnSetPixel(uiCoordinateX, uiCoordinateY, 0);
+            pstDeviceIF->fnSetPixel(iPosX, iPosY, 0);
         }
     }
 }
@@ -57,12 +57,12 @@ void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinateX, SG
 /** Purpose:		Get a pixel color .									**/
 /** Params:																**/
 /**	@ pstDeviceIF[in]:	SimpleGUI object pointer.						**/
-/**	@ uiCoordinateX[in]: X coordinate of point by pixels.				**/
-/**	@ uiCoordinateY[in]: Y coordinate of point by pixels.				**/
+/**	@ iPosX[in]:	X coordinate of point by pixels.				**/
+/**	@ iPosY[in]: Y coordinate of point by pixels.				**/
 /** Return:			SGUI_COLOR type enumerated for point color.			**/
 /** Notice:			None.												**/
 /*************************************************************************/
-SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinateX, SGUI_UINT uiCoordinateY)
+SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_INT iPosY)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -79,7 +79,7 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinate
     /*----------------------------------*/
     /* Process							*/
     /*----------------------------------*/
-    if((NULL != pstDeviceIF) && (uiCoordinateX < RECT_WIDTH(pstDeviceIF->stSize)) && (uiCoordinateY < RECT_HEIGHT(pstDeviceIF->stSize)))
+    if((NULL != pstDeviceIF) && (iPosX < RECT_WIDTH(pstDeviceIF->stSize)) && (iPosY < RECT_HEIGHT(pstDeviceIF->stSize)))
     {
     	if(NULL == pstDeviceIF->fnSetPixel)
 		{
@@ -87,7 +87,7 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCoordinate
 		}
 		else
 		{
-			uiPixValue = pstDeviceIF->fnGetPixel(uiCoordinateX, uiCoordinateY);
+			uiPixValue = pstDeviceIF->fnGetPixel(iPosX, iPosY);
 			if(0 == uiPixValue)
 			{
 				eColor = SGUI_COLOR_BKGCLR;
@@ -476,35 +476,35 @@ void SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiCx, SGUI_UINT 
 /** Function Name:	SGUI_Basic_ReverseBlockColor						**/
 /** Purpose:		Reverse all pixel color in a rectangle area.		**/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:	SimpleGUI object pointer.							**/
-/**	@ uiStartX[in]:		X coordinate of the upper-left corner.			**/
-/**	@ uiStartY[in]:		Y coordinate of the upper-left corner.			**/
-/**	@ uiWidth[in]: .	Width of rectangle.								**/
-/**	@ uiHeight[in]:		Height of rectangle.							**/
+/**	@ pstDeviceIF[in]:vSimpleGUI object pointer.						**/
+/**	@ iStartX[in]:	X coordinate of the upper-left corner.				**/
+/**	@ iStartY[in]:	Y coordinate of the upper-left corner.				**/
+/**	@ iWidth[in]:	Width of rectangle.									**/
+/**	@ iHeight[in]:	Height of rectangle.								**/
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_UINT uiStartX, SGUI_UINT uiStartY, SGUI_UINT uiWidth, SGUI_UINT uiHeight)
+void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
     /*----------------------------------*/
-    SGUI_UINT					i_W, i_H;
+    SGUI_INT					iIdxW, iIdxH;
 
     /*----------------------------------*/
     /* Process							*/
     /*----------------------------------*/
-    for(i_W=0; i_W<uiWidth; i_W++)
+    for(iIdxW=0; iIdxW<iWidth; iIdxW++)
     {
-        for(i_H=0; i_H<uiHeight; i_H++)
+        for(iIdxH=0; iIdxH<iHeight; iIdxH++)
         {
-            if(SGUI_Basic_GetPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H) == SGUI_COLOR_FRGCLR)
+            if(SGUI_Basic_GetPoint(pstDeviceIF, iStartX+iIdxW, iStartY+iIdxH) == SGUI_COLOR_FRGCLR)
             {
-                SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, SGUI_COLOR_BKGCLR);
+                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iIdxW, iStartY+iIdxH, SGUI_COLOR_BKGCLR);
             }
             else
             {
-                SGUI_Basic_DrawPoint(pstDeviceIF, uiStartX+i_W, uiStartY+i_H, SGUI_COLOR_FRGCLR);
+                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iIdxW, iStartY+iIdxH, SGUI_COLOR_FRGCLR);
             }
         }
     }
@@ -529,15 +529,15 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 	/*----------------------------------*/
 	SGUI_INT					iDrawPixX, iDrawPixY;
 	SGUI_INT					iBmpPixX, iBmpPixY;
-	SGUI_UINT					uiDrawnWidthIndex, uiDrawnHeightIndex;
-	SGUI_UINT					uiPixIndex;
+	SGUI_INT					iDrawnWidthIndex, iDrawnHeightIndex;
+	SGUI_INT					iPixIndex;
 	const SGUI_BYTE*			pData;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	uiDrawnWidthIndex			= 0;
-	uiDrawnHeightIndex			= 0;
+	iDrawnWidthIndex			= 0;
+	iDrawnHeightIndex			= 0;
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -562,9 +562,9 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 			{
 				iBmpPixX -= RECT_X_START(*pstInnerPos);
 			}
-			uiDrawnWidthIndex = iBmpPixX;
+			iDrawnWidthIndex = iBmpPixX;
 			// Loop for x coordinate;
-			while((uiDrawnWidthIndex<RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=RECT_X_END(*pstDisplayArea)) && (iDrawPixX<RECT_WIDTH(pstDeviceIF->stSize)))
+			while((iDrawnWidthIndex<RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=RECT_X_END(*pstDisplayArea)) && (iDrawPixX<RECT_WIDTH(pstDeviceIF->stSize)))
 			{
 				// Redirect to data array for column.
 				pData = pstBitmapData->pData+iBmpPixX;
@@ -579,18 +579,18 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 				{
 					iBmpPixY -= RECT_Y_START(*pstInnerPos);
 				}
-				uiDrawnHeightIndex = iBmpPixY;
-				uiPixIndex = iBmpPixY % 8;
+				iDrawnHeightIndex = iBmpPixY;
+				iPixIndex = iBmpPixY % 8;
 				pData += (iBmpPixY / 8) * RECT_WIDTH(*pstBitmapData);
 				// Loop for y coordinate;
-				while((uiDrawnHeightIndex<RECT_HEIGHT(*pstBitmapData)) && (iDrawPixY<=RECT_Y_END(*pstDisplayArea)) && (iDrawPixY<RECT_HEIGHT(pstDeviceIF->stSize)))
+				while((iDrawnHeightIndex<RECT_HEIGHT(*pstBitmapData)) && (iDrawPixY<=RECT_Y_END(*pstDisplayArea)) && (iDrawPixY<RECT_HEIGHT(pstDeviceIF->stSize)))
 				{
-					if(uiPixIndex == 8)
+					if(iPixIndex == 8)
 					{
-						uiPixIndex = 0;
+						iPixIndex = 0;
 						pData += RECT_WIDTH(*pstBitmapData);
 					}
-					if(SGUI_GET_PAGE_BIT(*pData, uiPixIndex) != eDrawMode)
+					if(SGUI_GET_PAGE_BIT(*pData, iPixIndex) != eDrawMode)
 					{
 						SGUI_Basic_DrawPoint(pstDeviceIF, iDrawPixX, iDrawPixY, SGUI_COLOR_FRGCLR);
 					}
@@ -598,12 +598,12 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 					{
 						SGUI_Basic_DrawPoint(pstDeviceIF, iDrawPixX, iDrawPixY, SGUI_COLOR_BKGCLR);
 					}
-					uiDrawnHeightIndex ++;
-					uiPixIndex ++;
+					iDrawnHeightIndex ++;
+					iPixIndex ++;
 					iDrawPixY ++;
 					iBmpPixY ++;
 				}
-				uiDrawnWidthIndex ++;
+				iDrawnWidthIndex ++;
 				iDrawPixX ++;
 				iBmpPixX ++;
 			}

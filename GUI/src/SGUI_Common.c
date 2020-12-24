@@ -60,17 +60,17 @@ void SGUI_Common_AdaptDisplayInfo(SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInne
 /** Return:			Converted string length(include space).				**/
 /** Notice:			Only applies to decimal numbers.					**/
 /*************************************************************************/
-SGUI_SIZE SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_UINT uiDecimalPlaces, SGUI_SZSTR pszStringBuffer, SGUI_INT iAlignment, SGUI_CHAR cFillCharacter)
+SGUI_INT SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_INT iDecimalPlaces, SGUI_SZSTR pszStringBuffer, SGUI_INT iAlignment, SGUI_CHAR cFillCharacter)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
 	SGUI_CHAR					szNumberString[SGUI_NUMBER_STR_LENGTH_MAX] = {0x00};
 	SGUI_UINT					uiSourceNumber;
-	SGUI_UINT					uiSignBit;
-	SGUI_SIZE					uiNumberStringLength;
-	SGUI_SIZE					uiDecimalLength;
-	SGUI_SIZE					uiOutputLength;
+	SGUI_INT					iSignBit;
+	SGUI_INT					iNumberStringLength;
+	SGUI_INT					iDecimalLength;
+	SGUI_INT					iOutputLength;
 	SGUI_SZSTR					pcSrcPtr;
 	SGUI_SZSTR					pcDestPtr;
 
@@ -80,12 +80,12 @@ SGUI_SIZE SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_UI
 	// Judged sign
 	if(iInteger < 0)
 	{
-		uiSignBit = 1;
+		iSignBit = 1;
 		uiSourceNumber = -iInteger;
 	}
 	else
 	{
-		uiSignBit = 0;
+		iSignBit = 0;
 		uiSourceNumber = iInteger;
 	}
 
@@ -93,42 +93,42 @@ SGUI_SIZE SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_UI
 	/* Process							*/
 	/*----------------------------------*/
 	// Insert dot to string.
-	if(uiDecimalPlaces > 0)
+	if(iDecimalPlaces > 0)
 	{
-		uiDecimalLength = uiDecimalPlaces;
+		iDecimalLength = iDecimalPlaces;
 		// Convert number to string, ignore sign.
-		uiNumberStringLength = SGUI_Common_IntegerToString(uiSourceNumber, szNumberString, 10, 0, cFillCharacter);
+		iNumberStringLength = SGUI_Common_IntegerToString(uiSourceNumber, szNumberString, 10, 0, cFillCharacter);
         // Set pointer.
-		pcSrcPtr = szNumberString + uiNumberStringLength - 1;
-		if(uiDecimalLength < uiNumberStringLength)
+		pcSrcPtr = szNumberString + iNumberStringLength - 1;
+		if(iDecimalLength < iNumberStringLength)
 		{
-			uiOutputLength = uiNumberStringLength + 1;
+			iOutputLength = iNumberStringLength + 1;
 		}
 		else
 		{
-			uiOutputLength = uiDecimalLength + 2;
+			iOutputLength = iDecimalLength + 2;
 		}
-		pcDestPtr = pszStringBuffer + uiOutputLength + uiSignBit;
+		pcDestPtr = pszStringBuffer + iOutputLength + iSignBit;
 		// Process decimal string character.
 		*pcDestPtr = '\0';
 		pcDestPtr--;
-		while((pcSrcPtr >= szNumberString) && (uiDecimalLength > 0))
+		while((pcSrcPtr >= szNumberString) && (iDecimalLength > 0))
 		{
 			*pcDestPtr = *pcSrcPtr;
 			pcDestPtr--;
 			pcSrcPtr--;
-			uiDecimalLength--;
+			iDecimalLength--;
 		}
-		while(uiDecimalLength > 0)
+		while(iDecimalLength > 0)
 		{
 			*pcDestPtr = '0';
 			pcDestPtr--;
-			uiDecimalLength --;
+			iDecimalLength --;
 		}
 		*pcDestPtr = '.';
 		pcDestPtr--;
 		// Process integer string character.
-		if(uiDecimalPlaces >= uiNumberStringLength)
+		if(iDecimalPlaces >= iNumberStringLength)
 		{
 			*pcDestPtr = '0';
 			pcDestPtr--;
@@ -142,22 +142,22 @@ SGUI_SIZE SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_UI
 				pcSrcPtr--;
 			}
 		}
-		if(uiSignBit > 0)
+		if(iSignBit > 0)
 		{
 			*pcDestPtr = '-';
 		}
 		// Alignment
-		uiOutputLength = uiOutputLength + uiSignBit;
+		iOutputLength = iOutputLength + iSignBit;
 		if(iAlignment > 0)
 		{
-			pcSrcPtr = pszStringBuffer + uiOutputLength - 1;
-			if(uiOutputLength > iAlignment)
+			pcSrcPtr = pszStringBuffer + iOutputLength - 1;
+			if(iOutputLength > iAlignment)
 			{
-				iAlignment = uiOutputLength;
+				iAlignment = iOutputLength;
 			}
 			else
 			{
-				uiOutputLength = iAlignment;
+				iOutputLength = iAlignment;
 			}
 			pcDestPtr = pszStringBuffer + iAlignment;
 			*pcDestPtr = '\0';
@@ -181,15 +181,15 @@ SGUI_SIZE SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_UI
 		{
 			iAlignment = -iAlignment;
 			pcSrcPtr = pszStringBuffer;
-			pcDestPtr = pszStringBuffer + uiOutputLength;
-			if(uiOutputLength > iAlignment)
+			pcDestPtr = pszStringBuffer + iOutputLength;
+			if(iOutputLength > iAlignment)
 			{
 				iAlignment = 0;
 			}
 			else
 			{
-				iAlignment = iAlignment - uiOutputLength;
-				uiOutputLength = uiOutputLength + iAlignment;
+				iAlignment = iAlignment - iOutputLength;
+				iOutputLength = iOutputLength + iAlignment;
 			}
 			while(iAlignment --)
 			{
@@ -203,10 +203,10 @@ SGUI_SIZE SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_UI
 	else
 	{
 		// Convert number to string.
-		uiOutputLength = SGUI_Common_IntegerToString(iInteger, pszStringBuffer, 10, iAlignment, cFillCharacter);
+		iOutputLength = SGUI_Common_IntegerToString(iInteger, pszStringBuffer, 10, iAlignment, cFillCharacter);
 	}
 
-	return uiOutputLength;
+	return iOutputLength;
 }
 
 /*************************************************************************/
@@ -232,7 +232,7 @@ SGUI_SIZE SGUI_Common_IntegerToString(SGUI_INT iInteger, SGUI_SZSTR pszStringBuf
 	SGUI_CHAR					szNumberString[SGUI_NUMBER_STR_LENGTH_MAX] = {0x00};
 	SGUI_UINT					uiSourceNumber;
 	SGUI_UINT					uiSignBit;
-	SGUI_SIZE					uiNumberStringLength;
+	SGUI_INT					iNumberStringLength;
     SGUI_SZSTR					pcSrcPtr;
     SGUI_SZSTR					pcDestPtr;
     SGUI_SIZE					uiDigitBit;
@@ -244,7 +244,7 @@ SGUI_SIZE SGUI_Common_IntegerToString(SGUI_INT iInteger, SGUI_SZSTR pszStringBuf
 	pcDestPtr = szNumberString;
 	*pcSrcPtr = '\0';
 	pcSrcPtr--;
-	uiNumberStringLength = 0;
+	iNumberStringLength = 0;
 	// Judged sign
     if(iInteger < 0)
 	{
@@ -282,43 +282,43 @@ SGUI_SIZE SGUI_Common_IntegerToString(SGUI_INT iInteger, SGUI_SZSTR pszStringBuf
 		}
 		uiSourceNumber = uiSourceNumber / uiBase;
 		pcSrcPtr--;
-		uiNumberStringLength++;
+		iNumberStringLength++;
 	}
 	if(uiSignBit == 1)
 	{
 		*pcSrcPtr = '-';
-		uiNumberStringLength++;
+		iNumberStringLength++;
 	}
 	else
 	{
 		pcSrcPtr++;
 	}
 
-	while((pcDestPtr - uiNumberStringLength) != szNumberString)
+	while((pcDestPtr - iNumberStringLength) != szNumberString)
 	{
 		*pcDestPtr = *pcSrcPtr;
 		pcSrcPtr++;
 		pcDestPtr++;
 	}
-	if(uiNumberStringLength == 0)
+	if(iNumberStringLength == 0)
 	{
 		pcDestPtr = szNumberString;
 		*pcDestPtr = '0';
 		pcDestPtr++;
-		uiNumberStringLength++;
+		iNumberStringLength++;
 	}
 	*pcDestPtr = '\0';
 	// Move to out put buffer
 	if(iAlignment > 0)
 	{
-		pcSrcPtr = szNumberString + uiNumberStringLength-1;
-		if(uiNumberStringLength > iAlignment)
+		pcSrcPtr = szNumberString + iNumberStringLength-1;
+		if(iNumberStringLength > iAlignment)
 		{
-			iAlignment = uiNumberStringLength;
+			iAlignment = iNumberStringLength;
 		}
 		else
 		{
-			uiNumberStringLength = iAlignment;
+			iNumberStringLength = iAlignment;
 		}
 		pcDestPtr = pszStringBuffer + iAlignment;
 		*pcDestPtr = '\0';
@@ -341,13 +341,13 @@ SGUI_SIZE SGUI_Common_IntegerToString(SGUI_INT iInteger, SGUI_SZSTR pszStringBuf
 	else
 	{
 		iAlignment = -iAlignment;
-		if(uiNumberStringLength > iAlignment)
+		if(iNumberStringLength > iAlignment)
 		{
-			iAlignment = uiNumberStringLength;
+			iAlignment = iNumberStringLength;
 		}
 		else
 		{
-			uiNumberStringLength = iAlignment;
+			iNumberStringLength = iAlignment;
 		}
 		pcDestPtr = pszStringBuffer;
 		pcSrcPtr = szNumberString;
@@ -367,7 +367,7 @@ SGUI_SIZE SGUI_Common_IntegerToString(SGUI_INT iInteger, SGUI_SZSTR pszStringBuf
 		}
 		*pcDestPtr = '\0';
 	}
-	return uiNumberStringLength;
+	return iNumberStringLength;
 }
 
 /*************************************************************************/

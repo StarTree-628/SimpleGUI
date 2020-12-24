@@ -239,6 +239,7 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, co
 					if(1 == s_uiFocusedFlag)
 					{
 						SGUI_TextVariableBox_DecreaseIndex(&s_stTextVariableBox);
+						SGUI_TextVariableBox_Repaint(pstDeviceIF, &s_stTextVariableBox, SGUI_DRAW_REVERSE);
 					}
 					break;
 				}
@@ -261,6 +262,7 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, co
 					if(1 == s_uiFocusedFlag)
 					{
 						SGUI_TextVariableBox_IncreaseIndex(&s_stTextVariableBox);
+						SGUI_TextVariableBox_Repaint(pstDeviceIF, &s_stTextVariableBox, SGUI_DRAW_REVERSE);
 					}
 					break;
 				}

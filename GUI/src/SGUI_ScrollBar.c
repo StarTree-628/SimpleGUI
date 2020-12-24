@@ -57,35 +57,6 @@ void SGUI_ScrollBar_SetValue(SGUI_SCROLLBAR_STRUCT* pstObj, SGUI_SIZE sNewValue)
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_ScrollBar_GetValue								**/
-/** Purpose:		Get current scrolled value.							**/
-/** Params:																**/
-/**	@ pstObj[in]:	Scroll bar object pointer.							**/
-/** Return:			Current scrolled value.								**/
-/*************************************************************************/
-SGUI_SIZE SGUI_ScrollBar_GetValue(const SGUI_SCROLLBAR_STRUCT* pstObj)
-{
-	/*----------------------------------*/
-	/* Variable Declaration				*/
-	/*----------------------------------*/
-	SGUI_SIZE				sReturn;
-
-	/*----------------------------------*/
-	/* Process							*/
-	/*----------------------------------*/
-	if(NULL != pstObj)
-	{
-		sReturn = pstObj->stData.sValue;
-	}
-	else
-	{
-		sReturn = 0;
-	}
-
-	return sReturn;
-}
-
-/*************************************************************************/
 /** Function Name:	SGUI_ScrollBar_RefreshScrollBar						**/
 /** Purpose:		Display or update a scroll bar.						**/
 /** Resources:		Scroll bar data structure.							**/

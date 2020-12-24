@@ -120,7 +120,6 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 		}
 		/* Active engine object. */
 		eProcessResult = HMI_ActiveEngine(&g_stDemoEngine, HMI_SCREEN_ID_DEMO_LIST);
-		//eProcessResult = HMI_ActiveEngine(&g_stDemoEngine, HMI_SCREEN_ID_DEMO_ITEMS_BASE);
 		if(HMI_PROCESS_FAILED(eProcessResult))
 		{
 			/* Active engine failed. */

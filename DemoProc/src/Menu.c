@@ -38,13 +38,13 @@ static SGUI_ITEMS_ITEM		s_arrstMenuItems[] =		{	{SCR6_MENU_ITEM1, NULL},
 static SGUI_ITEMS_ITEM		s_arrstSubMenuItems[] =		{	{SCR6_SUB_MENU_ITEM1, NULL},
 															{SCR6_SUB_MENU_ITEM2, NULL},
 															{SCR6_SUB_MENU_ITEM3, NULL},
-															{SCR6_SUB_MENU_ITEM1, NULL}
+															{SCR6_SUB_MENU_ITEM4, NULL}
 														};
 
-static SGUI_MENU_STRUCT		s_stDemoMenuObject = 		{0x00};
-static SGUI_MENU_STRUCT		s_stDemoSubMenuObject =		{0x00};
+static SGUI_MENU		s_stDemoMenuObject = 		{0x00};
+static SGUI_MENU		s_stDemoSubMenuObject =		{0x00};
 
-static SGUI_MENU_STRUCT*	s_pstActivedMenu =			&s_stDemoMenuObject;
+static SGUI_MENU*	s_pstActivedMenu =			&s_stDemoMenuObject;
 
 //=======================================================================//
 //= Global variable declaration.									    =//
@@ -72,8 +72,8 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	stLayout.iX =		0;
-	stLayout.iY =		0;
+	stLayout.iX =			0;
+	stLayout.iY =			0;
 	stLayout.iWidth = 		48;
 	stLayout.iHeight =		60;
 
@@ -81,9 +81,9 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/* Process							*/
 	/*----------------------------------*/
     // Initialize list data.
-    SGUI_SystemIF_MemorySet(&s_stDemoMenuObject, 0x00, sizeof(SGUI_MENU_STRUCT));
+    SGUI_SystemIF_MemorySet(&s_stDemoMenuObject, 0x00, sizeof(SGUI_MENU));
      //Initialize list object.
-	SGUI_Menu_Initialize(&s_stDemoMenuObject, &SGUI_DEFAULT_FONT_8, &stLayout, s_arrstMenuItems, sizeof(s_arrstMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+	SGUI_Menu_Initialize(&s_stDemoMenuObject, &stLayout, &SGUI_DEFAULT_FONT_8, s_arrstMenuItems, sizeof(s_arrstMenuItems)/sizeof(SGUI_ITEMS_ITEM));
 	return HMI_RET_NORMAL;
 }
 
@@ -146,9 +146,9 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 				{
 					if(&s_stDemoMenuObject == s_pstActivedMenu)
 					{
-						SGUI_ItemsBase_GetItemExtent(&(s_pstActivedMenu->stItems), s_pstActivedMenu->stItems.iSelection, &stItemArea);
+						SGUI_ItemsBase_GetItemExtent(&(s_pstActivedMenu->stItems), SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex, &stItemArea);
 						s_pstActivedMenu = &s_stDemoSubMenuObject;
-						SGUI_Menu_Initialize(&s_stDemoSubMenuObject, &SGUI_DEFAULT_FONT_8, &stItemArea, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+						SGUI_Menu_Initialize(&s_stDemoSubMenuObject, &stItemArea, &SGUI_DEFAULT_FONT_8, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
 						SGUI_Menu_PopupSubMenu(pstDeviceIF, &s_stDemoSubMenuObject, &stItemArea);
 						SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
 					}
@@ -177,18 +177,18 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 				}
 				case KEY_VALUE_UP:
 				{
-					if(s_pstActivedMenu->stItems.iSelection > 0)
+					if(SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex > 0)
 					{
-						s_pstActivedMenu->stItems.iSelection-=1;
+						SGUI_Menu_Selecte(s_pstActivedMenu, SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex-1);
 						SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
 					}
 					break;
 				}
 				case KEY_VALUE_DOWN:
 				{
-					if(s_pstActivedMenu->stItems.iSelection < s_pstActivedMenu->stItems.iCount-1)
+					if(SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex < s_pstActivedMenu->stItems.iCount-1)
 					{
-						s_pstActivedMenu->stItems.iSelection+=1;
+						SGUI_Menu_Selecte(s_pstActivedMenu, SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex+1);
 						SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
 					}
 					break;

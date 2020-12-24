@@ -37,8 +37,13 @@ typedef struct
 //= Public function declaration.									    =//
 //=======================================================================//
 void		SGUI_ScrollBar_Initialize(SGUI_SCROLLBAR_STRUCT* pstObj, const SGUI_SCROLLBAR_PARAM* pcstInitParam);
+#define		SGUI_ScrollBar_SetMax(OBJ, MAX) \
+				{(OBJ)->stParam.sMaxValue = MAX;}
+#define 	SGUI_ScrollBar_GetMax(OBJ) \
+				((OBJ)->stParam.sMaxValue)
 void		SGUI_ScrollBar_SetValue(SGUI_SCROLLBAR_STRUCT* pstObj, SGUI_SIZE sNewValue);
-SGUI_SIZE	SGUI_ScrollBar_GetValue(const SGUI_SCROLLBAR_STRUCT* pstObj);
+#define 	SGUI_ScrollBar_GetValue(OBJ) \
+				((OBJ)->stData.sValue)
 void		SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* pstObj);
 
 #endif // __INCLUDE_GUI_SCROLLBAR_STRUCT__

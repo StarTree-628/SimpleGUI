@@ -32,8 +32,8 @@
 #define PARAM_DEFAULT_PIXEL_NUM_H                       (128)
 #define PARAM_DEFAULT_PIXEL_NUM_V                       (64)
 #define PARAM_DEFAULT_PANEL_BORDER_WIDTH				(8)
-#define PARAM_DEFAULT_PIXEL_WIDTH					    (3)
-#define PARAM_DEFAULT_PIXEL_HEIGHT					    (3)
+#define PARAM_DEFAULT_PIXEL_WIDTH					    (2)
+#define PARAM_DEFAULT_PIXEL_HEIGHT					    (2)
 #define PARAM_DEFAULT_GRID_ENABLE                       (true)
 #define PARAM_DEFAULT_GRID_DISABLE                      (false)
 

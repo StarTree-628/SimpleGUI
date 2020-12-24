@@ -29,6 +29,13 @@ static HMI_ENGINE_RESULT	HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, HMI
 //=======================================================================//
 //= Static variable declaration.									    =//
 //=======================================================================//
+static const SGUI_RECT		s_arrstLayouts[] =			{	{0, 0, 96, 48},
+															{0, 0, 128, 64},
+															{0, 0, 192, 128},
+															{0, 0, 256, 160},
+															};
+static SGUI_SIZE			s_iLayoutIndex = 1;
+
 static SGUI_ITEMS_ITEM		s_arrstListItems[] =		{	{SCR1_LIST_ITEM1, NULL},
 															{SCR1_LIST_ITEM2, NULL},
 															{SCR1_LIST_ITEM3, NULL},
@@ -37,7 +44,22 @@ static SGUI_ITEMS_ITEM		s_arrstListItems[] =		{	{SCR1_LIST_ITEM1, NULL},
 															{SCR1_LIST_ITEM6, NULL},
 															{SCR1_LIST_ITEM7, NULL}
 														};
-static SGUI_LIST_STRUCT		s_stDemoListObject = 		{0x00};
+
+typedef struct
+{
+	SGUI_ITEMS_ITEM	stItem;
+	SGUI_BOOL		bUsed;
+}SGUI_TEST_ITEM;
+
+static SGUI_TEST_ITEM		s_arrstAppendListItems[] =	{	{{SCR1_LIST_APPEND1, NULL}, SGUI_FALSE},
+															{{SCR1_LIST_APPEND2, NULL}, SGUI_FALSE},
+															{{SCR1_LIST_APPEND3, NULL}, SGUI_FALSE},
+															{{SCR1_LIST_APPEND4, NULL}, SGUI_FALSE},
+															{{SCR1_LIST_APPEND5, NULL}, SGUI_FALSE},
+															{{SCR1_LIST_APPEND6, NULL}, SGUI_FALSE}
+														};
+
+static SGUI_LIST		s_stDemoListObject = 		{0x00};
 
 //=======================================================================//
 //= Global variable declaration.									    =//
@@ -61,15 +83,9 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/* Process							*/
 	/*----------------------------------*/
     // Initialize list data.
-    SGUI_SystemIF_MemorySet(&s_stDemoListObject, 0x00, sizeof(SGUI_LIST_STRUCT));
-    // Title and font size must set before initialize list object.
-    s_stDemoListObject.stLayout.iX = 0;
-    s_stDemoListObject.stLayout.iY = 0;
-    s_stDemoListObject.stLayout.iWidth = pstDeviceIF->stSize.iWidth;
-    s_stDemoListObject.stLayout.iHeight = pstDeviceIF->stSize.iHeight;
-    s_stDemoListObject.szTitle = SCR1_TITLE;
+    SGUI_SystemIF_MemorySet(&s_stDemoListObject, 0x00, sizeof(SGUI_LIST));
      //Initialize list object.
-	SGUI_List_Initialize(&s_stDemoListObject, &GB2312_FZXS12, s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
+	SGUI_List_Initialize(&s_stDemoListObject, &(s_arrstLayouts[s_iLayoutIndex]), &GB2312_FZXS12, SCR1_TITLE, s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
 	return HMI_RET_NORMAL;
 }
 
@@ -101,6 +117,8 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	SGUI_UINT16					uiKeyValue;
 	KEY_PRESS_EVENT*			pstKeyEvent;
 	SGUI_INT					iProcessAction;
+	SGUI_SIZE					sInsertDataIdx;
+	SGUI_ITEMS_ITEM*			pstItemObj;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -138,18 +156,115 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 				}
 				case KEY_VALUE_UP:
 				{
-					if(s_stDemoListObject.stItems.iSelection > 0)
+					if(SGUI_List_GetSelection(&s_stDemoListObject)->iIndex > 0)
 					{
-						s_stDemoListObject.stItems.iSelection -= 1;
+						SGUI_List_Selecte(&s_stDemoListObject, SGUI_List_GetSelection(&s_stDemoListObject)->iIndex-1);
 					}
 					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
 					break;
 				}
 				case KEY_VALUE_DOWN:
 				{
-					if(s_stDemoListObject.stItems.iSelection < s_stDemoListObject.stItems.iCount-1)
+					if(SGUI_List_GetSelection(&s_stDemoListObject)->iIndex < (s_stDemoListObject.stItems.iCount-1))
 					{
-						s_stDemoListObject.stItems.iSelection += 1;
+						SGUI_List_Selecte(&s_stDemoListObject, SGUI_List_GetSelection(&s_stDemoListObject)->iIndex+1);
+					}
+					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
+					break;
+				}
+				case KEY_VALUE_PLUS_PAD:
+				{
+					// Erase old paint.
+					SGUI_Basic_DrawRectangle(pstDeviceIF, s_arrstLayouts[s_iLayoutIndex].iX, s_arrstLayouts[s_iLayoutIndex].iY, s_arrstLayouts[s_iLayoutIndex].iWidth, s_arrstLayouts[s_iLayoutIndex].iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+					// Select new layout.
+					s_iLayoutIndex++;
+					s_iLayoutIndex = s_iLayoutIndex%(sizeof(s_arrstLayouts)/sizeof(SGUI_RECT));
+					// Resize and repaint.
+					SGUI_List_Resize(&s_stDemoListObject, &(s_arrstLayouts[s_iLayoutIndex]));
+					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
+					break;
+				}
+				case KEY_VALUE_SUB_PAD:
+				{
+					// Erase old paint.
+					SGUI_Basic_DrawRectangle(pstDeviceIF, s_arrstLayouts[s_iLayoutIndex].iX, s_arrstLayouts[s_iLayoutIndex].iY, s_arrstLayouts[s_iLayoutIndex].iWidth, s_arrstLayouts[s_iLayoutIndex].iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+					// Select new layout.
+					s_iLayoutIndex--;
+					s_iLayoutIndex = s_iLayoutIndex%(sizeof(s_arrstLayouts)/sizeof(SGUI_RECT));
+					// Resize and repaint.
+					SGUI_List_Resize(&s_stDemoListObject, &(s_arrstLayouts[s_iLayoutIndex]));
+					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
+					break;
+				}
+				case KEY_VALUE_DEL:
+				{
+					sInsertDataIdx = 0;
+					pstItemObj = SGUI_List_RemoveItem(&s_stDemoListObject, SGUI_List_GetSelection(&s_stDemoListObject)->iIndex);
+					while(sInsertDataIdx < sizeof(s_arrstAppendListItems)/sizeof(SGUI_TEST_ITEM))
+					{
+						if(pstItemObj == &(s_arrstAppendListItems[sInsertDataIdx].stItem))
+						{
+							s_arrstAppendListItems[sInsertDataIdx].bUsed = SGUI_FALSE;
+							break;
+						}
+						else
+						{
+							sInsertDataIdx++;
+						}
+					}
+					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
+					break;
+				}
+				case KEY_VALUE_INSERT:
+				{
+					sInsertDataIdx = 0;
+					while(sInsertDataIdx < sizeof(s_arrstAppendListItems)/sizeof(SGUI_TEST_ITEM))
+					{
+						if(SGUI_FALSE == s_arrstAppendListItems[sInsertDataIdx].bUsed)
+						{
+							s_arrstAppendListItems[sInsertDataIdx].bUsed = (SGUI_List_InsertItem(&s_stDemoListObject, &(s_arrstAppendListItems[sInsertDataIdx].stItem), SGUI_List_GetSelection(&s_stDemoListObject)->iIndex))?SGUI_TRUE:SGUI_FALSE;
+							break;
+						}
+						else
+						{
+							sInsertDataIdx++;
+						}
+					}
+					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
+					break;
+				}
+				case KEY_VALUE_HOME:
+				{
+					sInsertDataIdx = 0;
+					while(sInsertDataIdx < sizeof(s_arrstAppendListItems)/sizeof(SGUI_TEST_ITEM))
+					{
+						if(SGUI_FALSE == s_arrstAppendListItems[sInsertDataIdx].bUsed)
+						{
+							s_arrstAppendListItems[sInsertDataIdx].bUsed = (SGUI_List_InsertItem(&s_stDemoListObject, &(s_arrstAppendListItems[sInsertDataIdx].stItem), 0)?SGUI_TRUE:SGUI_FALSE);
+							break;
+						}
+						else
+						{
+							sInsertDataIdx++;
+						}
+					}
+					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
+					break;
+				}
+				case KEY_VALUE_END:
+				{
+					sInsertDataIdx = 0;
+					while(sInsertDataIdx < sizeof(s_arrstAppendListItems)/sizeof(SGUI_TEST_ITEM))
+					{
+						if(SGUI_FALSE == s_arrstAppendListItems[sInsertDataIdx].bUsed)
+						{
+							s_arrstAppendListItems[sInsertDataIdx].bUsed = (SGUI_List_InsertItem(&s_stDemoListObject, &(s_arrstAppendListItems[sInsertDataIdx].stItem), SGUI_List_Count(&s_stDemoListObject))?SGUI_TRUE:SGUI_FALSE);
+							break;
+						}
+						else
+						{
+							sInsertDataIdx++;
+						}
 					}
 					SGUI_List_Repaint(pstDeviceIF, &s_stDemoListObject);
 					break;
@@ -173,7 +288,7 @@ HMI_ENGINE_RESULT HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, HMI_ENGINE
 {
 	if(HMI_DEMO_PROC_CONFIRM == iActionID)
 	{
-        switch(s_stDemoListObject.stItems.iSelection)
+        switch(SGUI_List_GetSelection(&s_stDemoListObject)->iIndex)
         {
         	case 0:
 			{
@@ -212,7 +327,6 @@ HMI_ENGINE_RESULT HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, HMI_ENGINE
 			}
 			default:
 			{
-
 				/* do nothing. */
 			}
         }

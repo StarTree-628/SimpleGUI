@@ -389,8 +389,8 @@ void SGUI_ItemsBase_Resize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstNewLayo
 	{
 		ITEMS_VISIBLE_START_ITEM(pstObj) = ITEMS_FIRST_ITEM(pstObj);
 		ITEMS_VISIBLE_START_IDX(pstObj) = 0;
-		ITEMS_VISIBLE_END_ITEM(pstObj) = ITEMS_LAST_ITEM(pstObj);
-		ITEMS_VISIBLE_END_IDX(pstObj) = pstObj->iCount - 1;
+		ITEMS_VISIBLE_END_ITEM(pstObj) = NULL;
+		ITEMS_VISIBLE_END_IDX(pstObj) = ITEMS_VISIBLE_ITEMS(pstObj) - 1;
 		pstObj->iItemPaintOffset = 0;
 	}
 }

@@ -16,6 +16,13 @@
 //=======================================================================//
 //= Data type definition.											    =//
 //=======================================================================//
+typedef struct {
+    SGUI_INT8                   uiDepthBits;
+    SGUI_COLOR                  eTextColor;
+    SGUI_COLOR                  eFocusTextColor;
+    SGUI_COLOR                  eBackgroundColor;
+    SGUI_COLOR                  eFocusColor;
+} SGUI_ITEMS_BASE_PALETTE;
 typedef struct _st_sgui_items_item_
 {
 	SGUI_CSZSTR					cszLabelText;					// This pointer points to a character array constant
@@ -33,12 +40,13 @@ typedef struct
 	SGUI_INT					iVisibleItems;
 	SGUI_INT					iItemPaintOffset;
 	const SGUI_FONT_RES*        pstFontRes;
+	SGUI_ITEMS_BASE_PALETTE     stPallete;
 }SGUI_ITEMS_BASE;
 
 //=======================================================================//
 //= Public function declaration.									    =//
 //=======================================================================//
-void				SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount);
+void				SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount, SGUI_ITEMS_BASE_PALETTE* pstPalette);
 void				SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj);
 SGUI_ITEMS_ITEM*	SGUI_ItemsBase_GetItem(SGUI_ITEMS_BASE* pstObj, SGUI_INT iSelection);
 void				SGUI_ItemsBase_GetItemExtent(SGUI_ITEMS_BASE* pstObj, SGUI_INT iSelection, SGUI_RECT* pstItemExtent);

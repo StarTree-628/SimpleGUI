@@ -68,6 +68,7 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/* Variable Declaration				*/
 	/*----------------------------------*/
 	SGUI_RECT				stLayout;
+	SGUI_MENU_PALETTE       stPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -77,13 +78,21 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stLayout.iWidth = 		48;
 	stLayout.iHeight =		60;
 
+	stPalette.uiDepthBits = 4;
+	stPalette.stItemBase.eBackgroundColor = 0x02;
+	stPalette.stItemBase.eTextColor = 0x0F;
+	stPalette.stItemBase.eFocusColor = 0x08;
+	stPalette.stItemBase.eFocusTextColor = 0x0F;
+	stPalette.eBorder = 0x0F;
+	stPalette.eDirectionIconColor = 0x0F;
+
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
     // Initialize list data.
     SGUI_SystemIF_MemorySet(&s_stDemoMenuObject, 0x00, sizeof(SGUI_MENU_STRUCT));
      //Initialize list object.
-	SGUI_Menu_Initialize(&s_stDemoMenuObject, SGUI_FONT_REF(FONT_8), &stLayout, s_arrstMenuItems, sizeof(s_arrstMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+	SGUI_Menu_Initialize(&s_stDemoMenuObject, SGUI_FONT_REF(FONT_8), &stLayout, s_arrstMenuItems, sizeof(s_arrstMenuItems)/sizeof(SGUI_ITEMS_ITEM), &stPalette);
 	return HMI_RET_NORMAL;
 }
 
@@ -117,6 +126,7 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	KEY_PRESS_EVENT*		pstKeyEvent;
 	SGUI_INT				iProcessAction;
 	SGUI_RECT				stItemArea;
+	SGUI_MENU_PALETTE       stPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -124,6 +134,14 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	eProcessResult =			HMI_RET_NORMAL;
 	pstKeyEvent =				(KEY_PRESS_EVENT*)pstEvent;
 	iProcessAction =			HMI_DEMO_PROC_NO_ACT;
+
+	stPalette.uiDepthBits = 4;
+	stPalette.stItemBase.eBackgroundColor = 0x02;
+	stPalette.stItemBase.eTextColor = 0x0F;
+	stPalette.stItemBase.eFocusColor = 0x08;
+	stPalette.stItemBase.eFocusTextColor = 0x0F;
+    stPalette.eBorder = 0x0F;
+	stPalette.eDirectionIconColor = 0x0F;
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -148,7 +166,7 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 					{
 						SGUI_ItemsBase_GetItemExtent(&(s_pstActivedMenu->stItems), s_pstActivedMenu->stItems.iSelection, &stItemArea);
 						s_pstActivedMenu = &s_stDemoSubMenuObject;
-						SGUI_Menu_Initialize(&s_stDemoSubMenuObject, SGUI_FONT_REF(FONT_8), &stItemArea, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+						SGUI_Menu_Initialize(&s_stDemoSubMenuObject, SGUI_FONT_REF(FONT_8), &stItemArea, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM), &stPalette);
 						SGUI_Menu_PopupSubMenu(pstDeviceIF, &s_stDemoSubMenuObject, &stItemArea);
 						SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
 					}

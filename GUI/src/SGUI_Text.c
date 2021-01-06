@@ -1,7 +1,7 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_Text.c												**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Text display interface									**/
 /*************************************************************************/
 
@@ -78,7 +78,7 @@ void SGUI_Text_GetTextExtent(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRe
 /**	@ eFontMode[in]	Character display mode(normal or reverse color).	**/
 /** Return:			None.												**/
 /*************************************************************************/
-void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, SGUI_DRAW_MODE eFontMode)
+void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, SGUI_COLOR eFontColor)
 {
 
 	/*----------------------------------*/
@@ -86,7 +86,6 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 	/*----------------------------------*/
 	const SGUI_CHAR*            pcChar;							// Text character pointer.
 	SGUI_UINT32					uiCharacterCode;				// Character byte, might be tow bytes.
-	SGUI_COLOR					eBackColor;
 	SGUI_BMP_RES				stCharBitmap;
 	SGUI_POINT					stPaintPos;
 
@@ -95,7 +94,6 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 	/*----------------------------------*/
 	// Initialize variable.
 	pcChar =				    (SGUI_CSZSTR)ENCODE(cszText);
-	eBackColor =				SGUI_Basic_MapColor(1,(eFontMode == SGUI_DRAW_NORMAL)?0:1,pstDeviceIF->uiDepthBits);
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -104,10 +102,6 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
     {
         // Adapt text display area and data area.
         SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
-		// Clear text area.
-        SGUI_Basic_DrawRectangle(pstDeviceIF, RECT_X_START(*pstDisplayArea), RECT_Y_START(*pstDisplayArea),
-						RECT_WIDTH(*pstDisplayArea), RECT_HEIGHT(*pstDisplayArea),
-						eBackColor, eBackColor);
 		// Initialize drawing area data.
 		RECT_X_START(stPaintPos) = RECT_X_START(*pstInnerPos);
 		RECT_Y_START(stPaintPos) = RECT_Y_START(*pstInnerPos);
@@ -124,7 +118,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 				if((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0)
 				{
-					SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
+					SGUI_Basic_DrawAlphaBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontColor);
 				}
 				RECT_X_START(stPaintPos) += RECT_WIDTH(stCharBitmap);
 			}
@@ -145,7 +139,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 /** Return:			Used line count.									**/
 /** Notice:			None.												**/
 /*************************************************************************/
-SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_INT iTopOffset, SGUI_DRAW_MODE eFontMode)
+SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_INT iTopOffset, SGUI_COLOR eFontColor)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -153,7 +147,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 	const SGUI_CHAR*            pcChar;
 	SGUI_UINT32					uiCharacterCode;
 	SGUI_SIZE					uiLines;
-	SGUI_COLOR					eBackColor;
 	SGUI_BMP_RES				stCharBitmap;
 	SGUI_POINT					stPaintPos;
 	SGUI_INT					iStartOffsetX;
@@ -164,7 +157,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 	pcChar =					(SGUI_CSZSTR)ENCODE(cszText);
 	uiCharacterCode =			0;
 	uiLines =					0;
-	eBackColor =				SGUI_Basic_MapColor(1,(eFontMode == SGUI_DRAW_NORMAL)?0:1,pstDeviceIF->uiDepthBits);
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -177,11 +169,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 		// Adapt text display area and data area.
         SGUI_Common_AdaptDisplayInfo(pstDisplayArea, &stPaintPos);
         iStartOffsetX = stPaintPos.iX;
-		// Clear text area.
-        SGUI_Basic_DrawRectangle(pstDeviceIF,
-						RECT_X_START(*pstDisplayArea), RECT_Y_START(*pstDisplayArea),
-						RECT_WIDTH(*pstDisplayArea), RECT_HEIGHT(*pstDisplayArea),
-						eBackColor, eBackColor);
 
 		RECT_HEIGHT(stCharBitmap) = pstFontRes->iHeight;
 		uiLines = 1;
@@ -201,6 +188,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 				uiLines ++;
 				continue;
 			}
+            pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 
 			// Judge change line
 			if((stPaintPos.iX+stCharBitmap.iWidth-1) >= RECT_WIDTH(*pstDisplayArea))
@@ -214,8 +202,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 			if(((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0) && (RECT_Y_START(stPaintPos) < RECT_HEIGHT(*pstDisplayArea)))
 			{
 				// Draw character.
-				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
-                SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
+                SGUI_Basic_DrawAlphaBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontColor);
 			}
 			else
 			{
@@ -281,6 +268,26 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 		}
 	}
 	return uiLineNumber;
+}
+
+/*****************************************************************************/
+/** Function Name:	SGUI_Text_StringLength      						    **/
+/** Purpose:		Get string length in given font.                        **/
+/** Params:																	**/
+/**	@ cszText[in]:       String head pointer.   							**/
+/**	@ pstFontRes[in]:    Font resource which will be used to parse string.	**/
+/** Return:				The char block index inside of the library.         **/
+/*****************************************************************************/
+SGUI_SIZE SGUI_Text_StringLength(SGUI_CSZSTR cszText,const SGUI_FONT_RES* pstFontRes)
+{
+    SGUI_SIZE       sStrLen=0;
+    SGUI_UINT32     uiCharCode;
+    while(*cszText!='\0')
+    {
+        cszText=pstFontRes->fnStepNext(cszText,&uiCharCode);
+        sStrLen++;
+    }
+    return sStrLen;
 }
 
 /*****************************************************************************/

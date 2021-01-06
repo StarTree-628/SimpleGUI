@@ -1,7 +1,7 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_ScrollBar.c											**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Create and display a scrollbar on screen.				**/
 /*************************************************************************/
 

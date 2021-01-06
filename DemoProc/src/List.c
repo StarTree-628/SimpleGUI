@@ -57,6 +57,7 @@ HMI_SCREEN_OBJECT       g_stHMIDemo_List =				{	HMI_SCREEN_ID_DEMO_LIST,
 //=======================================================================//
 HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 {
+	SGUI_LIST_PALETTE   stPalette;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -68,8 +69,24 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
     s_stDemoListObject.stLayout.iWidth = pstDeviceIF->stSize.iWidth;
     s_stDemoListObject.stLayout.iHeight = pstDeviceIF->stSize.iHeight;
     s_stDemoListObject.szTitle = SCR1_TITLE;
+
+    stPalette.uiDepthBits = 4;
+    stPalette.stItemBase.eBackgroundColor = 0x02;
+    stPalette.stItemBase.eFocusColor = 0x0D;
+    stPalette.stItemBase.eTextColor = 0x0F;
+    stPalette.stItemBase.eFocusTextColor = 0x00;
+
+    stPalette.stScrollBar.uiDepthBits = 4;
+    stPalette.stScrollBar.eBackgroundColor = 0x02;
+    stPalette.stScrollBar.eEdgeColor = 0x0F;
+    stPalette.stScrollBar.eHandleColor = 0x0F;
+
+    stPalette.eBackgroundColor = 0x02;
+    stPalette.eBorderColor = 0x0A;
+    stPalette.eTitleTextColor = 0x0F;
+
      //Initialize list object.
-	SGUI_List_Initialize(&s_stDemoListObject, SGUI_FONT_REF(GB2312_FZXS12), s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
+	SGUI_List_Initialize(&s_stDemoListObject, SGUI_FONT_REF(GB2312_FZXS12), s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM), &stPalette);
 	return HMI_RET_NORMAL;
 }
 

@@ -119,7 +119,7 @@ typedef struct
 	SGUI_INT							iMax;
 }SGUI_RANGE;
 
-typedef SGUI_INT16 SGUI_COLOR ;
+typedef SGUI_INT8 SGUI_COLOR ;
 
 typedef enum
 {

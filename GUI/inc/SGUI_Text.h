@@ -34,9 +34,10 @@ extern SGUI_CSZSTR		SGUI_EMPTY_STRING;
 //= Public function declaration.									    =//
 //=======================================================================//
 void			SGUI_Text_GetTextExtent(SGUI_CSZSTR cszTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_AREA_SIZE* pstTextExtent);
-void			SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, SGUI_DRAW_MODE eFontMode);
-SGUI_SIZE		SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR szTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_INT iTopOffset, SGUI_DRAW_MODE eFontMode);
+void			SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, SGUI_COLOR eFontColor);
+SGUI_SIZE		SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR szTextBuffer, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_INT iTopOffset, SGUI_COLOR eFontColor);
 SGUI_SIZE		SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_SIZE uiDisplayAreaWidth);
+SGUI_SIZE       SGUI_Text_StringLength(SGUI_CSZSTR cszText,const SGUI_FONT_RES* pstFontRes);
 SGUI_CSZSTR     SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
 SGUI_CSZSTR     SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
 SGUI_CSZSTR     SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);

@@ -125,7 +125,7 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
 	stTextArea.iY = 1;
 	stTextArea.iWidth = 48;
 	stTextArea.iHeight = 8;
-	SGUI_Text_DrawText(pstDeviceIF, "Focused ", SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawText(pstDeviceIF, "Focused ", SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, 0x0F);
 	if(NULL != s_stCurve.stData.pstFocused)
 	{
 		//SGUI_Common_IntegerToString(s_stRealtimeGraph.Data->ValueArray[s_stRealtimeGraph.Data->ValueCount-1], szTextBuffer, 10, 4, ' ');
@@ -133,14 +133,14 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
 		stTextArea.iY =  pstDeviceIF->stSize.iHeight-9;
 		stTextArea.iWidth = 48;
 		SGUI_Common_IntegerToString(s_stCurve.stData.pstFocused->stPoint.iX, szNumberTextBuffer, 10, -1, ' ');
-		SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+		SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, 0x0F);
 		SGUI_Text_GetTextExtent(szNumberTextBuffer,SGUI_FONT_REF(FONT_8),&stTextAreaSize);
 		stTextArea.iX+=stTextAreaSize.iWidth;
-		SGUI_Text_DrawText(pstDeviceIF, ",", SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+		SGUI_Text_DrawText(pstDeviceIF, ",", SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, 0x0F);
 		SGUI_Text_GetTextExtent(",",SGUI_FONT_REF(FONT_8),&stTextAreaSize);
 		stTextArea.iX+=stTextAreaSize.iWidth;
 		SGUI_Common_IntegerToString(s_stCurve.stData.pstFocused->stPoint.iY, szNumberTextBuffer, 10, -1, ' ');
-		SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+		SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, SGUI_FONT_REF(FONT_8), &stTextArea, &stInnsrPos, 0x0F);
 	}
 }
 

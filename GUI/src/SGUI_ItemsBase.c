@@ -367,8 +367,17 @@ void SGUI_ItemsBase_Resize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstNewLayo
 	SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstNewLayout, sizeof(SGUI_RECT));
 	/* Calculate visible items number in new size. */
 	ITEMS_VISIBLE_ITEMS(pstObj) = (pstObj->stLayout.iHeight-1)/ITEM_HEIGHT(pstObj->pstFontRes)+1;
-	/* Visible items number is less then items count. */
-	if(ITEMS_VISIBLE_ITEMS(pstObj) < pstObj->iCount)
+	/* Visible items number is greater then items count. */
+	if(ITEMS_VISIBLE_ITEMS(pstObj) > pstObj->iCount)
+        {
+		ITEMS_VISIBLE_START_ITEM(pstObj) = ITEMS_FIRST_ITEM(pstObj);
+		ITEMS_VISIBLE_START_IDX(pstObj) = 0;
+		ITEMS_VISIBLE_END_ITEM(pstObj) = NULL;
+		ITEMS_VISIBLE_END_IDX(pstObj) = ITEMS_VISIBLE_ITEMS(pstObj) - 1;
+		pstObj->iItemPaintOffset = 0;
+	}
+	/* Visible items number is NOT less then items count. */
+	else
 	{
 		ITEMS_VISIBLE_END_ITEM(pstObj) = SGUI_ItemsBase_JumpItem(ITEMS_VISIBLE_START_ITEM(pstObj), ITEMS_VISIBLE_ITEMS(pstObj)-1);
 		if(NULL == ITEMS_VISIBLE_END_ITEM(pstObj))
@@ -383,15 +392,6 @@ void SGUI_ItemsBase_Resize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstNewLayo
 		{
 			ITEMS_VISIBLE_END_IDX(pstObj) = ITEMS_VISIBLE_START_IDX(pstObj) + ITEMS_VISIBLE_ITEMS(pstObj) - 1;
 		}
-	}
-	/* Visible items number is greater then items count. */
-	else
-	{
-		ITEMS_VISIBLE_START_ITEM(pstObj) = ITEMS_FIRST_ITEM(pstObj);
-		ITEMS_VISIBLE_START_IDX(pstObj) = 0;
-		ITEMS_VISIBLE_END_ITEM(pstObj) = NULL;
-		ITEMS_VISIBLE_END_IDX(pstObj) = ITEMS_VISIBLE_ITEMS(pstObj) - 1;
-		pstObj->iItemPaintOffset = 0;
 	}
 }
 

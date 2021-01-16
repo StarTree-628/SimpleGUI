@@ -82,8 +82,8 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	SGUI_SystemIF_MemorySet(&g_stDemoEngine, 0x00, sizeof(HMI_ENGINE_OBJECT));
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	/* Initialize display size. */
-	g_stDeviceInterface.stSize.iWidth = 128;
-	g_stDeviceInterface.stSize.iHeight = 64;
+	g_stDeviceInterface.stSize.iWidth = 256;
+	g_stDeviceInterface.stSize.iHeight = 160;
 	/* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
@@ -332,7 +332,8 @@ bool RTCTimerTriggered(void)
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	return CheckEventFlag(ENV_FLAG_IDX_SDK_RTC_EVENT);
 #else
-	#error Add RTC timer trigger process here.
+    // // Add Dummy RTC trigger process here.
+	return false;
 #endif
 }
 
@@ -391,8 +392,6 @@ void RTCTimerEnable(bool bEnable)
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	(void)SGUI_SDK_EnableRTCInterrupt(bEnable);
-#else
-	#error Add RTC timer enable/disable process here.
 #endif
 }
 

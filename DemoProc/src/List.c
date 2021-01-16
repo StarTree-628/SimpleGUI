@@ -80,12 +80,20 @@ HMI_SCREEN_OBJECT       g_stHMIDemo_List =				{	HMI_SCREEN_ID_DEMO_LIST,
 HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 {
 	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_RECT					stListLayout;	
+	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
     // Initialize list data.
     SGUI_SystemIF_MemorySet(&s_stDemoListObject, 0x00, sizeof(SGUI_LIST));
      //Initialize list object.
-	SGUI_List_Initialize(&s_stDemoListObject, &(s_arrstLayouts[s_iLayoutIndex]), &GB2312_FZXS12, SCR1_TITLE, s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
+	stListLayout.iX = 0;
+	stListLayout.iY = 0;
+	stListLayout.iWidth = pstDeviceIF->stSize.iWidth;
+	stListLayout.iHeight = pstDeviceIF->stSize.iHeight;
+	SGUI_List_Initialize(&s_stDemoListObject, &stListLayout, &GB2312_FZXS12, SCR1_TITLE, s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
 	return HMI_RET_NORMAL;
 }
 

@@ -104,12 +104,12 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
 		stIconArea.iWidth = 5;
 		stIconArea.iHeight = 3;
 		stIconArea.iX = pstObj->stLayout.iX+((pstObj->stLayout.iWidth-stIconArea.iWidth)/2);
-		if(pstObj->stItems.stVisibleStart.iIndex != 0)
+		if(SGUI_Menu_CanScrollUp(pstObj))
 		{
 			stIconArea.iY = pstObj->stLayout.iY+1;
             SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
 		}
-		if(pstObj->stItems.stVisibleEnd.iIndex < (pstObj->stItems.iCount-1))
+		if(SGUI_Menu_CanScrollDown(pstObj))
 		{
 			stIconArea.iY = RECT_Y_END(pstObj->stItems.stLayout)+1;
 			SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEDOWN, SGUI_DRAW_NORMAL);

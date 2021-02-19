@@ -29,4 +29,9 @@ void 					SGUI_Menu_PopupSubMenu(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj, c
 #define					SGUI_Menu_Selecte(OBJ, IDX) \
 							(SGUI_ItemsBase_Selecte(&(OBJ->stItems), IDX))
 
+#define					SGUI_Menu_CanScrollUp(OBJ) \
+							(SGUI_ItemsBase_CanScrollUp(&(OBJ->stItems)))
+#define					SGUI_Menu_CanScrollDown(OBJ) \
+							(SGUI_ItemsBase_CanScrollDown(&(OBJ->stItems)))
+
 #endif // _INCLUDE_SGUI_MENU_H_

@@ -548,11 +548,6 @@ SGUI_ITEMS_ITEM* SGUI_ItemsBase_InsertItem(SGUI_ITEMS_BASE* pstObj, SGUI_ITEMS_I
 	SGUI_ITEMS_ITEM*		pstInsertedItem;
 
 	/*----------------------------------*/
-	/* Initialize						*/
-	/*----------------------------------*/
-
-
-	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	/* New items cannot greater then count of items. */
@@ -645,4 +640,36 @@ SGUI_ITEMS_ITEM* SGUI_ItemsBase_InsertItem(SGUI_ITEMS_BASE* pstObj, SGUI_ITEMS_I
 	}
 
 	return pstNewItem;
+}
+
+SGUI_BOOL SGUI_ItemsBase_CanScrollUp(SGUI_ITEMS_BASE* pstObj)
+{
+    /*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_BOOL               bReturn;
+
+    /*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+
+	bReturn = ((ITEMS_VISIBLE_START_ITEM(pstObj) != ITEMS_FIRST_ITEM(pstObj)) || (pstObj->iItemPaintOffset != 0));
+
+	return bReturn;
+}
+
+SGUI_BOOL SGUI_ItemsBase_CanScrollDown(SGUI_ITEMS_BASE* pstObj)
+{
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_BOOL               bReturn;
+
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+
+	bReturn = ((ITEMS_VISIBLE_END_ITEM(pstObj) != ITEMS_LAST_ITEM(pstObj)) || (pstObj->iItemPaintOffset == 0));
+
+	return bReturn;
 }

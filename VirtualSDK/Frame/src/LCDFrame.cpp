@@ -11,8 +11,6 @@
 #include <wx/app.h>
 #include "LCDFrame.h"
 #include "SDKInterface.h"
-// Only used in demo process.
-#include "DemoActions.h"
 
 //=======================================================================//
 //= User Macro definition.											    =//
@@ -194,34 +192,19 @@ void LCDFrame::OnKeyDown(wxKeyEvent& clsEvent)
     /*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-    unsigned int				uiKeyCode;
-
-    /*----------------------------------*/
-	/* Initialize						*/
-	/*----------------------------------*/
-    uiKeyCode = clsEvent.GetKeyCode();
+    SDK_KB_EVENT                stSDKEvent;
 
     /*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	// Union option key value to key code.
-	if(true == clsEvent.ShiftDown())
-	{
-		uiKeyCode |= KEY_OPTION_SHIFT;
-	}
-	if(true == clsEvent.AltDown())
-	{
-		uiKeyCode |= KEY_OPTION_ALT;
-	}
-	if(true == clsEvent.ControlDown())
-	{
-		uiKeyCode |= KEY_OPTION_CTRL;
-	}
+	stSDKEvent.iKeyCode = clsEvent.GetKeyCode();
+	stSDKEvent.bShift = clsEvent.ShiftDown();
+	stSDKEvent.bAlt = clsEvent.AltDown();
+	stSDKEvent.bCtrl = clsEvent.ControlDown();
 	// Set key code and sync flag.
-	SGUI_SDK_SyncKeyEventData(uiKeyCode);
+	SGUI_SDK_SyncKeyEventData(&stSDKEvent);
 	SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_KEY_EVENT, true);
-
-	clsEvent.ResumePropagation(1);
 	clsEvent.Skip();
 }
 
@@ -239,13 +222,8 @@ void LCDFrame::OnMouseEvent(wxMouseEvent& clsEvent)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-    unsigned int				uiKeyCode;
-    int							iMouseWhellDelta;
-
-    /*----------------------------------*/
-	/* Initialize						*/
-	/*----------------------------------*/
-    uiKeyCode = 				KEY_VALUE_NONE;
+    int                     iMouseWhellDelta;
+    SDK_KB_EVENT            stEvent = {0x00};
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -254,19 +232,20 @@ void LCDFrame::OnMouseEvent(wxMouseEvent& clsEvent)
 	iMouseWhellDelta = clsEvent.GetWheelRotation();
 	if(0 != iMouseWhellDelta)
 	{
+	    stEvent.iKeyCode = WXK_NONE;
 		// Same as Down key pressed.
 		if(iMouseWhellDelta < MOUSE_WHELL_DOWN_DELTA)
 		{
-			uiKeyCode = KEY_VALUE_DOWN;
+			stEvent.iKeyCode = WXK_DOWN;
 		}
 		// Same as Up key pressed.
 		if(iMouseWhellDelta > MOUSE_WHELL_UP_DELTA)
 		{
-			uiKeyCode = KEY_VALUE_UP;
+			stEvent.iKeyCode = WXK_UP;
 		}
-		if(KEY_VALUE_NONE != uiKeyCode)
+		if(WXK_NONE != stEvent.iKeyCode)
 		{
-			SGUI_SDK_SyncKeyEventData(uiKeyCode);
+			SGUI_SDK_SyncKeyEventData(&stEvent);
 			SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_KEY_EVENT, true);
 		}
 	}

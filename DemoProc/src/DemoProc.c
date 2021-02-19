@@ -82,8 +82,8 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	SGUI_SystemIF_MemorySet(&g_stDemoEngine, 0x00, sizeof(HMI_ENGINE_OBJECT));
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	/* Initialize display size. */
-	g_stDeviceInterface.stSize.iWidth = 256;
-	g_stDeviceInterface.stSize.iHeight = 160;
+	g_stDeviceInterface.stSize.iWidth = 128;
+	g_stDeviceInterface.stSize.iHeight = 64;
 	/* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
@@ -220,7 +220,10 @@ void KeyPressEventProc(void)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	KEY_PRESS_EVENT		stEvent;
+	KEY_PRESS_EVENT		    stEvent;
+#ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
+    const SDK_KB_EVENT*     pstSDKEvent;
+#endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -233,7 +236,20 @@ void KeyPressEventProc(void)
 	stEvent.Head.iType = EVENT_TYPE_ACTION;
 	stEvent.Head.iID = EVENT_ID_KEY_PRESS;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	stEvent.Data.uiKeyValue = SGUI_SDK_GetKeyEventData();
+    pstSDKEvent = SGUI_SDK_GetKeyEventData();
+	stEvent.Data.uiKeyValue = pstSDKEvent->iKeyCode;
+	if(pstSDKEvent->bShift)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_SHIFT;
+    }
+    if(pstSDKEvent->bCtrl)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_CTRL;
+    }
+    if(pstSDKEvent->bAlt)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_ALT;
+    }
 #else
 	#error Add key event data prepare process here.
 #endif

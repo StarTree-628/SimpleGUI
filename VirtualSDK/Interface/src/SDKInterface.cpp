@@ -29,18 +29,18 @@ static bool					SGUI_SDK_SyncMainFrameEvent(wxEvent& clsEvent, ENV_FLAG_INDEX eS
 //= Data type definition.											    =//
 //=======================================================================//
 static bool					s_barrEventFlag[ENV_FLAG_IDX_MAX];
-static unsigned int         s_uiKeyCode;
+static SDK_KB_EVENT         s_stKBEvent;
 static wxCriticalSection	s_clsEventSyncCS;
 
 //=======================================================================//
 //= Function define.										            =//
 //=======================================================================//
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_SetPixel                                     **/
+/** Function Name:	SGUI_SDK_SetPixel                                   **/
 /** Purpose:		Set virtual device pixel register data.             **/
 /** Params:																**/
-/**	@ iX[in]:		Pixel x-coordinate on display panel.			**/
-/**	@ iY[in]:		Pixel y-coordinate on display panel.			**/
+/**	@ iX[in]:		Pixel x-coordinate on display panel.                **/
+/**	@ iY[in]:		Pixel y-coordinate on display panel.                **/
 /**	@ iPixelValue[out]:	Pixel value, 0 for clear, 1 for set.			**/
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
@@ -70,8 +70,8 @@ void SGUI_SDK_SetPixel(int iX, int iY, int iPixelValue)
 /** Function Name:	SGUI_SDK_GetPixel									**/
 /** Purpose:		Get a pixel value form virtual device register.     **/
 /** Params:																**/
-/**	@ iX[in]:		Pixel x-coordinate on display panel.			**/
-/**	@ iY[in]:		Pixel y-coordinate on display panel.		    **/
+/**	@ iX[in]:		Pixel x-coordinate on display panel.                **/
+/**	@ iY[in]:		Pixel y-coordinate on display panel.                **/
 /** Return:			Pixel state, 0 for cleared, 1 for set.              **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
@@ -248,18 +248,21 @@ void SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_INDEX eIndex, bool bValue)
 /** Function Name:	SGUI_SDK_SyncKeyEventData.							**/
 /** Purpose:		Set key code value when key press event targets.	**/
 /** Params:																**/
-/**	@ uiKeyCode[in]:	Key code.										**/
+/**	@ pcstKBEvent[in]: Key event data structure.                        **/
 /** Return:			None.												**/
 /** Notice:			This function used to save and keep pressed key 	**/
 /**					code value, must be called before SetEvnetFlag.		**/
 /*************************************************************************/
-void SGUI_SDK_SyncKeyEventData(unsigned int uiKeyCode)
+void SGUI_SDK_SyncKeyEventData(const SDK_KB_EVENT* pcstKBEvent)
 {
     /*----------------------------------*/
     /* Process							*/
     /*----------------------------------*/
     EventSyncLock();
-    s_uiKeyCode = uiKeyCode;
+    if(nullptr != pcstKBEvent)
+    {
+        memcpy(&s_stKBEvent, pcstKBEvent, sizeof(SDK_KB_EVENT));
+    }
     EventSyncUnlock();
 }
 
@@ -267,13 +270,13 @@ void SGUI_SDK_SyncKeyEventData(unsigned int uiKeyCode)
 /** Function Name:	SGUI_SDK_GetKeyEventData.							**/
 /** Purpose:		Set key code value when key press event targets.	**/
 /** Params:			none.												**/
-/** Return:			Last targeted key event value.						**/
+/** Return:			Last targeted key event data.						**/
 /** Notice:			This function used to save and keep pressed key 	**/
 /**					code value, must be called before SetEvnetFlag.		**/
 /*************************************************************************/
-unsigned int SGUI_SDK_GetKeyEventData(void)
+const SDK_KB_EVENT* SGUI_SDK_GetKeyEventData(void)
 {
-	return s_uiKeyCode;
+	return &s_stKBEvent;
 }
 
 /*************************************************************************/
@@ -400,7 +403,7 @@ void SGUI_SDK_PrepareSDK(void)
         s_barrEventFlag[i] = false;
     }
     // Initialize key coed variable.
-    s_uiKeyCode = KEY_VALUE_NONE;
+    memset(&s_stKBEvent, 0x00, sizeof(SDK_KB_EVENT));
 }
 
 /*************************************************************************/

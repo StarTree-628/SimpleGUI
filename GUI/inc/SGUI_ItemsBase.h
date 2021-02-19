@@ -70,5 +70,7 @@ void					SGUI_ItemsBase_Selecte(SGUI_ITEMS_BASE* pstObj, SGUI_INT iIndex);
 							(&((OBJ)->stVisibleEnd))
 SGUI_ITEMS_ITEM*		SGUI_ItemsBase_RemoveItem(SGUI_ITEMS_BASE* pstObj, SGUI_INT iRemoveIndex);
 SGUI_ITEMS_ITEM*		SGUI_ItemsBase_InsertItem(SGUI_ITEMS_BASE* pstObj, SGUI_ITEMS_ITEM* pstNewItem, SGUI_INT iIndex);
+SGUI_BOOL               SGUI_ItemsBase_CanScrollUp(SGUI_ITEMS_BASE* pstObj);
+SGUI_BOOL               SGUI_ItemsBase_CanScrollDown(SGUI_ITEMS_BASE* pstObj);
 
 #endif // _INCLUDE_SGUI_ITEMS_BASE_H_

@@ -319,7 +319,7 @@ bool SGUI_SDK_GetEventSyncFlag(ENV_FLAG_INDEX eIndex)
 /**					like screen auto scroll animation or dummy data		**/
 /**					input, the recommended setting is 20(ms) or more.	**/
 /*************************************************************************/
-bool SGUI_SDK_ConfigHearBeatTimer(unsigned int uiIntervalMs)
+bool SGUI_SDK_ConfigGeneralTimer(unsigned int uiIntervalMs)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -357,7 +357,7 @@ bool SGUI_SDK_ConfigHearBeatTimer(unsigned int uiIntervalMs)
 /** Notice:			This function will start RTC for demo process, like **/
 /**					screen auto scroll animation or dummy data input.	**/
 /*************************************************************************/
-bool SGUI_SDK_EnableRTCInterrupt(bool bEnabled)
+bool SGUI_SDK_EnableSecondInterrupt(bool bEnabled)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -379,7 +379,7 @@ bool SGUI_SDK_EnableRTCInterrupt(bool bEnabled)
     clsEventObject.SetReqState(bEnabled);
 
     // Post event.
-    bReturn = SGUI_SDK_SyncMainFrameEvent(clsEventObject, ENV_FLAG_IDX_SDK_RTC_EN, SDK_DEFAULT_EVENT_SYNC_TIMEOUT_MS);
+    bReturn = SGUI_SDK_SyncMainFrameEvent(clsEventObject, ENV_FLAG_IDX_SDK_SEC_EN, SDK_DEFAULT_EVENT_SYNC_TIMEOUT_MS);
 
     return bReturn;
 }
@@ -459,27 +459,40 @@ int SGUI_SDK_DummyMainProc(void)
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_SysTickTimerInterrput						**/
-/** Purpose:		SDK Dummy SysTick timer interrupt service function.	**/
+/** Function Name:	SGUI_SDK_GeneralTimerHandler						**/
+/** Purpose:		SDK Dummy General timer interrupt service function.	**/
 /** Params:			None.                                               **/
 /** Return:			none.												**/
 /** Notice:			This function simulates the SysTick timer interrupt	**/
 /**					service, add custom processing here if needed.		**/
 /*************************************************************************/
-void SGUI_SDK_SysTickTimerInterrput(void)
+void SGUI_SDK_GeneralTimerHandler(void)
 {
 	// Add your process here.
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_RTCInterrput								**/
-/** Purpose:		SDK Dummy RTC interrupt service function.			**/
+/** Function Name:	SGUI_SDK_SecondTimerHandler                         **/
+/** Purpose:		SDK Dummy second interrupt service function.        **/
 /** Params:			None.                                               **/
 /** Return:			none.												**/
 /** Notice:			This function simulates the RTC interrupt service,	**/
 /**					add custom processing here if needed.				**/
 /*************************************************************************/
-void SGUI_SDK_RTCInterrput(void)
+void SGUI_SDK_SecondTimerHandler(void)
+{
+    // Add your process here.
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_SDK_KeyboardHandler                            **/
+/** Purpose:		SDK Dummy Key board interrupt service function.     **/
+/** Params:			None.                                               **/
+/** Return:			none.												**/
+/** Notice:			This function simulates the RTC interrupt service,	**/
+/**					add custom processing here if needed.				**/
+/*************************************************************************/
+void SGUI_SDK_KeyboardHandler(void)
 {
     // Add your process here.
 }

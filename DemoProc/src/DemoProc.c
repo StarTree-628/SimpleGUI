@@ -346,7 +346,7 @@ bool RTCTimerTriggered(void)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	return CheckEventFlag(ENV_FLAG_IDX_SDK_RTC_EVENT);
+	return CheckEventFlag(ENV_FLAG_IDX_SDK_SEC_EVENT);
 #else
     // // Add Dummy RTC trigger process here.
 	return false;
@@ -386,7 +386,7 @@ void SysTickTimerEnable(bool bEnable)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	(void)SGUI_SDK_ConfigHearBeatTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
+	(void)SGUI_SDK_ConfigGeneralTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
 #else
 	#error Add sys-tick timer enable/disable process here.
 #endif
@@ -407,7 +407,7 @@ void RTCTimerEnable(bool bEnable)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	(void)SGUI_SDK_EnableRTCInterrupt(bEnable);
+	(void)SGUI_SDK_EnableSecondInterrupt(bEnable);
 #endif
 }
 

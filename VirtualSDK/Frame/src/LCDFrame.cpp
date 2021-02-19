@@ -29,18 +29,18 @@ LCDFrame* LCDFrame::m_pclsInstance = NULL;
 //= Event table.													    =//
 //=======================================================================//
 BEGIN_EVENT_TABLE(LCDFrame,wxFrame)
-    EVT_CLOSE			(LCDFrame::OnClose)
-    EVT_KEY_DOWN		(LCDFrame::OnKeyDown)
-    EVT_MOUSE_EVENTS	(LCDFrame::OnMouseEvent)
-    EVT_TOOL			(wxID_TOOLBAR_QUICKSHOTS, LCDFrame::OnScreenshots)
-    EVT_TOOL			(wxID_TOOLBAR_COPY, LCDFrame::OnToolCopy)
-    EVT_TOOL			(wxID_TOOLBAR_SCREENSHOTS_FOLDER, LCDFrame::OnOpenScreenshotsFolder)
-    EVT_TOOL			(wxID_TOOLBAR_EXIT, LCDFrame::OnToolClose)
-    EVT_TIMER			(WXID_SYSTICK_TIMER, LCDFrame::OnSysTickTimerEvent)
-    EVT_TIMER			(WXID_RTC_TIMER, LCDFrame::OnRTCEvent)
-    EVT_SDK_INIT		(LCDFrame::OnSDKInitialize)
-    EVT_SDK_SYSTICK_SET	(LCDFrame::OnSDKSysTickSet)
-    EVT_SDK_RTC_EN		(LCDFrame::OnRTCTimerEnabled)
+    EVT_CLOSE			(                       LCDFrame::OnClose)
+    EVT_KEY_DOWN		(                       LCDFrame::OnKeyDown)
+    EVT_MOUSE_EVENTS    (                       LCDFrame::OnMouseEvent)
+    EVT_TOOL			(ID_TOOL_QUICKSHOTS,    LCDFrame::OnScreenshots)
+    EVT_TOOL			(ID_TOOL_COPY,          LCDFrame::OnToolCopy)
+    EVT_TOOL			(ID_TOOL_OPEN_FOLDER,   LCDFrame::OnOpenScreenshotsFolder)
+    EVT_TOOL			(ID_TOOL_EXIT,          LCDFrame::OnToolClose)
+    EVT_TIMER			(ID_GENERAL_TIMER,      LCDFrame::OnGeneralTimerTrigger)
+    EVT_TIMER			(ID_SECOND_TIMER,       LCDFrame::OnSecondTimerTrigger)
+    EVT_SDK_INIT		(                       LCDFrame::OnSDKInitialize)
+    EVT_SDK_SYSTICK_SET	(                       LCDFrame::OnSDKGeneralTimerSet)
+    EVT_SDK_RTC_EN		(                       LCDFrame::OnSecondTimerEnabled)
 END_EVENT_TABLE()
 
 //=======================================================================//
@@ -56,8 +56,8 @@ END_EVENT_TABLE()
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-LCDFrame::LCDFrame(wxWindow* pclsParent, wxWindowID iID, const wxString& strTitle)
-: wxFrame(pclsParent, iID, strTitle, wxDefaultPosition, wxDefaultSize, wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+LCDFrame::LCDFrame(wxWindow* pclsParent)
+: wxFrame(pclsParent, ID_MAIN_FRAME, FRAME_TITLE, wxDefaultPosition, wxDefaultSize, wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
 , wxThreadHelper(wxTHREAD_JOINABLE)
 {
 	SetEvtHandlerEnabled(false);
@@ -67,9 +67,9 @@ LCDFrame::LCDFrame(wxWindow* pclsParent, wxWindowID iID, const wxString& strTitl
 	// Create tools bar and tool button.
     _createToolbar();
     // Create status bar.
-    m_pclsCtrlStatusBar = CreateStatusBar(1, wxST_SIZEGRIP, wxID_STATUSBAR);
+    m_pclsCtrlStatusBar = CreateStatusBar(1, wxST_SIZEGRIP, ID_STATUSBAR);
     // Create LCD screen panel.
-	m_pclsCtrlPaintPanel = new wxLCD(this, wxID_PANEL);
+	m_pclsCtrlPaintPanel = new wxLCD(this, ID_LCD_PANEL);
     // Set frame object position on monitor.
 	Centre( wxBOTH );
 	// Update frame object UI.
@@ -139,18 +139,18 @@ void LCDFrame::_createToolbar(void)
 	/* Process							*/
 	/*----------------------------------*/
     // Create tools bar.
-    pclsNewToolBar = CreateToolBar(wxTB_HORIZONTAL, wxID_TOOLBAR);
+    pclsNewToolBar = CreateToolBar(wxTB_HORIZONTAL, ID_TOOLSBAR);
     if(NULL != pclsNewToolBar)
     {
         // Screen shot button.
-        pclsNewToolBar->AddTool(wxID_TOOLBAR_QUICKSHOTS, _TRANS_TEXT("Quick Shot"),
+        pclsNewToolBar->AddTool(ID_TOOL_QUICKSHOTS, _TRANS_TEXT("Quick Shot"),
                                 wxBitmap(_T("ID_TOOL_QUICKSHOTS"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxBitmap(_T("ID_TOOL_QUICKSHOTS"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxITEM_NORMAL,
                                 _TRANS_TEXT("Quick Shot"),
                                 _TRANS_TEXT("Quick save screen shot to file."));
 
-        pclsNewToolBar->AddTool(wxID_TOOLBAR_COPY, _TRANS_TEXT("Copy Screen Image"),
+        pclsNewToolBar->AddTool(ID_TOOL_COPY, _TRANS_TEXT("Copy Screen Image"),
                                 wxBitmap(_T("ID_TOOL_COPYSCREENSHOT"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxBitmap(_T("ID_TOOL_COPYSCREENSHOT"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxITEM_NORMAL,
@@ -158,7 +158,7 @@ void LCDFrame::_createToolbar(void)
                                 _TRANS_TEXT("Copy screenshots picture to clipboard."));
 
 
-        pclsNewToolBar->AddTool(wxID_TOOLBAR_SCREENSHOTS_FOLDER, _TRANS_TEXT("Open Screenshots Folder"),
+        pclsNewToolBar->AddTool(ID_TOOL_OPEN_FOLDER, _TRANS_TEXT("Open Screenshots Folder"),
                                 wxBitmap(_T("ID_TOOL_OPENSCREENSHOTSFOLDER"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxBitmap(_T("ID_TOOL_OPENSCREENSHOTSFOLDER"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxITEM_NORMAL,
@@ -167,7 +167,7 @@ void LCDFrame::_createToolbar(void)
         // Add a separator.
         pclsNewToolBar->AddSeparator();
 
-        pclsNewToolBar->AddTool(wxID_TOOLBAR_EXIT, _TRANS_TEXT("Exit"),
+        pclsNewToolBar->AddTool(ID_TOOL_EXIT, _TRANS_TEXT("Exit"),
                                 wxBitmap(_T("ID_TOOL_EXIT"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxBitmap(_T("ID_TOOL_EXIT"), wxBITMAP_TYPE_PNG_RESOURCE),
                                 wxITEM_NORMAL,
@@ -205,6 +205,7 @@ void LCDFrame::OnKeyDown(wxKeyEvent& clsEvent)
 	// Set key code and sync flag.
 	SGUI_SDK_SyncKeyEventData(&stSDKEvent);
 	SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_KEY_EVENT, true);
+	SGUI_SDK_KeyboardHandler();
 	clsEvent.Skip();
 }
 
@@ -334,13 +335,13 @@ void LCDFrame::OpenScreenshotsFolder(void)
 }
 
 /*************************************************************************/
-/** Function Name:	OnClose                                             **/
+/** Function Name:	Close                                               **/
 /** Purpose:		Called when frame close and object destroyed.       **/
 /** Params:			None.                                               **/
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void LCDFrame::OnClose(void)
+void LCDFrame::Close(void)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -350,15 +351,15 @@ void LCDFrame::OnClose(void)
     /*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-    if(NULL != m_pclsMilliSecondTimer)
+    if(NULL != m_pclsGeneralTimer)
     {
-        m_pclsMilliSecondTimer->Stop();
-        delete m_pclsMilliSecondTimer;
+        m_pclsGeneralTimer->Stop();
+        delete m_pclsGeneralTimer;
     }
-    if(NULL != m_pclsRTCTimer)
+    if(NULL != m_pclsSecondTimer)
     {
-        m_pclsRTCTimer->Stop();
-        delete m_pclsRTCTimer;
+        m_pclsSecondTimer->Stop();
+        delete m_pclsSecondTimer;
     }
 
     // Stop thread helper.
@@ -416,7 +417,7 @@ LCDFrame* LCDFrame::GetInstance(void)
 {
 	if(NULL == m_pclsInstance)
 	{
-		m_pclsInstance = new LCDFrame(NULL, wxID_MAIN, FRAME_TITLE);
+		m_pclsInstance = new LCDFrame();
 	}
 
     return m_pclsInstance;
@@ -465,13 +466,13 @@ uint32_t LCDFrame::GetLCDPixel(uint32_t uiPosX, uint32_t uiY)
 /** Return:			None.                                               **/
 /** Notice:			Target for drive dummy actions.						**/
 /*************************************************************************/
-void LCDFrame::OnSysTickTimerEvent(wxTimerEvent& event)
+void LCDFrame::OnGeneralTimerTrigger(wxTimerEvent& event)
 {
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_TIM_EVENT, true);
-	SGUI_SDK_SysTickTimerInterrput();
+	SGUI_SDK_GeneralTimerHandler();
 }
 
 /*************************************************************************/
@@ -482,13 +483,13 @@ void LCDFrame::OnSysTickTimerEvent(wxTimerEvent& event)
 /** Return:			None.                                               **/
 /** Notice:			Target per-second for get now time.					**/
 /*************************************************************************/
-void LCDFrame::OnRTCEvent(wxTimerEvent& event)
+void LCDFrame::OnSecondTimerTrigger(wxTimerEvent& event)
 {
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_RTC_EVENT, true);
-	SGUI_SDK_RTCInterrput();
+	SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_SEC_EVENT, true);
+	SGUI_SDK_SecondTimerHandler();
 }
 
 /*************************************************************************/
@@ -514,8 +515,8 @@ void LCDFrame::OnSDKInitialize(InitEvent& clsEvent)
 	// Reset frame position.
 	Center(wxBOTH);
 	// Create timer objects.
-	m_pclsMilliSecondTimer = new wxTimer(this, WXID_SYSTICK_TIMER);
-	m_pclsRTCTimer = new wxTimer(this, WXID_RTC_TIMER);
+	m_pclsGeneralTimer = new wxTimer(this, ID_GENERAL_TIMER);
+	m_pclsSecondTimer = new wxTimer(this, ID_SECOND_TIMER);
 	// Set event process flag.
 	SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_INIT, true);
 	// Set status bar text.
@@ -524,7 +525,7 @@ void LCDFrame::OnSDKInitialize(InitEvent& clsEvent)
 	clsEvent.Skip();
 }
 
-void LCDFrame::OnSDKSysTickSet(TimerSetEvent& clsEvent)
+void LCDFrame::OnSDKGeneralTimerSet(TimerSetEvent& clsEvent)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -542,16 +543,16 @@ void LCDFrame::OnSDKSysTickSet(TimerSetEvent& clsEvent)
 	/*----------------------------------*/
 	iTimerInterval = clsEvent.GetInterval();
 
-	if(NULL != m_pclsMilliSecondTimer)
+	if(NULL != m_pclsGeneralTimer)
 	{
 		if(iTimerInterval > 0)
 		{
 			// Timer started.
-			bReturn = m_pclsMilliSecondTimer->Start(iTimerInterval);
+			bReturn = m_pclsGeneralTimer->Start(iTimerInterval);
 		}
 		else
 		{
-			m_pclsMilliSecondTimer->Stop();
+			m_pclsGeneralTimer->Stop();
 		}
 
 		// Set event process flag when timer start successfully or stopped.
@@ -562,7 +563,7 @@ void LCDFrame::OnSDKSysTickSet(TimerSetEvent& clsEvent)
 	}
 }
 
-void LCDFrame::OnRTCTimerEnabled(RTCSwitchEvent& clsEvent)
+void LCDFrame::OnSecondTimerEnabled(RTCSwitchEvent& clsEvent)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -580,21 +581,21 @@ void LCDFrame::OnRTCTimerEnabled(RTCSwitchEvent& clsEvent)
 	/*----------------------------------*/
 	bRTCEnabled = clsEvent.GetReqState();
 
-	if(NULL != m_pclsRTCTimer)
+	if(NULL != m_pclsSecondTimer)
 	{
 		if(false == bRTCEnabled)
 		{
-			m_pclsRTCTimer->Stop();
+			m_pclsSecondTimer->Stop();
 		}
 		else
 		{
-			bReturn = m_pclsRTCTimer->Start(1000);
+			bReturn = m_pclsSecondTimer->Start(1000);
 		}
 
 		// Set event process flag when timer start successfully or stopped.
 		if(true == bReturn)
 		{
-			SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_RTC_EN, true);
+			SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_IDX_SDK_SEC_EN, true);
 		}
 	}
 }

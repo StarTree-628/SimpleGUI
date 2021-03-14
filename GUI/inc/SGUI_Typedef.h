@@ -106,6 +106,11 @@ typedef enum
 	SGUI_LEFT,
 }SGUI_ALIG_MODE;
 
+// Palette color value, 16Bit for RGB555 or RGB565.
+typedef SGUI_UINT16                     SGUI_PALETTE_COLOUR;
+// Palette color value, 16Bit for RGB888.
+//typedef SGUI_UINT32                     SGUI_PALETTE_COLOUR;
+
 // Screen device operation interface type declare.
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_INITIALIZE,				(void));
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_CLEAR,					(void));
@@ -114,6 +119,7 @@ SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_GET_POINT,				(SGUI_INT iX, SGUI_INT
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_SET_BYTE,				(SGUI_INT iPage, SGUI_INT iColumn));
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_GET_BYTE,				(SGUI_INT iPage, SGUI_INT iColumn));
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_REFRESH,					(void));
+SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_SET_PALETTE,             (SGUI_PALETTE_COLOUR, SGUI_PALETTE_COLOUR, SGUI_PALETTE_COLOUR));
 
 // System function interface type declare.
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_GET_RTC,					(SGUI_INT iYear, SGUI_INT iMounth, SGUI_INT iDay, SGUI_INT iWeekDay, SGUI_INT iHour, SGUI_INT iMinute, SGUI_INT iSecond));
@@ -138,6 +144,8 @@ typedef struct
     SGUI_FN_IF_GET_POINT				fnGetPixel;
     // Sync display buffer data to screen device.
     SGUI_FN_IF_REFRESH					fnSyncBuffer;
+    // Set palette function.
+    SGUI_FN_IF_SET_PALETTE			    fnSetPalette;
 }SGUI_SCR_DEV;
 
 typedef struct

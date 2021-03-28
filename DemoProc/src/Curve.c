@@ -223,9 +223,9 @@ HMI_ENGINE_RESULT HMI_DemoCurve_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
     /*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, pstDeviceIF->stSize.iWidth, pstDeviceIF->stSize.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-	SGUI_Basic_DrawLine(pstDeviceIF, 1, 9, pstDeviceIF->stSize.iWidth-2, 9, SGUI_COLOR_FRGCLR);
-	SGUI_Basic_DrawLine(pstDeviceIF, 1, pstDeviceIF->stSize.iHeight-10, pstDeviceIF->stSize.iWidth-2, pstDeviceIF->stSize.iHeight-10, SGUI_COLOR_FRGCLR);
+	SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, pstDeviceIF->stSize.iWidth, pstDeviceIF->stSize.iHeight, 0x0A, SGUI_COLOR_BKGCLR);
+	SGUI_Basic_DrawLine(pstDeviceIF, 1, 9, pstDeviceIF->stSize.iWidth-2, 9, 0x0A);
+	SGUI_Basic_DrawLine(pstDeviceIF, 1, pstDeviceIF->stSize.iHeight-10, pstDeviceIF->stSize.iWidth-2, pstDeviceIF->stSize.iHeight-10, 0x0A);
 	HMI_DemoCurve_RepaintText(pstDeviceIF);
 	SGUI_Curve_Repaint(pstDeviceIF, &s_stCurve);
 	SGUI_Curve_HighlightFocus(pstDeviceIF, &s_stCurve);

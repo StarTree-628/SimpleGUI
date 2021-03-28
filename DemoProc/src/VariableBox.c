@@ -157,14 +157,14 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, c
     // Draw number box
     SGUI_Basic_DrawRectangle(pstDeviceIF, VARIABLE_BOX_POSX, VARIABLE_BOX_NUMBER_POSY,
 							s_stNumberVariableBox.stParam.stLayout.iWidth+4, s_stNumberVariableBox.stParam.stLayout.iHeight+4,
-							 SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+							 0x0A, SGUI_COLOR_BKGCLR);
     s_stNumberVariableBox.stData.iFocused = (s_uiFocusedFlag==0)?SGUI_TRUE:SGUI_FALSE;
     SGUI_NumberVariableBox_Repaint(pstDeviceIF, &s_stNumberVariableBox);
     // Draw text box
     s_stNumberVariableBox.stData.iFocused = (s_uiFocusedFlag==0)?SGUI_FALSE:SGUI_TRUE;
     SGUI_Basic_DrawRectangle(pstDeviceIF, VARIABLE_BOX_POSX, VARIABLE_BOX_TEXT_POSY,
 							s_stTextVariableBox.stParam.stLayout.iWidth+4, s_stTextVariableBox.stParam.stLayout.iHeight+4,
-							SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+							0x0A, SGUI_COLOR_BKGCLR);
     SGUI_TextVariableBox_Repaint(pstDeviceIF, &s_stTextVariableBox);
 
 	return HMI_RET_NORMAL;

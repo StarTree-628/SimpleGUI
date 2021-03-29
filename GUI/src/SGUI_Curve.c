@@ -370,7 +370,7 @@ void SGUI_Curve_CalculatePointPosition(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POI
 /** Return:			Focused point object pointer. NULL pointer will be	**/
 /**					returned when index is invalid.						**/
 /*************************************************************************/
-SGUI_CURVE_POINT* SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INDEX sIndex)
+SGUI_CURVE_POINT* SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iIndex)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -388,10 +388,10 @@ SGUI_CURVE_POINT* SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INDEX sI
 	if(NULL != pstObj)
 	{
 		pstFocusedPoint = pstObj->stData.stPoints.pstHead;
-		while((sIndex>0) && (NULL != pstFocusedPoint))
+		while((iIndex>0) && (NULL != pstFocusedPoint))
 		{
 			pstFocusedPoint = pstFocusedPoint->pstNext;
-			sIndex--;
+			iIndex--;
 		}
 
 		pstObj->stData.pstFocused = pstFocusedPoint;

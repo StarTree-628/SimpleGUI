@@ -37,20 +37,36 @@ static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEDOWN, 5, 3, 1, SGUI_BMP_SCAN_MOD
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_Menu_Initialize(SGUI_MENU_STRUCT* pstObj, const SGUI_FONT_RES* pstFontRes, const SGUI_RECT* cpstLayout, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount, SGUI_MENU_PALETTE* pstPalette)
+void SGUI_Menu_Initialize(SGUI_MENU* pstObj, const SGUI_RECT* cpstLayout, const SGUI_MENU_PALETTE* cpstPalette, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
 {
+   	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_RECT				sItemstLayout;
+
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL != pstPalette))
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL != cpstPalette))
 	{
+	    // Save layout
+	    SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
+
+	    // Save Palette
+	    pstObj->stPalette = *cpstPalette;
+
 		// Initialize member object pointer.
 		pstObj->pstFontRes = pstFontRes;
-		pstObj->stItems.pstItems = NULL;
-		SGUI_Menu_Layout(pstObj, cpstLayout);
-        pstPalette->stItemBase.uiDepthBits = pstPalette->uiDepthBits;
-		SGUI_ItemsBase_Initialize(&(pstObj->stItems), pstObj->pstFontRes, pstItemsData, iItemsCount,&(pstPalette->stItemBase));
-		pstObj->stPalette = *pstPalette;
+		pstObj->stItems.pstFirstItem = NULL;
+		sItemstLayout.iX = pstObj->stLayout.iX+1;
+		sItemstLayout.iY = pstObj->stLayout.iY+SGUI_MENU_ICON_MOVEUP.iHeight+1;
+		sItemstLayout.iWidth = pstObj->stLayout.iWidth-2;
+		sItemstLayout.iHeight = pstObj->stLayout.iHeight-(SGUI_MENU_ICON_MOVEUP.iHeight+SGUI_MENU_ICON_MOVEDOWN.iHeight+2);
+		SGUI_ItemsBase_Initialize(&(pstObj->stItems), &sItemstLayout, &(pstObj->stPalette.stItemBase),pstObj->pstFontRes,pstItemsData,iItemsCount);
 	}
 }
 
@@ -64,7 +80,7 @@ void SGUI_Menu_Initialize(SGUI_MENU_STRUCT* pstObj, const SGUI_FONT_RES* pstFont
 /** Notice:			This function will refresh all list display on		**/
 /**					screen, include edge, items, title and scrollbar.	**/
 /*************************************************************************/
-void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU_STRUCT* pstObj)
+void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -94,18 +110,18 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU_STRUCT* pstObj)
 		/* Clear list item display area. */
 		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstPalette->eBorder, pstPalette->stItemBase.eBackgroundColor);
 		// Paint items.
-		SGUI_ItemsBase_FitLayout(&(pstObj->stItems));
+		//SGUI_ItemsBase_FitLayout(&(pstObj->stItems));
 		SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
 		/* Paint arrow icon. */
 		stIconArea.iWidth = 5;
 		stIconArea.iHeight = 3;
 		stIconArea.iX = pstObj->stLayout.iX+((pstObj->stLayout.iWidth-stIconArea.iWidth)/2);
-		if(pstObj->stItems.iPageStartIndex != 0)
+		if(SGUI_Menu_CanScrollUp(pstObj))
 		{
 			stIconArea.iY = pstObj->stLayout.iY+1;
             SGUI_Basic_DrawAlphaBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEUP, pstPalette->eDirectionIconColor);
 		}
-		if(pstObj->stItems.iPageEndIndex < (pstObj->stItems.iCount-1))
+		if(SGUI_Menu_CanScrollDown(pstObj))
 		{
 			stIconArea.iY = RECT_Y_END(pstObj->stItems.stLayout)+1;
 			SGUI_Basic_DrawAlphaBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEDOWN, pstPalette->eDirectionIconColor);
@@ -123,8 +139,13 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU_STRUCT* pstObj)
 /** Return:			None.												**/
 /** Notice:			This function must called after initialize.			**/
 /*************************************************************************/
-void SGUI_Menu_Layout(SGUI_MENU_STRUCT* pstObj, const SGUI_RECT* cpstNewLayout)
+void SGUI_Menu_Resize(SGUI_MENU* pstObj, const SGUI_RECT* cpstNewLayout)
 {
+	/*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_RECT				stItemsLayout;
+
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -134,10 +155,12 @@ void SGUI_Menu_Layout(SGUI_MENU_STRUCT* pstObj, const SGUI_RECT* cpstNewLayout)
 		pstObj->stLayout.iY = cpstNewLayout->iY;
 		pstObj->stLayout.iWidth = cpstNewLayout->iWidth;
 		pstObj->stLayout.iHeight = cpstNewLayout->iHeight;
-		pstObj->stItems.stLayout.iX = pstObj->stLayout.iX+1;
-		pstObj->stItems.stLayout.iY = pstObj->stLayout.iY+SGUI_MENU_ICON_MOVEUP.iHeight+1;
-		pstObj->stItems.stLayout.iWidth = pstObj->stLayout.iWidth-2;
-		pstObj->stItems.stLayout.iHeight = pstObj->stLayout.iHeight-(SGUI_MENU_ICON_MOVEUP.iHeight+SGUI_MENU_ICON_MOVEDOWN.iHeight+2);
+
+		stItemsLayout.iX = cpstNewLayout->iX+1;
+		stItemsLayout.iY = cpstNewLayout->iY+SGUI_MENU_ICON_MOVEUP.iHeight+1;
+		stItemsLayout.iWidth = cpstNewLayout->iWidth-2;
+		stItemsLayout.iHeight = cpstNewLayout->iHeight-(SGUI_MENU_ICON_MOVEUP.iHeight+SGUI_MENU_ICON_MOVEDOWN.iHeight+2);
+		SGUI_ItemsBase_Resize(&(pstObj->stItems), &stItemsLayout);
 	}
 }
 
@@ -154,7 +177,7 @@ void SGUI_Menu_Layout(SGUI_MENU_STRUCT* pstObj, const SGUI_RECT* cpstNewLayout)
 /** Notice:			For 		**/
 /**					screen, include edge, items, title and scrollbar.	**/
 /*************************************************************************/
-void SGUI_Menu_PopupSubMenu(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU_STRUCT* pstObj, const SGUI_RECT* cpstParentItemLayout)
+void SGUI_Menu_PopupSubMenu(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj, const SGUI_RECT* cpstParentItemLayout)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -200,6 +223,6 @@ void SGUI_Menu_PopupSubMenu(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU_STRUCT* pstObj,
 		{
 			stLayout.iHeight = iFullHeight;
 		}
-		SGUI_Menu_Layout(pstObj, &stLayout);
+		SGUI_Menu_Resize(pstObj, &stLayout);
 	}
 }

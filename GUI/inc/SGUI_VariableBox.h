@@ -25,11 +25,11 @@ typedef struct
 typedef struct
 {
 	SGUI_RECT				stLayout;
+	SGUI_VARBOX_PALETTE     stPalette;
 	SGUI_INT				iMin;
 	SGUI_INT				iMax;
 	const SGUI_FONT_RES*	pstFontRes;
 	SGUI_ALIG_MODE			eAlignment;
-	SGUI_VARBOX_PALETTE     stPalette;
 }SGUI_NUM_VARBOX_PARAM;
 
 typedef struct
@@ -48,10 +48,10 @@ typedef struct
 typedef struct
 {
 	SGUI_RECT				stLayout;
+	SGUI_VARBOX_PALETTE     stPalette;
 	const SGUI_FONT_RES*	pstFontRes;
 	SGUI_ALIG_MODE          eAlignment;
 	SGUI_SIZE				sTextLengthMax;
-	SGUI_VARBOX_PALETTE     stPalette;
 }SGUI_TEXT_VARBOX_PARAM;
 
 typedef struct

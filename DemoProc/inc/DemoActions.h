@@ -11,6 +11,8 @@
 #define		KEY_VALUE_ESC									(0x001B)
 #define		KEY_VALUE_SPACE									(0x0020)
 #define		KEY_VALUE_DEL									(0x007F)
+#define		KEY_VALUE_HOME									(0x0139)
+#define		KEY_VALUE_END									(0x0138)
 #define		KEY_VALUE_LEFT									(0x013A)
 #define		KEY_VALUE_UP									(0x013B)
 #define		KEY_VALUE_RIGHT									(0x013C)
@@ -29,6 +31,8 @@
 #define		KEY_VALUE_F11									(0x015E)
 #define		KEY_VALUE_F12									(0x015F)
 #define		KEY_VALUE_ENTER_PAD								(0x0172)
+#define		KEY_VALUE_PLUS_PAD								(0x0184)
+#define		KEY_VALUE_SUB_PAD								(0x0186)
 // User option flag value define
 #define		KEY_OPTION_CTRL									(0x1000)
 #define		KEY_OPTION_ALT									(0x2000)

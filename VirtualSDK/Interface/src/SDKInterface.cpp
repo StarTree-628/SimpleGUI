@@ -29,23 +29,23 @@ static bool					SGUI_SDK_SyncMainFrameEvent(wxEvent& clsEvent, ENV_FLAG_INDEX eS
 //= Data type definition.											    =//
 //=======================================================================//
 static bool					s_barrEventFlag[ENV_FLAG_IDX_MAX];
-static unsigned int         s_uiKeyCode;
+static SDK_KB_EVENT         s_stKBEvent;
 static wxCriticalSection	s_clsEventSyncCS;
 
 //=======================================================================//
 //= Function define.										            =//
 //=======================================================================//
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_SetPixel                                     **/
+/** Function Name:	SGUI_SDK_SetPixel                                   **/
 /** Purpose:		Set virtual device pixel register data.             **/
 /** Params:																**/
-/**	@ iX[in]:		Pixel x-coordinate on display panel.			**/
-/**	@ iY[in]:		Pixel y-coordinate on display panel.			**/
+/**	@ iX[in]:		Pixel x-coordinate on display panel.                **/
+/**	@ iY[in]:		Pixel y-coordinate on display panel.                **/
 /**	@ iPixelValue[out]:	Pixel value, 0 for clear, 1 for set.			**/
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_SetPixel(SGUI_INT iX, SGUI_INT iY, SGUI_COLOR iPixelValue)
+void SGUI_SDK_SetPixel(int iX, int iY, SGUI_COLOR iPixelValue)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -70,12 +70,12 @@ void SGUI_SDK_SetPixel(SGUI_INT iX, SGUI_INT iY, SGUI_COLOR iPixelValue)
 /** Function Name:	SGUI_SDK_GetPixel									**/
 /** Purpose:		Get a pixel value form virtual device register.     **/
 /** Params:																**/
-/**	@ iX[in]:		Pixel x-coordinate on display panel.			**/
-/**	@ iY[in]:		Pixel y-coordinate on display panel.		    **/
+/**	@ iX[in]:		Pixel x-coordinate on display panel.                **/
+/**	@ iY[in]:		Pixel y-coordinate on display panel.                **/
 /** Return:			Pixel state, 0 for cleared, 1 for set.              **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-SGUI_COLOR SGUI_SDK_GetPixel(SGUI_INT iX, SGUI_INT iY)
+SGUI_COLOR SGUI_SDK_GetPixel(int iX, int iY)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -248,18 +248,21 @@ void SGUI_SDK_SetEvnetSyncFlag(ENV_FLAG_INDEX eIndex, bool bValue)
 /** Function Name:	SGUI_SDK_SyncKeyEventData.							**/
 /** Purpose:		Set key code value when key press event targets.	**/
 /** Params:																**/
-/**	@ uiKeyCode[in]:	Key code.										**/
+/**	@ pcstKBEvent[in]: Key event data structure.                        **/
 /** Return:			None.												**/
 /** Notice:			This function used to save and keep pressed key 	**/
 /**					code value, must be called before SetEvnetFlag.		**/
 /*************************************************************************/
-void SGUI_SDK_SyncKeyEventData(unsigned int uiKeyCode)
+void SGUI_SDK_SyncKeyEventData(const SDK_KB_EVENT* pcstKBEvent)
 {
     /*----------------------------------*/
     /* Process							*/
     /*----------------------------------*/
     EventSyncLock();
-    s_uiKeyCode = uiKeyCode;
+    if(nullptr != pcstKBEvent)
+    {
+        memcpy(&s_stKBEvent, pcstKBEvent, sizeof(SDK_KB_EVENT));
+    }
     EventSyncUnlock();
 }
 
@@ -267,13 +270,13 @@ void SGUI_SDK_SyncKeyEventData(unsigned int uiKeyCode)
 /** Function Name:	SGUI_SDK_GetKeyEventData.							**/
 /** Purpose:		Set key code value when key press event targets.	**/
 /** Params:			none.												**/
-/** Return:			Last targeted key event value.						**/
+/** Return:			Last targeted key event data.						**/
 /** Notice:			This function used to save and keep pressed key 	**/
 /**					code value, must be called before SetEvnetFlag.		**/
 /*************************************************************************/
-unsigned int SGUI_SDK_GetKeyEventData(void)
+const SDK_KB_EVENT* SGUI_SDK_GetKeyEventData(void)
 {
-	return s_uiKeyCode;
+	return &s_stKBEvent;
 }
 
 /*************************************************************************/
@@ -316,7 +319,7 @@ bool SGUI_SDK_GetEventSyncFlag(ENV_FLAG_INDEX eIndex)
 /**					like screen auto scroll animation or dummy data		**/
 /**					input, the recommended setting is 20(ms) or more.	**/
 /*************************************************************************/
-bool SGUI_SDK_ConfigHearBeatTimer(unsigned int uiIntervalMs)
+bool SGUI_SDK_ConfigGeneralTimer(unsigned int uiIntervalMs)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -354,7 +357,7 @@ bool SGUI_SDK_ConfigHearBeatTimer(unsigned int uiIntervalMs)
 /** Notice:			This function will start RTC for demo process, like **/
 /**					screen auto scroll animation or dummy data input.	**/
 /*************************************************************************/
-bool SGUI_SDK_EnableRTCInterrupt(bool bEnabled)
+bool SGUI_SDK_EnableSecondInterrupt(bool bEnabled)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -376,7 +379,7 @@ bool SGUI_SDK_EnableRTCInterrupt(bool bEnabled)
     clsEventObject.SetReqState(bEnabled);
 
     // Post event.
-    bReturn = SGUI_SDK_SyncMainFrameEvent(clsEventObject, ENV_FLAG_IDX_SDK_RTC_EN, SDK_DEFAULT_EVENT_SYNC_TIMEOUT_MS);
+    bReturn = SGUI_SDK_SyncMainFrameEvent(clsEventObject, ENV_FLAG_IDX_SDK_SEC_EN, SDK_DEFAULT_EVENT_SYNC_TIMEOUT_MS);
 
     return bReturn;
 }
@@ -400,7 +403,7 @@ void SGUI_SDK_PrepareSDK(void)
         s_barrEventFlag[i] = false;
     }
     // Initialize key coed variable.
-    s_uiKeyCode = KEY_VALUE_NONE;
+    memset(&s_stKBEvent, 0x00, sizeof(SDK_KB_EVENT));
 }
 
 /*************************************************************************/
@@ -456,27 +459,40 @@ int SGUI_SDK_DummyMainProc(void)
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_SysTickTimerInterrput						**/
-/** Purpose:		SDK Dummy SysTick timer interrupt service function.	**/
+/** Function Name:	SGUI_SDK_GeneralTimerHandler						**/
+/** Purpose:		SDK Dummy General timer interrupt service function.	**/
 /** Params:			None.                                               **/
 /** Return:			none.												**/
 /** Notice:			This function simulates the SysTick timer interrupt	**/
 /**					service, add custom processing here if needed.		**/
 /*************************************************************************/
-void SGUI_SDK_SysTickTimerInterrput(void)
+void SGUI_SDK_GeneralTimerHandler(void)
 {
 	// Add your process here.
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_RTCInterrput								**/
-/** Purpose:		SDK Dummy RTC interrupt service function.			**/
+/** Function Name:	SGUI_SDK_SecondTimerHandler                         **/
+/** Purpose:		SDK Dummy second interrupt service function.        **/
 /** Params:			None.                                               **/
 /** Return:			none.												**/
 /** Notice:			This function simulates the RTC interrupt service,	**/
 /**					add custom processing here if needed.				**/
 /*************************************************************************/
-void SGUI_SDK_RTCInterrput(void)
+void SGUI_SDK_SecondTimerHandler(void)
+{
+    // Add your process here.
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_SDK_KeyboardHandler                            **/
+/** Purpose:		SDK Dummy Key board interrupt service function.     **/
+/** Params:			None.                                               **/
+/** Return:			none.												**/
+/** Notice:			This function simulates the RTC interrupt service,	**/
+/**					add custom processing here if needed.				**/
+/*************************************************************************/
+void SGUI_SDK_KeyboardHandler(void)
 {
     // Add your process here.
 }

@@ -224,6 +224,9 @@ void KeyPressEventProc(void)
 	/* Variable Declaration				*/
 	/*----------------------------------*/
 	KEY_PRESS_EVENT		stEvent;
+#ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
+    const SDK_KB_EVENT*     pstSDKEvent;
+#endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -236,7 +239,20 @@ void KeyPressEventProc(void)
 	stEvent.Head.iType = EVENT_TYPE_ACTION;
 	stEvent.Head.iID = EVENT_ID_KEY_PRESS;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	stEvent.Data.uiKeyValue = SGUI_SDK_GetKeyEventData();
+    pstSDKEvent = SGUI_SDK_GetKeyEventData();
+	stEvent.Data.uiKeyValue = pstSDKEvent->iKeyCode;
+	if(pstSDKEvent->bShift)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_SHIFT;
+    }
+    if(pstSDKEvent->bCtrl)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_CTRL;
+    }
+    if(pstSDKEvent->bAlt)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_ALT;
+    }
 #else
 	#error Add key event data prepare process here.
 #endif
@@ -333,7 +349,7 @@ bool RTCTimerTriggered(void)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	return CheckEventFlag(ENV_FLAG_IDX_SDK_RTC_EVENT);
+	return CheckEventFlag(ENV_FLAG_IDX_SDK_SEC_EVENT);
 #else
 	#error Add RTC timer trigger process here.
 #endif
@@ -372,7 +388,7 @@ void SysTickTimerEnable(bool bEnable)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	(void)SGUI_SDK_ConfigHearBeatTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
+	(void)SGUI_SDK_ConfigGeneralTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
 #else
 	#error Add sys-tick timer enable/disable process here.
 #endif
@@ -393,7 +409,7 @@ void RTCTimerEnable(bool bEnable)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	(void)SGUI_SDK_EnableRTCInterrupt(bEnable);
+	(void)SGUI_SDK_EnableSecondInterrupt(bEnable);
 #else
 	#error Add RTC timer enable/disable process here.
 #endif

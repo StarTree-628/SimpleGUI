@@ -110,6 +110,7 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
 			}
 		}
 		stTextInnerPos.iY = 0;
+		SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX,LAYOUT(pstObj).iY,LAYOUT(pstObj).iWidth,LAYOUT(pstObj).iHeight,pstSubPalette->eBackgroundColor,pstSubPalette->eBackgroundColor);
 		SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, pstObj->stParam.pstFontRes, &(LAYOUT(pstObj)), &stTextInnerPos, pstSubPalette->eTextColor);
 	}
 }

@@ -12,6 +12,13 @@
 #define SCR1_LIST_ITEM6					("消息框")
 #define SCR1_LIST_ITEM7					("调整曲线")
 
+#define SCR1_LIST_APPEND1				("附加测试项1")
+#define SCR1_LIST_APPEND2				("附加测试项2")
+#define SCR1_LIST_APPEND3				("附加测试项3")
+#define SCR1_LIST_APPEND4				("附加测试项4")
+#define SCR1_LIST_APPEND5				("附加测试项5")
+#define SCR1_LIST_APPEND6				("附加测试项6")
+
 /* Screen 2: Basic Paint*/
 /* No text used. */
 

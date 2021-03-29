@@ -91,6 +91,7 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stNumBoxInitParam.stLayout.iY = VARIABLE_BOX_NUMBER_POSY+2;
 	stNumBoxInitParam.stLayout.iWidth = pstDeviceIF->stSize.iWidth - (VARIABLE_BOX_POSX*2)-4;
 	stNumBoxInitParam.stLayout.iHeight = SGUI_FONT(FONT_8).iHeight;
+	stNumBoxInitParam.stPalette.uiDepthBits = 4;
 	stNumBoxInitParam.stPalette.stFocus.eBackgroundColor    = 0x0F;
 	stNumBoxInitParam.stPalette.stFocus.eTextColor          = 0x00;
 	stNumBoxInitParam.stPalette.stNormal.eBackgroundColor   = 0x00;
@@ -161,7 +162,7 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, c
     s_stNumberVariableBox.stData.iFocused = (s_uiFocusedFlag==0)?SGUI_TRUE:SGUI_FALSE;
     SGUI_NumberVariableBox_Repaint(pstDeviceIF, &s_stNumberVariableBox);
     // Draw text box
-    s_stNumberVariableBox.stData.iFocused = (s_uiFocusedFlag==0)?SGUI_FALSE:SGUI_TRUE;
+    s_stTextVariableBox.stData.iFocused = (s_uiFocusedFlag==0)?SGUI_FALSE:SGUI_TRUE;
     SGUI_Basic_DrawRectangle(pstDeviceIF, VARIABLE_BOX_POSX, VARIABLE_BOX_TEXT_POSY,
 							s_stTextVariableBox.stParam.stLayout.iWidth+4, s_stTextVariableBox.stParam.stLayout.iHeight+4,
 							0x0A, SGUI_COLOR_BKGCLR);

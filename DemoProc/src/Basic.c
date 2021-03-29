@@ -74,7 +74,7 @@ HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
 	// Paint background
 	for(iPaintBkgIdx=0; iPaintBkgIdx<pstDeviceIF->stSize.iHeight; iPaintBkgIdx+=5)
     {
-        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, iPaintBkgIdx/pstDeviceIF->stSize.iHeight*0x0F);
+        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, iPaintBkgIdx*0x0F/pstDeviceIF->stSize.iHeight);
     }
     // Paint rectangle
     SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 1, 30, 20, 0x0F, SGUI_COLOR_TRANS);

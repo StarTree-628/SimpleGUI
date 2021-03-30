@@ -8,7 +8,7 @@
 //= Include files.													    =//
 //=======================================================================//
 #include "wxLCD.h"
-#include "SGUI_Typedef.h"
+#include "SGUI_Common.h"
 #include <math.h>
 #include <wx/log.h>
 //=======================================================================//

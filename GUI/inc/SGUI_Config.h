@@ -54,6 +54,7 @@
  * recomended.
  */
 #define	SGUI_CONF_BMP_DATA_BUFFER_SIZE				(512)
+#define	SGUI_NUMBER_STR_LENGTH_MAX		            (12)
 //=======================================================================//
 //= Used for SimpleGUI virtual SDK.									    =//
 //=======================================================================//

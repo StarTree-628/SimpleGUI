@@ -625,9 +625,9 @@ void SGUI_Basic_DrawAlphaBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplay
                         eAlpha = SGUI_Basic_BitMapScanDVPV(pstBitmapData,iBmpPixX,iBmpPixY);
                     }
 
-                    if(pstDeviceIF->uiDepthBits != pstBitmapData->iDepthBits)
+                    if(pstDeviceIF->uiDepthBits != pstBitmapData->uiDepthBits)
                     {
-                        eAlpha = SGUI_Basic_MapColor(pstBitmapData->iDepthBits,eAlpha,pstDeviceIF->uiDepthBits);
+                        eAlpha = SGUI_Basic_MapColor(pstBitmapData->uiDepthBits,eAlpha,pstDeviceIF->uiDepthBits);
                     }
 
                     eColor = SGUI_Basic_GetPoint(pstDeviceIF,iDrawPixX,iDrawPixY);
@@ -729,11 +729,11 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 
 					if(eDrawMode == SGUI_DRAW_REVERSE)
 					{
-						eColor = SGUI_Basic_GetReverseColor(pstBitmapData->iDepthBits,eColor);
+						eColor = SGUI_Basic_GetReverseColor(pstBitmapData->uiDepthBits,eColor);
 					}
-					if(pstDeviceIF->uiDepthBits != pstBitmapData->iDepthBits)
+					if(pstDeviceIF->uiDepthBits != pstBitmapData->uiDepthBits)
 					{
-						eColor = SGUI_Basic_MapColor(pstBitmapData->iDepthBits,eColor,pstDeviceIF->uiDepthBits);
+						eColor = SGUI_Basic_MapColor(pstBitmapData->uiDepthBits,eColor,pstDeviceIF->uiDepthBits);
 					}
 					SGUI_Basic_DrawPoint(pstDeviceIF,iDrawPixX,iDrawPixY,eColor);
 					iDrawnHeightIndex ++;
@@ -773,19 +773,19 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDHPH(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/* Initialize						*/
 	/*----------------------------------*/
 	eColor              = 0;
-	uiBytesPerRow       = (pstBitmapData->iWidth * pstBitmapData->iDepthBits + 7)/8;
+	uiBytesPerRow       = (pstBitmapData->iWidth * pstBitmapData->uiDepthBits + 7)/8;
 	pData               = pstBitmapData->pData;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if( pstBitmapData->iDepthBits == 1 ||
-        pstBitmapData->iDepthBits == 2 ||
-        pstBitmapData->iDepthBits == 4 ||
-        pstBitmapData->iDepthBits == 8 )
+	if( pstBitmapData->uiDepthBits == 1 ||
+        pstBitmapData->uiDepthBits == 2 ||
+        pstBitmapData->uiDepthBits == 4 ||
+        pstBitmapData->uiDepthBits == 8 )
 	{
-        pData += uiBytesPerRow * uiY + (uiX*pstBitmapData->iDepthBits)/8;
-        cTemp  = (*pData)>>((uiX*pstBitmapData->iDepthBits)%8);
-        eColor = cTemp & ((0x1<<pstBitmapData->iDepthBits)-1);
+        pData += uiBytesPerRow * uiY + (uiX*pstBitmapData->uiDepthBits)/8;
+        cTemp  = (*pData)>>((uiX*pstBitmapData->uiDepthBits)%8);
+        eColor = cTemp & ((0x1<<pstBitmapData->uiDepthBits)-1);
 	}
 	return eColor;
 }
@@ -821,16 +821,16 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDHPV(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if( pstBitmapData->iDepthBits == 1 ||
-        pstBitmapData->iDepthBits == 2 ||
-        pstBitmapData->iDepthBits == 4 ||
-        pstBitmapData->iDepthBits == 8 )
+	if( pstBitmapData->uiDepthBits == 1 ||
+        pstBitmapData->uiDepthBits == 2 ||
+        pstBitmapData->uiDepthBits == 4 ||
+        pstBitmapData->uiDepthBits == 8 )
 	{
-		uiPixelPerByte      = 8 / pstBitmapData->iDepthBits;
+		uiPixelPerByte      = 8 / pstBitmapData->uiDepthBits;
 		uiByteRow           = uiY / uiPixelPerByte;
 		pData              += uiByteRow * pstBitmapData->iWidth + uiX;
-		cTemp               = (*pData)>>(uiY%uiPixelPerByte*pstBitmapData->iDepthBits);
-		eColor             |= cTemp & ((0x1<<pstBitmapData->iDepthBits)-1);
+		cTemp               = (*pData)>>(uiY%uiPixelPerByte*pstBitmapData->uiDepthBits);
+		eColor             |= cTemp & ((0x1<<pstBitmapData->uiDepthBits)-1);
 	}
 	return eColor;
 }
@@ -866,16 +866,16 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDVPH(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if( pstBitmapData->iDepthBits == 1 ||
-        pstBitmapData->iDepthBits == 2 ||
-        pstBitmapData->iDepthBits == 4 ||
-        pstBitmapData->iDepthBits == 8 )
+	if( pstBitmapData->uiDepthBits == 1 ||
+        pstBitmapData->uiDepthBits == 2 ||
+        pstBitmapData->uiDepthBits == 4 ||
+        pstBitmapData->uiDepthBits == 8 )
 	{
-		uiPixelPerByte      = 8 / pstBitmapData->iDepthBits;
+		uiPixelPerByte      = 8 / pstBitmapData->uiDepthBits;
 		uiByteColumn        = uiX / uiPixelPerByte;
 		pData              += uiByteColumn * pstBitmapData->iHeight + uiY;
-		cTemp               = (*pData)>>(uiX%uiPixelPerByte*pstBitmapData->iDepthBits);
-		eColor             |= cTemp & ((0x1<<pstBitmapData->iDepthBits)-1);
+		cTemp               = (*pData)>>(uiX%uiPixelPerByte*pstBitmapData->uiDepthBits);
+		eColor             |= cTemp & ((0x1<<pstBitmapData->uiDepthBits)-1);
 	}
 	return eColor;
 }
@@ -906,19 +906,19 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDVPV(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/* Initialize       				*/
 	/*----------------------------------*/
 	eColor = 0;
-	uiBytesPerColomn    = (pstBitmapData->iDepthBits * pstBitmapData->iHeight + 7)/8;
+	uiBytesPerColomn    = (pstBitmapData->uiDepthBits * pstBitmapData->iHeight + 7)/8;
 	pData               = pstBitmapData->pData;
 	/*----------------------------------*/
 	/* Process          				*/
 	/*----------------------------------*/
-	if( pstBitmapData->iDepthBits == 1 ||
-	        pstBitmapData->iDepthBits == 2 ||
-	        pstBitmapData->iDepthBits == 4 ||
-	        pstBitmapData->iDepthBits == 8 )
+	if( pstBitmapData->uiDepthBits == 1 ||
+	        pstBitmapData->uiDepthBits == 2 ||
+	        pstBitmapData->uiDepthBits == 4 ||
+	        pstBitmapData->uiDepthBits == 8 )
 	{
-	    pData += uiBytesPerColomn * uiX + (uiY*pstBitmapData->iDepthBits)/8;
-	    cTemp  = (*pData) >> ((uiY*pstBitmapData->iDepthBits)%8);
-	    eColor = cTemp & ((0x01 << pstBitmapData->iDepthBits)-1);
+	    pData += uiBytesPerColomn * uiX + (uiY*pstBitmapData->uiDepthBits)/8;
+	    cTemp  = (*pData) >> ((uiY*pstBitmapData->uiDepthBits)%8);
+	    eColor = cTemp & ((0x01 << pstBitmapData->uiDepthBits)-1);
 	}
 	return eColor;
 }

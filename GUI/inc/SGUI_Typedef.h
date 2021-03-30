@@ -40,9 +40,9 @@ static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32
 {\
     SGUI_INT iCharIndex = INDEXMAPPER(uiCode);\
     if(NULL != pBitmapData) {\
-        pBitmapData->iHeight    = SGUI_FONT_##NAME.iHeight;\
-        pBitmapData->iWidth     = WIDTH;\
-        pBitmapData->iDepthBits = SGUI_FONT_##NAME.iDepthBits;\
+        pBitmapData->iHeight     = SGUI_FONT_##NAME.iHeight;\
+        pBitmapData->iWidth      = WIDTH;\
+        pBitmapData->uiDepthBits = SGUI_FONT_##NAME.uiDepthBits;\
         if(!bDryRun) {\
             pBitmapData->fnGetPixel = SCANMODE;\
             pBitmapData->pData      = DATA_##NAME + iCharIndex*BLOCKSIZE;\
@@ -171,7 +171,7 @@ typedef struct _bmp_res
 {
 	SGUI_INT							iWidth;
     SGUI_INT							iHeight;
-    SGUI_INT                            iDepthBits;
+    SGUI_UINT8                          uiDepthBits;
     SGUI_FN_IF_BMP_GET_PIXEL            fnGetPixel;
     //SGUI_COLOR                          (*fnGetPixel)(const struct _bmp_res* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY);
     const SGUI_BYTE*					pData;
@@ -185,7 +185,7 @@ SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_GET_BITMAP,              (SGU
 typedef struct _font_res
 {
     SGUI_INT							iHeight;
-    SGUI_INT                            iDepthBits;
+    SGUI_UINT8                          uiDepthBits;
 	SGUI_FN_IF_GET_BITMAP               fnGetBitmap;
 	SGUI_FN_IF_STEP_NEXT                fnStepNext;
 }SGUI_FONT_RES;

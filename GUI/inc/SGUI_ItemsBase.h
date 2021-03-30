@@ -17,7 +17,7 @@
 //= Data type definition.											    =//
 //=======================================================================//
 typedef struct {
-    SGUI_INT8                   uiDepthBits;
+    SGUI_UINT8                  uiDepthBits;
     SGUI_COLOR                  eTextColor;
     SGUI_COLOR                  eFocusTextColor;
     SGUI_COLOR                  eBackgroundColor;

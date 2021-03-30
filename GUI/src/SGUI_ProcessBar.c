@@ -50,7 +50,8 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
 			{
 				pstProcessBarData->stData.sValue = pstProcessBarData->stParameter.sMaxValue;
 			}
-			// Check Palette depth is current depth
+			#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+			// Mapping Color
             if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
             {
                 pstPalette->eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
@@ -58,6 +59,7 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
                 pstPalette->eEdgeColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
                 pstPalette->uiDepthBits         = pstDeviceIF->uiDepthBits;
             }
+            #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 			// Update process bar data.
 			switch(pstProcessBarData->stParameter.eDirection)
 			{

@@ -539,7 +539,11 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
         for(iIdxH=0; iIdxH<iHeight; iIdxH++)
         {
             eColor=SGUI_Basic_GetPoint(pstDeviceIF, iStartX+iIdxW, iStartY+iIdxH);
+            #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
             eColor=SGUI_Basic_GetReverseColor(pstDeviceIF->uiDepthBits,eColor);
+            #else
+            eColor=SGUI_Basic_GetReverseColor(SGUI_CONF_GRAYSCALE_DEPTH_BITS,eColor);
+            #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX + iIdxW, iStartY + iIdxH, eColor);
         }
     }
@@ -597,7 +601,11 @@ void SGUI_Basic_DrawAlphaBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplay
                 iBmpPixX -= RECT_X_START(*pstInnerPos);
             }
             uiDrawnWidthIndex = iBmpPixX;
-            eMaxColor = (1<<pstDeviceIF->uiDepthBits)-1;
+            #ifdef SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
+            eMaxColor = SGUI_MAXCOLOR(pstDeviceIF->uiDepthBits);
+            #else
+            eMaxColor = SGUI_MAXCOLOR(SGUI_CONF_GRAYSCALE_DEPTH_BITS);
+            #endif
             // Loop for x coordinate;
             while((uiDrawnWidthIndex<RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=RECT_X_END(*pstDisplayArea)) && (iDrawPixX<RECT_WIDTH(pstDeviceIF->stSize)))
             {
@@ -624,12 +632,12 @@ void SGUI_Basic_DrawAlphaBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplay
                     {
                         eAlpha = SGUI_Basic_BitMapScanDVPV(pstBitmapData,iBmpPixX,iBmpPixY);
                     }
-
+                    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
                     if(pstDeviceIF->uiDepthBits != pstBitmapData->uiDepthBits)
                     {
                         eAlpha = SGUI_Basic_MapColor(pstBitmapData->uiDepthBits,eAlpha,pstDeviceIF->uiDepthBits);
                     }
-
+                    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
                     eColor = SGUI_Basic_GetPoint(pstDeviceIF,iDrawPixX,iDrawPixY);
 
                     // calculate the mixed color
@@ -729,12 +737,18 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 
 					if(eDrawMode == SGUI_DRAW_REVERSE)
 					{
+					    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 						eColor = SGUI_Basic_GetReverseColor(pstBitmapData->uiDepthBits,eColor);
+						#else
+						eColor = SGUI_Basic_GetReverseColor(SGUI_CONF_GRAYSCALE_DEPTH_BITS,eColor);
+						#endif
 					}
+					#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 					if(pstDeviceIF->uiDepthBits != pstBitmapData->uiDepthBits)
 					{
 						eColor = SGUI_Basic_MapColor(pstBitmapData->uiDepthBits,eColor,pstDeviceIF->uiDepthBits);
 					}
+					#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 					SGUI_Basic_DrawPoint(pstDeviceIF,iDrawPixX,iDrawPixY,eColor);
 					iDrawnHeightIndex ++;
 					iDrawPixY ++;
@@ -772,21 +786,25 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDHPH(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        #define DEPTH_BITS (pstBitmapData->uiDepthBits)
+	#else
+        #define DEPTH_BITS  SGUI_CONF_GRAYSCALE_DEPTH_BITS
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	eColor              = 0;
-	uiBytesPerRow       = (pstBitmapData->iWidth * pstBitmapData->uiDepthBits + 7)/8;
+	uiBytesPerRow       = (pstBitmapData->iWidth * DEPTH_BITS + 7)/8;
 	pData               = pstBitmapData->pData;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if( pstBitmapData->uiDepthBits == 1 ||
-        pstBitmapData->uiDepthBits == 2 ||
-        pstBitmapData->uiDepthBits == 4 ||
-        pstBitmapData->uiDepthBits == 8 )
+	if( DEPTH_BITS == 1 || DEPTH_BITS == 2 ||
+        DEPTH_BITS == 4 || DEPTH_BITS == 8 )
 	{
-        pData += uiBytesPerRow * uiY + (uiX*pstBitmapData->uiDepthBits)/8;
-        cTemp  = (*pData)>>((uiX*pstBitmapData->uiDepthBits)%8);
-        eColor = cTemp & ((0x1<<pstBitmapData->uiDepthBits)-1);
+        pData += uiBytesPerRow * uiY + (uiX*DEPTH_BITS)/8;
+        cTemp  = (*pData)>>((uiX*DEPTH_BITS)%8);
+        eColor = cTemp & ((0x1<<DEPTH_BITS)-1);
 	}
+	#undef DEPTH_BITS
 	return eColor;
 }
 
@@ -815,23 +833,27 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDHPV(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        #define DEPTH_BITS (pstBitmapData->uiDepthBits)
+    #else
+        #define DEPTH_BITS  SGUI_CONF_GRAYSCALE_DEPTH_BITS
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	eColor              = 0;
 	pData               = pstBitmapData->pData;
 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if( pstBitmapData->uiDepthBits == 1 ||
-        pstBitmapData->uiDepthBits == 2 ||
-        pstBitmapData->uiDepthBits == 4 ||
-        pstBitmapData->uiDepthBits == 8 )
+	if( DEPTH_BITS == 1 || DEPTH_BITS == 2 ||
+        DEPTH_BITS == 4 || DEPTH_BITS == 8 )
 	{
-		uiPixelPerByte      = 8 / pstBitmapData->uiDepthBits;
+		uiPixelPerByte      = 8 / DEPTH_BITS;
 		uiByteRow           = uiY / uiPixelPerByte;
 		pData              += uiByteRow * pstBitmapData->iWidth + uiX;
-		cTemp               = (*pData)>>(uiY%uiPixelPerByte*pstBitmapData->uiDepthBits);
-		eColor             |= cTemp & ((0x1<<pstBitmapData->uiDepthBits)-1);
+		cTemp               = (*pData)>>(uiY%uiPixelPerByte*DEPTH_BITS);
+		eColor             |= cTemp & ((0x1<<DEPTH_BITS)-1);
 	}
+	#undef DEPTH_BITS
 	return eColor;
 }
 
@@ -860,23 +882,27 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDVPH(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        #define DEPTH_BITS (pstBitmapData->uiDepthBits)
+    #else
+        #define DEPTH_BITS  SGUI_CONF_GRAYSCALE_DEPTH_BITS
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	eColor              = 0;
 	pData               = pstBitmapData->pData;
 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if( pstBitmapData->uiDepthBits == 1 ||
-        pstBitmapData->uiDepthBits == 2 ||
-        pstBitmapData->uiDepthBits == 4 ||
-        pstBitmapData->uiDepthBits == 8 )
+	if( DEPTH_BITS == 1 || DEPTH_BITS == 2 ||
+        DEPTH_BITS == 4 || DEPTH_BITS == 8 )
 	{
-		uiPixelPerByte      = 8 / pstBitmapData->uiDepthBits;
+		uiPixelPerByte      = 8 / DEPTH_BITS;
 		uiByteColumn        = uiX / uiPixelPerByte;
 		pData              += uiByteColumn * pstBitmapData->iHeight + uiY;
-		cTemp               = (*pData)>>(uiX%uiPixelPerByte*pstBitmapData->uiDepthBits);
-		eColor             |= cTemp & ((0x1<<pstBitmapData->uiDepthBits)-1);
+		cTemp               = (*pData)>>(uiX%uiPixelPerByte*DEPTH_BITS);
+		eColor             |= cTemp & ((0x1<<DEPTH_BITS)-1);
 	}
+    #undef DEPTH_BITS
 	return eColor;
 }
 
@@ -905,21 +931,25 @@ SGUI_COLOR   SGUI_Basic_BitMapScanDVPV(const SGUI_BMP_RES* pstBitmapData,SGUI_UI
 	/*----------------------------------*/
 	/* Initialize       				*/
 	/*----------------------------------*/
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        #define DEPTH_BITS (pstBitmapData->uiDepthBits)
+    #else
+        #define DEPTH_BITS  SGUI_CONF_GRAYSCALE_DEPTH_BITS
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	eColor = 0;
-	uiBytesPerColomn    = (pstBitmapData->uiDepthBits * pstBitmapData->iHeight + 7)/8;
+	uiBytesPerColomn    = (DEPTH_BITS * pstBitmapData->iHeight + 7)/8;
 	pData               = pstBitmapData->pData;
 	/*----------------------------------*/
 	/* Process          				*/
 	/*----------------------------------*/
-	if( pstBitmapData->uiDepthBits == 1 ||
-	        pstBitmapData->uiDepthBits == 2 ||
-	        pstBitmapData->uiDepthBits == 4 ||
-	        pstBitmapData->uiDepthBits == 8 )
+	if( DEPTH_BITS == 1 || DEPTH_BITS == 2 ||
+	    DEPTH_BITS == 4 || DEPTH_BITS == 8 )
 	{
-	    pData += uiBytesPerColomn * uiX + (uiY*pstBitmapData->uiDepthBits)/8;
-	    cTemp  = (*pData) >> ((uiY*pstBitmapData->uiDepthBits)%8);
-	    eColor = cTemp & ((0x01 << pstBitmapData->uiDepthBits)-1);
+	    pData += uiBytesPerColomn * uiX + (uiY*DEPTH_BITS)/8;
+	    cTemp  = (*pData) >> ((uiY*DEPTH_BITS)%8);
+	    eColor = cTemp & ((0x01 << DEPTH_BITS)-1);
 	}
+	#undef DEPTH_BITS
 	return eColor;
 }
 

@@ -19,10 +19,12 @@ typedef enum
 
 typedef struct
 {
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	SGUI_UINT8              uiDepthBits;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	SGUI_COLOR              eProcessBarColor;
 	SGUI_COLOR              eEdgeColor;
 	SGUI_COLOR              eBackgroundColor;
-	SGUI_UINT8              uiDepthBits;
 } SGUI_PROCBAR_PALETTE;
 
 typedef struct

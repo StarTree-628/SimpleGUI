@@ -45,7 +45,12 @@ static SGUI_UINT32 SGUI_Resource_IndexMapper_Default(SGUI_UINT32 uiCode);
 //======================================================================//
 //= 5 Pix mono space font library.								   =//
 //======================================================================//
-SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(MiniNum,4,5,1,4,
+SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(
+        MiniNum,4,5,
+        #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        1,
+        #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        4,
         SGUI_TEXT_DECODER_ASCII,
         SGUI_Resource_IndexMapper_MiniNum,
         SGUI_BMP_SCAN_MODE_DHPV,
@@ -73,7 +78,12 @@ SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(MiniNum,4,5,1,4,
 //======================================================================//
 //= 8 Pix mono space font library.													//
 //======================================================================//
-SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(FONT_8,6,8,1,6,
+SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(
+        FONT_8,6,8,
+        #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        1,
+        #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        6,
         SGUI_TEXT_DECODER_ASCII,
         SGUI_Resource_IndexMapper_Default,
         SGUI_BMP_SCAN_MODE_DHPV,
@@ -176,7 +186,12 @@ SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(FONT_8,6,8,1,6,
 //======================================================================//
 //= 12 Pix mono space font library.									   =//
 //======================================================================//
-SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(FONT_12,6,12,1,12,
+SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(
+        FONT_12,6,12,
+        #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        1,
+        #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        12,
         SGUI_TEXT_DECODER_ASCII,
         SGUI_Resource_IndexMapper_Default,
         SGUI_BMP_SCAN_MODE_DHPV,
@@ -275,11 +290,16 @@ SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(FONT_12,6,12,1,12,
         0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00,	// |
         0x00, 0x02, 0x9E, 0x60, 0x00, 0x00, 0x00, 0x04, 0x07, 0x00, 0x00, 0x00,	// }
         0x04, 0x02, 0x02, 0x04, 0x04, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	// ~		Index 94
-                                            );
+);
 //======================================================================//
 //= 16 Pix font library.												//
 //======================================================================//
-SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(FONT_16,8,16,1,16,
+SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(
+        FONT_16,8,16,
+        #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        1,
+        #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        16,
         SGUI_TEXT_DECODER_ASCII,
         SGUI_Resource_IndexMapper_Default,
         SGUI_BMP_SCAN_MODE_DHPV,

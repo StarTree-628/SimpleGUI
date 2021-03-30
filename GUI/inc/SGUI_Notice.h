@@ -12,7 +12,9 @@
 //=======================================================================//
 typedef struct
 {
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_UINT8              uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_COLOR              eEdgeColor;
     SGUI_COLOR              eFillColor;
     SGUI_COLOR              eTextColor;

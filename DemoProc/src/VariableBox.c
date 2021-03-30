@@ -91,11 +91,22 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stNumBoxInitParam.stLayout.iY = VARIABLE_BOX_NUMBER_POSY+2;
 	stNumBoxInitParam.stLayout.iWidth = pstDeviceIF->stSize.iWidth - (VARIABLE_BOX_POSX*2)-4;
 	stNumBoxInitParam.stLayout.iHeight = SGUI_FONT(FONT_8).iHeight;
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+	stNumBoxInitParam.stPalette.stFocus.eBackgroundColor    = 0x01;
+	stNumBoxInitParam.stPalette.stFocus.eTextColor          = 0x00;
+	stNumBoxInitParam.stPalette.stNormal.eBackgroundColor   = 0x00;
+	stNumBoxInitParam.stPalette.stNormal.eTextColor         = 0x01;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stNumBoxInitParam.stPalette.uiDepthBits = 4;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stNumBoxInitParam.stPalette.stFocus.eBackgroundColor    = 0x0F;
 	stNumBoxInitParam.stPalette.stFocus.eTextColor          = 0x00;
 	stNumBoxInitParam.stPalette.stNormal.eBackgroundColor   = 0x00;
 	stNumBoxInitParam.stPalette.stNormal.eTextColor         = 0x0F;
+    #else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+    #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 
 	SGUI_NumberVariableBox_Initialize(&s_stNumberVariableBox, &stNumBoxInitParam);
 
@@ -105,11 +116,22 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stTextBoxInitParam.stLayout.iY = VARIABLE_BOX_TEXT_POSY+2;
 	stTextBoxInitParam.stLayout.iWidth = pstDeviceIF->stSize.iWidth-(VARIABLE_BOX_POSX*2)-4;
 	stTextBoxInitParam.stLayout.iHeight = SGUI_FONT(FONT_12).iHeight;
+	#if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+    stTextBoxInitParam.stPalette.stNormal.eBackgroundColor = 0x00;
+	stTextBoxInitParam.stPalette.stNormal.eTextColor       = 0x01;
+	stTextBoxInitParam.stPalette.stFocus.eBackgroundColor  = 0x01;
+	stTextBoxInitParam.stPalette.stFocus.eTextColor        = 0x00;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stTextBoxInitParam.stPalette.uiDepthBits = 4;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stTextBoxInitParam.stPalette.stNormal.eBackgroundColor = 0x00;
 	stTextBoxInitParam.stPalette.stNormal.eTextColor       = 0x0F;
 	stTextBoxInitParam.stPalette.stFocus.eBackgroundColor  = 0x0F;
 	stTextBoxInitParam.stPalette.stFocus.eTextColor        = 0x00;
+	#else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+    #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 	stTextBoxInitParam.sTextLengthMax = TEXT_VARIABLE_LENGTH;
 
 	SGUI_TextVariableBox_Initialize(&s_stTextVariableBox, &stTextBoxInitParam, s_szTextVariableBuffer);
@@ -129,11 +151,20 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Prepare(SGUI_SCR_DEV* pstDeviceIF, const v
 	/*----------------------------------*/
 	stNoticeBox.pstIcon = &SGUI_RES_ICON_INFORMATION_16;
 	stNoticeBox.cszNoticeText = s_szHelpNoticeText;
-
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+	stNoticeBox.stPalette.eEdgeColor  = 0x01;
+	stNoticeBox.stPalette.eFillColor  = 0x00;
+	stNoticeBox.stPalette.eTextColor  = 0x01;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stNoticeBox.stPalette.uiDepthBits = 4;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stNoticeBox.stPalette.eEdgeColor  = 0x0A;
 	stNoticeBox.stPalette.eFillColor  = 0x01;
 	stNoticeBox.stPalette.eTextColor  = 0x0F;
+	#else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+    #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/

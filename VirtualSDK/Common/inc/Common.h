@@ -6,6 +6,7 @@
 //=======================================================================//
 #include <stddef.h>
 #include <stdint.h>
+#include <../../../GUI/inc/SGUI_Config.h>
 
 //=======================================================================//
 //= User Macro definition.											    =//
@@ -40,7 +41,7 @@
 #define PARAM_DEFAULT_PANEL_BORDER_WIDTH				(8)
 #define PARAM_DEFAULT_PIXEL_WIDTH					    (2)
 #define PARAM_DEFAULT_PIXEL_HEIGHT					    (2)
-#define PARAM_DEFAULT_PIXEL_DEPTH_BITS                  (4)
+#define PARAM_DEFAULT_PIXEL_DEPTH_BITS                  (SGUI_CONF_GRAYSCALE_DEPTH_BITS)
 #define PARAM_DEFAULT_PIXEL_DEPTH                       (1<<PARAM_DEFAULT_PIXEL_DEPTH_BITS)
 #define PARAM_DEFAULT_GRID_ENABLE                       (true)
 #define PARAM_DEFAULT_GRID_DISABLE                      (false)

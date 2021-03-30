@@ -55,9 +55,11 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 		// Initialize member object pointer.
 		pstObj->stPallete = *cpstPalette;
 
+        #ifdef SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
 		// Initialize palette
 	    pstObj->stPallete.stScrollBar.uiDepthBits = cpstPalette->uiDepthBits;
 	    pstObj->stPallete.stItemBase.uiDepthBits = cpstPalette->uiDepthBits;
+        #endif // SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
 
 	    // Copy layout
 	    SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));

@@ -77,16 +77,27 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stLayout.iY =		    0;
 	stLayout.iWidth = 		48;
 	stLayout.iHeight =		60;
-
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+    stPalette.stItemBase.eBackgroundColor = 0x00;
+	stPalette.stItemBase.eTextColor = 0x01;
+	stPalette.stItemBase.eFocusColor = 0x01;
+	stPalette.stItemBase.eFocusTextColor = 0x00;
+	stPalette.eBorder = 0x01;
+	stPalette.eDirectionIconColor = 0x01;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.uiDepthBits = 4;
 	stPalette.stItemBase.uiDepthBits = 4;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.stItemBase.eBackgroundColor = 0x02;
 	stPalette.stItemBase.eTextColor = 0x0F;
 	stPalette.stItemBase.eFocusColor = 0x08;
 	stPalette.stItemBase.eFocusTextColor = 0x0F;
 	stPalette.eBorder = 0x0F;
 	stPalette.eDirectionIconColor = 0x0F;
-
+	#else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+    #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -135,16 +146,27 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	eProcessResult =			HMI_RET_NORMAL;
 	pstKeyEvent =				(KEY_PRESS_EVENT*)pstEvent;
 	iProcessAction =			HMI_DEMO_PROC_NO_ACT;
-
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+    stPalette.stItemBase.eBackgroundColor = 0x00;
+	stPalette.stItemBase.eTextColor = 0x01;
+	stPalette.stItemBase.eFocusColor = 0x01;
+	stPalette.stItemBase.eFocusTextColor = 0x00;
+    stPalette.eBorder = 0x01;
+	stPalette.eDirectionIconColor = 0x01;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.uiDepthBits = 4;
 	stPalette.stItemBase.uiDepthBits = 4;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.stItemBase.eBackgroundColor = 0x02;
 	stPalette.stItemBase.eTextColor = 0x0F;
 	stPalette.stItemBase.eFocusColor = 0x08;
 	stPalette.stItemBase.eFocusTextColor = 0x0F;
     stPalette.eBorder = 0x0F;
 	stPalette.eDirectionIconColor = 0x0F;
-
+    #else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+    #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/

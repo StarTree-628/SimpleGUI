@@ -114,7 +114,11 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
             pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
             //if(SGUI_IS_VISIBLE_CHAR(uiCharacterCode))
 			{
-				stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
+			    #if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
+					stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
+				#else
+                    stCharBitmap.pData=NULL;
+				#endif
 				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 				if((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0)
 				{
@@ -172,7 +176,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 
 		RECT_HEIGHT(stCharBitmap) = pstFontRes->iHeight;
 		uiLines = 1;
-		stCharBitmap.pData = pstDeviceIF->arrBmpDataBuffer;
 		// Loop for each word in display area.
 		while(((NULL != pcChar) && ('\0' != *pcChar)))
 		{
@@ -188,6 +191,11 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 				uiLines ++;
 				continue;
 			}
+			#if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
+                stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
+			#else
+                stCharBitmap.pData=NULL;
+            #endif
             pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 
 			// Judge change line

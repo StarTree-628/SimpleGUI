@@ -96,7 +96,8 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 		{
 			pstObj->stData.sValue = pstObj->stParam.sMaxValue;
 		}
-		// Check Palette depth is current depth
+		#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+		// Mapping Color
         if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
         {
             pstPalette->eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
@@ -104,6 +105,7 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
             pstPalette->eEdgeColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
             pstPalette->uiDepthBits         = pstDeviceIF->uiDepthBits;
         }
+        #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 		// Draw scroll bar edge.
 		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX, pstObj->stParam.stLayout.iY,
 									pstObj->stParam.stLayout.iWidth, pstObj->stParam.stLayout.iHeight,

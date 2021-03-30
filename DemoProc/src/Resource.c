@@ -7743,7 +7743,9 @@ const SGUI_CBYTE GB2312_H12[] = {
 
 const SGUI_FONT_RES SGUI_FONT(GB2312_FZXS12) = {
 	/*SGUI_INT                      iHeight*/               12,
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	/*SGUI_UINT                     uiDepthBits*/           1,
+	#endif // SGUI_CONF_GRAYSCALE_COLORMAPPING_ENABLED
 	/*SGUI_FN_IF_GET_DATA           fnGetBitmap*/           SGUI_Resource_GetBitmap_GB2312,
 	/*SGUI_FN_IF_STEP_NEXT          fnStepNext*/            SGUI_TEXT_DECODER_GB2312,
 };
@@ -7765,7 +7767,10 @@ void SGUI_Resource_GetBitmap_GB2312(SGUI_BMP_RES* pstBitmapData,SGUI_UINT32 uiCo
 
 	pstBitmapData->fnGetPixel   = SGUI_BMP_SCAN_MODE_DHPV;
 	pstBitmapData->iHeight      = pstFontRes->iHeight;
+
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	pstBitmapData->uiDepthBits  = pstFontRes->uiDepthBits;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 
 	uiHighByte                  = (uiCode & 0xFF00)>>8;
 	uiLowByte                   = uiCode & 0x00FF;

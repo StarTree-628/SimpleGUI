@@ -14,7 +14,9 @@
 //=======================================================================//
 typedef struct
 {
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_UINT8                  uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_ITEMS_BASE_PALETTE     stItemBase;
     SGUI_SCROLLBAR_PALETTE      stScrollBar;
     SGUI_COLOR                  eBorderColor;

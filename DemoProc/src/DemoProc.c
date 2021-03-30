@@ -85,7 +85,9 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	/* Initialize display size. */
 	g_stDeviceInterface.stSize.iWidth = PARAM_DEFAULT_PIXEL_NUM_H;
 	g_stDeviceInterface.stSize.iHeight = PARAM_DEFAULT_PIXEL_NUM_V;
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     g_stDeviceInterface.uiDepthBits = PARAM_DEFAULT_PIXEL_DEPTH_BITS;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     /* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;

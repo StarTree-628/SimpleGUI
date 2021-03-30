@@ -47,11 +47,14 @@ SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICE_BOX* pstObj
 	if((NULL != pstObject) && (NULL != pstObject->cszNoticeText))
 	{
 	    pstPalette = &pstObject->stPalette;
+	    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING
+	    // Mapping Color
 	    if(pstDeviceIF->uiDepthBits != pstPalette->uiDepthBits){
             pstPalette->eEdgeColor = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
             pstPalette->eFillColor = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eFillColor,pstDeviceIF->uiDepthBits);
             pstPalette->uiDepthBits= pstDeviceIF->uiDepthBits;
 	    }
+	    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING
 		// Draw edgeNOTICE_BOX_MARGIN
 		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObject->stLayout.iX, pstObject->stLayout.iY, pstObject->stLayout.iWidth, pstObject->stLayout.iHeight, pstPalette->eEdgeColor, pstPalette->eFillColor);
 

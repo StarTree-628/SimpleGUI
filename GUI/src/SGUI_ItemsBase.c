@@ -181,8 +181,10 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 	/*----------------------------------*/
 	if((NULL != pstDeviceIF) && (NULL != pstObj))
 	{
-        // Map color
+
         pstPalette = &(pstObj->stPalette);
+        #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING
+        // Map color
         if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
         {
             pstPalette->eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
@@ -191,7 +193,7 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
             pstPalette->eTextColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
             pstPalette->uiDepthBits         = pstDeviceIF->uiDepthBits;
         }
-
+        #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING
 		// Clear background
 		if(pstObj->iCount < pstObj->iVisibleItems)
         {

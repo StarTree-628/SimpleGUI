@@ -12,16 +12,26 @@
 //=======================================================================//
 //= User Macro definition.											    =//
 //=======================================================================//
-#define	SGUI_MENU_ICON_DECLARE(NAME)					extern const SGUI_BMP_RES NAME
-#define	SGUI_MENU_ICON_DEFINE(NAME, W, H, D, FGP,...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
-														const SGUI_BMP_RES NAME = {W, H, D, FGP, NAME##DATA}
+
 //=======================================================================//
 //= Static variable define.												=//
 //=======================================================================//
-static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEUP, 5, 3, 1, SGUI_BMP_SCAN_MODE_DHPV,
-0x04,0x06,0x07,0x06,0x04);
-static SGUI_MENU_ICON_DEFINE(SGUI_MENU_ICON_MOVEDOWN, 5, 3, 1, SGUI_BMP_SCAN_MODE_DHPV,
-0x01,0x03,0x07,0x03,0x01);
+static SGUI_BMP_RESOURCE_DEFINE(
+    SGUI_MENU_ICON_MOVEUP,
+    5, 3,
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    1,
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_BMP_SCAN_MODE_DHPV,
+    0x04,0x06,0x07,0x06,0x04);
+static SGUI_BMP_RESOURCE_DEFINE(
+    SGUI_MENU_ICON_MOVEDOWN,
+    5, 3,
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    1,
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_BMP_SCAN_MODE_DHPV,
+    0x01,0x03,0x07,0x03,0x01);
 
 //=======================================================================//
 //= Function define.										            =//
@@ -101,11 +111,13 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
 	if(NULL != pstObj)
 	{
 	    pstPalette = &(pstObj->stPalette);
-
+	    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+        // Mapping Color
 	    if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits){
             pstPalette->eBorder = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBorder,pstDeviceIF->uiDepthBits);
             pstPalette->uiDepthBits = pstDeviceIF->uiDepthBits;
 	    }
+	    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 
 		/* Clear list item display area. */
 		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstPalette->eBorder, pstPalette->stItemBase.eBackgroundColor);

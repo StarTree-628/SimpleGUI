@@ -6,7 +6,7 @@
 #include "stdint.h"
 #include "stddef.h"
 #include <stdbool.h>
-
+#include <SGUI_Config.h>
 //=======================================================================//
 //= User Macro definition.											    =//
 //=======================================================================//
@@ -23,33 +23,58 @@
 #define		RECT_VALID_HEIGHT(DATA, POS)			((RECT_Y_START(POS)>0)?RECT_HEIGHT(DATA):(RECT_HEIGHT(DATA)+RECT_Y_START(POS)))
 
 #define		SGUI_DEVPF_IF_DEFINE(R, FN, PARAM)		typedef R(*FN)PARAM
-#define		SGUI_BMP_DATA_BUFFER_SIZE				(512)
 
 #define	SGUI_BMP_RESOURCE_DECLARE(NAME)				        extern const SGUI_BMP_RES NAME
+#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 #define	SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, D, FGP, ...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
                                                             const SGUI_BMP_RES NAME = {W, H, D, FGP, NAME##DATA}
+#else
+#define	SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, FGP, ...)	    const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
+                                                            const SGUI_BMP_RES NAME = {W, H, FGP, NAME##DATA}
+#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 
 #define SGUI_FONT(NAME)                                     SGUI_FONT_##NAME
 #define SGUI_FONT_REF(NAME)                                 &SGUI_FONT(NAME)
 #define SGUI_FONT_RESOURCE_DECLARE(NAME)                    extern const SGUI_FONT_RES SGUI_FONT(NAME)
-#define SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(NAME,WIDTH,HEIGHT,DEPTH,BLOCKSIZE,DECODER,INDEXMAPPER,SCANMODE,...) \
-static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun);\
-const SGUI_BYTE     DATA_##NAME[]={__VA_ARGS__};\
-const SGUI_FONT_RES SGUI_FONT_##NAME={HEIGHT,DEPTH,SGUI_Resource_GetBitmap_##NAME,DECODER};\
-static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun)\
-{\
-    SGUI_INT iCharIndex = INDEXMAPPER(uiCode);\
-    if(NULL != pBitmapData) {\
-        pBitmapData->iHeight     = SGUI_FONT_##NAME.iHeight;\
-        pBitmapData->iWidth      = WIDTH;\
-        pBitmapData->uiDepthBits = SGUI_FONT_##NAME.uiDepthBits;\
-        if(!bDryRun) {\
-            pBitmapData->fnGetPixel = SCANMODE;\
-            pBitmapData->pData      = DATA_##NAME + iCharIndex*BLOCKSIZE;\
-        }\
-    }\
-}\
-// end #define
+
+
+#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    #define SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(NAME,WIDTH,HEIGHT,DEPTH,BLOCKSIZE,DECODER,INDEXMAPPER,SCANMODE,...) \
+        static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun);\
+        const SGUI_BYTE     DATA_##NAME[]={__VA_ARGS__};\
+        const SGUI_FONT_RES SGUI_FONT_##NAME={HEIGHT,DEPTH,SGUI_Resource_GetBitmap_##NAME,DECODER};\
+        static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun)\
+        {\
+            SGUI_INT iCharIndex = INDEXMAPPER(uiCode);\
+            if(NULL != pBitmapData) {\
+                pBitmapData->iHeight     = SGUI_FONT_##NAME.iHeight;\
+                pBitmapData->iWidth      = WIDTH;\
+                pBitmapData->uiDepthBits = SGUI_FONT_##NAME.uiDepthBits;\
+                if(!bDryRun) {\
+                    pBitmapData->fnGetPixel = SCANMODE;\
+                    pBitmapData->pData      = DATA_##NAME + iCharIndex*BLOCKSIZE;\
+                }\
+            }\
+        }
+#else
+    #define SGUI_INTERNAL_MONOSPACE_FONT_RESOURCE_DEFINE(NAME,WIDTH,HEIGHT,BLOCKSIZE,DECODER,INDEXMAPPER,SCANMODE,...) \
+        static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun);\
+        const SGUI_BYTE     DATA_##NAME[]={__VA_ARGS__};\
+        const SGUI_FONT_RES SGUI_FONT_##NAME={HEIGHT,SGUI_Resource_GetBitmap_##NAME,DECODER};\
+        static void SGUI_Resource_GetBitmap_##NAME(SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun)\
+        {\
+            SGUI_INT iCharIndex = INDEXMAPPER(uiCode);\
+            if(NULL != pBitmapData) {\
+                pBitmapData->iHeight     = SGUI_FONT_##NAME.iHeight;\
+                pBitmapData->iWidth      = WIDTH;\
+                if(!bDryRun) {\
+                    pBitmapData->fnGetPixel = SCANMODE;\
+                    pBitmapData->pData      = DATA_##NAME + iCharIndex*BLOCKSIZE;\
+                }\
+            }\
+    }
+#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+
 
 //=======================================================================//
 //= Data type definition.											    =//
@@ -149,10 +174,14 @@ typedef struct
 {
 	//Screen display area size in pixel.
 	SGUI_AREA_SIZE						stSize;
-    // Screen display pixel depth in bit count(eg. 4(bits) means 16 grayscale)
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	// Screen display pixel depth in bit count(eg. 4(bits) means 16 grayscale)
     SGUI_UINT8                          uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    #if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
 	//Bitmap data buffer.
-	SGUI_BYTE							arrBmpDataBuffer[SGUI_BMP_DATA_BUFFER_SIZE];
+	SGUI_BYTE							arrBmpDataBuffer[SGUI_CONF_BMP_DATA_BUFFER_SIZE];
+	#endif // SGUI_CONF_BMP_DATA_BUFFER_SIZE
     //Engine & device initialize function.
     SGUI_FN_IF_INITIALIZE				fnInitialize;
     //Clear screen function.
@@ -171,7 +200,9 @@ typedef struct _bmp_res
 {
 	SGUI_INT							iWidth;
     SGUI_INT							iHeight;
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_UINT8                          uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_FN_IF_BMP_GET_PIXEL            fnGetPixel;
     //SGUI_COLOR                          (*fnGetPixel)(const struct _bmp_res* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY);
     const SGUI_BYTE*					pData;
@@ -185,7 +216,9 @@ SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_GET_BITMAP,              (SGU
 typedef struct _font_res
 {
     SGUI_INT							iHeight;
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_UINT8                          uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	SGUI_FN_IF_GET_BITMAP               fnGetBitmap;
 	SGUI_FN_IF_STEP_NEXT                fnStepNext;
 }SGUI_FONT_RES;

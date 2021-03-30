@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <SGUI_Typedef.h>
+
 #ifdef __cplusplus
 extern "C"
 {

@@ -1,13 +1,13 @@
 #ifndef __INCLUDE_GUI_SCROLLBAR__
 #define __INCLUDE_GUI_SCROLLBAR__
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_Basic.h"
 #include "SGUI_Common.h"
 
 //=======================================================================//
-//= Data type definition.											    =//
+//= Data type definition.												=//
 //=======================================================================//
 typedef enum
 {
@@ -17,20 +17,20 @@ typedef enum
 
 typedef struct
 {
-    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
-    SGUI_UINT8                  uiDepthBits;
-    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
-    SGUI_COLOR                  eHandleColor;
-    SGUI_COLOR                  eEdgeColor;
-    SGUI_COLOR                  eBackgroundColor;
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	SGUI_UINT8				uiDepthBits;
+	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	SGUI_COLOR				eHandleColor;
+	SGUI_COLOR				eEdgeColor;
+	SGUI_COLOR				eBackgroundColor;
 } SGUI_SCROLLBAR_PALETTE;
 
 typedef struct
 {
 	SGUI_RECT					stLayout;
-    SGUI_SIZE					sMaxValue;
-    SGUI_SCROLLBAR_DIRECTION	eDirection;
-    SGUI_SCROLLBAR_PALETTE      stPalette;
+	SGUI_SIZE					sMaxValue;
+	SGUI_SCROLLBAR_DIRECTION	eDirection;
+	SGUI_SCROLLBAR_PALETTE		stPalette;
 }SGUI_SCROLLBAR_PARAM;
 
 typedef struct
@@ -45,7 +45,7 @@ typedef struct
 }SGUI_SCROLLBAR_STRUCT;
 
 //=======================================================================//
-//= Public function declaration.									    =//
+//= Public function declaration.										=//
 //=======================================================================//
 void		SGUI_ScrollBar_Initialize(SGUI_SCROLLBAR_STRUCT* pstObj, const SGUI_SCROLLBAR_PARAM* pcstInitParam);
 #define		SGUI_ScrollBar_SetMax(OBJ, MAX) \

@@ -224,7 +224,7 @@ void KeyPressEventProc(void)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	KEY_PRESS_EVENT	    stEvent;
+	KEY_PRESS_EVENT		    stEvent;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
     const SDK_KB_EVENT*     pstSDKEvent;
 #endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_

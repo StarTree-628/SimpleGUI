@@ -1,4 +1,4 @@
-# Simple(Gray)GUI
+# SimpleGUI
 
 ---
 

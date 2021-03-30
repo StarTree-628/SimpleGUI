@@ -5,14 +5,14 @@
 /** Description: LCD display panel in wxWidgets frame.					**/
 /*************************************************************************/
 //=======================================================================//
-//= Include files.														=//
+//= Include files.													    =//
 //=======================================================================//
 #include "wxLCD.h"
 #include "SGUI_Common.h"
 #include <math.h>
 #include <wx/log.h>
 //=======================================================================//
-//= Function define.													=//
+//= Function define.										            =//
 //=======================================================================//
 wxLCD::wxLCD(wxWindow *pclsParent, wxWindowID iWinID, const wxPoint& clsPosition, const wxSize& clsSizeInPixel):
 wxLCDBase(pclsParent, iWinID, clsPosition, clsSizeInPixel)
@@ -178,7 +178,7 @@ void wxLCD::SetParameter(PixelPanelParameter* pstPanelParameter)
 	if(NULL != pstPanelParameter)
 	{
 		SetPixelUnitSize(wxSize(pstPanelParameter->PixelUnitWidth, pstPanelParameter->PixelUnitHeight));
-		SetGridVisibled(pstPanelParameter->EnableGrid);
+        SetGridVisibled(pstPanelParameter->EnableGrid);
 		SetPixelNumber(pstPanelParameter->HorizontalPixelNumber, pstPanelParameter->VerticalPixelNumber);
 		SetBorderWidth(pstPanelParameter->BorderWidth);
 

@@ -49,15 +49,15 @@ SGUI_PTR				SGUI_SystemIF_Allocate(SGUI_SIZE sSize);
 void					SGUI_SystemIF_Free(SGUI_PTR pFreePointer);
 #endif
 
-#define			SGUI_SystemIF_MemoryCopy(DEST, SOURCE, SIZE) \
+#define					SGUI_SystemIF_MemoryCopy(DEST, SOURCE, SIZE) \
                             (memcpy(DEST, SOURCE, SIZE))
-#define			SGUI_SystemIF_MemorySet(PTR, VAL, SIZE) \
+#define					SGUI_SystemIF_MemorySet(PTR, VAL, SIZE) \
                             (memset(PTR, VAL, SIZE))
-#define			SGUI_SystemIF_StringLength(/* SGUI_CSZSTR */STR) \
+#define                 SGUI_SystemIF_StringLength(/* SGUI_CSZSTR */STR) \
                             ((NULL == (STR))?0:(strlen((STR))))
-#define			SGUI_SystemIF_StringCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC) \
+#define 				SGUI_SystemIF_StringCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC) \
                             (strcpy((DEST), (SRC)))
-#define			SGUI_SystemIF_StringLengthCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC, /* SGUI_SIZE */SIZE) \
+#define                 SGUI_SystemIF_StringLengthCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC, /* SGUI_SIZE */SIZE) \
                             (strncpy((DEST), (SRC), (SIZE)))
 
 #ifdef __cplusplus

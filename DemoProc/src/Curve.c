@@ -112,7 +112,7 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
 	SGUI_RECT				stTextArea;
 	SGUI_POINT				stInnsrPos;
 	SGUI_CHAR				szNumberTextBuffer[12];
-	SGUI_AREA_SIZE          stTextAreaSize;
+	SGUI_AREA_SIZE				stTextAreaSize;
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/

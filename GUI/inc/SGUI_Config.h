@@ -27,7 +27,7 @@
  */
 #define SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED       1
 /**
- * Wheather to use Alpha mix in font render
+ * Wheather to use Alpha mix in font render (Unavailable)
  *
  * This is important for gray scale screens. If you turn on this option,
  * the SimpleGUI will treat character bitmaps as the alpha channel and try

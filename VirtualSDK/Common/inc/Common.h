@@ -51,16 +51,16 @@
 //=======================================================================//
 typedef struct
 {
-    size_t					HorizontalPixelNumber;
+	size_t					HorizontalPixelNumber;
     size_t					VerticalPixelNumber;
     size_t					PixelUnitWidth;
     size_t					PixelUnitHeight;
     int                     PixelUnitDepth;
     size_t					BorderWidth;
     bool					EnableGrid;
-    unsigned int			PanelColor;
-    unsigned int			PixelColor;
-    unsigned int			GridColor;
+	unsigned int			PanelColor;
+	unsigned int			PixelColor;
+	unsigned int			GridColor;
 }PixelPanelParameter;
 
 //=======================================================================//

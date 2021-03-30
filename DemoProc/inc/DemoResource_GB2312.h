@@ -18,6 +18,7 @@
 #define SCR1_LIST_APPEND4				("附加测试项4")
 #define SCR1_LIST_APPEND5				("附加测试项5")
 #define SCR1_LIST_APPEND6				("附加测试项6")
+
 /* Screen 2: Basic Paint*/
 /* No text used. */
 

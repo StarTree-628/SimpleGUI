@@ -15,7 +15,7 @@ typedef enum
 	SGUI_PROCBAR_DOWN,							//Process bar direction to down.
 	SGUI_PROCBAR_LEFT,							//Process bar direction to left.
 	SGUI_PROCBAR_RIGHT,							//Process bar direction to right.
-} SGUI_PROCBAR_DIRECTION;
+}SGUI_PROCBAR_DIRECTION;
 
 typedef struct
 {
@@ -33,18 +33,18 @@ typedef struct
 	SGUI_UINT32				sMaxValue;
 	SGUI_PROCBAR_DIRECTION	eDirection;
 	SGUI_PROCBAR_PALETTE    stPalette;
-} SGUI_PROCBAR_PARAMETER;
+}SGUI_PROCBAR_PARAMETER;
 
 typedef struct
 {
 	SGUI_SIZE				sValue;
-} SGUI_PROCBAR_DATA;
+}SGUI_PROCBAR_DATA;
 
 typedef struct
 {
 	SGUI_PROCBAR_PARAMETER	stParameter;
 	SGUI_PROCBAR_DATA		stData;
-} SGUI_PROCBAR_STRUCT;
+}SGUI_PROCBAR_STRUCT;
 
 //=======================================================================//
 //= Public function declaration.									    =//

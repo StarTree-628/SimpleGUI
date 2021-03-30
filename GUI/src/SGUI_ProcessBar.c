@@ -6,12 +6,12 @@
 /*************************************************************************/
 
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_ProcessBar.h"
 
 //=======================================================================//
-//= Function define.										            =//
+//= Function define.													=//
 //=======================================================================//
 /*************************************************************************/
 /** Function Name:	SGUI_RefreshProcessBar								**/
@@ -32,11 +32,13 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
 	SGUI_UINT16					uiProcessBlockStartX, uiProcessBlockStartY;
 	SGUI_UINT16					uiProcessBlockWidth, uiProcessBlockHeight;
 	SGUI_COLOR					eBackColor, eFillColor;
-    SGUI_PROCBAR_PALETTE*       pstPalette;
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    pstPalette = &pstProcessBarData->stParameter.stPalette;
+	SGUI_PROCBAR_PALETTE*		pstPalette;
+
+	/*----------------------------------*/
+	/* Initialize						*/
+	/*----------------------------------*/
+	pstPalette = &pstProcessBarData->stParameter.stPalette;
+
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -52,14 +54,14 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
 			}
 			#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 			// Mapping Color
-            if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
-            {
-                pstPalette->eBackgroundColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
-                pstPalette->eProcessBarColor    = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eProcessBarColor,pstDeviceIF->uiDepthBits);
-                pstPalette->eEdgeColor          = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
-                pstPalette->uiDepthBits         = pstDeviceIF->uiDepthBits;
-            }
-            #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+			if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
+			{
+				pstPalette->eBackgroundColor	= SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+				pstPalette->eProcessBarColor	= SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eProcessBarColor,pstDeviceIF->uiDepthBits);
+				pstPalette->eEdgeColor		  = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
+				pstPalette->uiDepthBits		 = pstDeviceIF->uiDepthBits;
+			}
+			#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 			// Update process bar data.
 			switch(pstProcessBarData->stParameter.eDirection)
 			{
@@ -106,9 +108,9 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
 			}
 			// Redraw edge and clean up area.
 			SGUI_Basic_DrawRectangle(pstDeviceIF,
-                             pstProcessBarData->stParameter.stLayout.iX, pstProcessBarData->stParameter.stLayout.iY,
-                             pstProcessBarData->stParameter.stLayout.iWidth, pstProcessBarData->stParameter.stLayout.iHeight,
-                             pstPalette->eEdgeColor, eBackColor);
+							pstProcessBarData->stParameter.stLayout.iX, pstProcessBarData->stParameter.stLayout.iY,
+							pstProcessBarData->stParameter.stLayout.iWidth, pstProcessBarData->stParameter.stLayout.iHeight,
+							pstPalette->eEdgeColor, eBackColor);
 			// Draw process block.
 			SGUI_Basic_DrawRectangle(pstDeviceIF, uiProcessBlockStartX, uiProcessBlockStartY, uiProcessBlockWidth, uiProcessBlockHeight, eFillColor, eFillColor);
 		}

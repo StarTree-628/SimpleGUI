@@ -157,4 +157,3 @@ void SGUI_SystemIF_Free(void* pFreePointer)
 }
 #endif
 
-

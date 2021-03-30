@@ -62,19 +62,19 @@ class LCDFrame
 
 	private:
 	    // Controlers
-		wxStatusBar*            	m_pclsCtrlStatusBar;
-		wxToolBar*              	m_pclsCtrlToolBar;
-		wxLCD*						m_pclsCtrlPaintPanel;
-		wxTimer*               		m_pclsGeneralTimer;
-		wxTimer*                	m_pclsSecondTimer;
-		static LCDFrame*        	m_pclsInstance;
+		wxStatusBar*                m_pclsCtrlStatusBar;
+		wxToolBar*                  m_pclsCtrlToolBar;
+		wxLCD*                      m_pclsCtrlPaintPanel;
+		wxTimer*                    m_pclsGeneralTimer;
+        wxTimer*                    m_pclsSecondTimer;
+        static LCDFrame*            m_pclsInstance;
 
 		// Members.
 		void						_createToolbar(void);
 		void					    _setStatusText(const wxString& strString);
 
 	protected:
-		virtual void		    	Close(void);
+		virtual void                Close(void);
 		virtual void				OnKeyDown(wxKeyEvent& clsEvent);
 		virtual void				OnMouseEvent(wxMouseEvent& clsEvent);
 		virtual void				Screenshots(void);

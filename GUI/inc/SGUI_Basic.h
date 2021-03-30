@@ -19,7 +19,6 @@
 #define     SGUI_BMP_SCAN_MODE_DVPH              SGUI_Basic_BitMapScanDVPH
 #define     SGUI_BMP_SCAN_MODE_DVPV              SGUI_Basic_BitMapScanDVPV
 
-
 //=======================================================================//
 //= Public function declaration.									    =//
 //=======================================================================//

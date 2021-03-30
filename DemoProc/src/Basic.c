@@ -62,7 +62,7 @@ HMI_ENGINE_RESULT HMI_DemoBasic_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
 
 HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const void* pstParameters)
 {
-	/*----------------------------------*/
+    /*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
 	SGUI_INT                iPaintBkgIdx;
@@ -71,7 +71,7 @@ HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
 	/* Process							*/
 	/*----------------------------------*/
 
-	// Paint background
+	// Paint background.
 	for(iPaintBkgIdx=0; iPaintBkgIdx<pstDeviceIF->stSize.iHeight; iPaintBkgIdx+=5)
     {
         SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, iPaintBkgIdx*0x0F/pstDeviceIF->stSize.iHeight);

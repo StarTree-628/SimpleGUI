@@ -30,7 +30,6 @@ extern const wxSize	wxDefaultSizeInPixel;
 //=======================================================================//
 class wxLCDBase
 : public wxWindow
-
 {
     wxDECLARE_NO_COPY_CLASS(wxLCDBase);
 	wxDECLARE_EVENT_TABLE();

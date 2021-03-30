@@ -59,7 +59,7 @@ static SGUI_TEST_ITEM		s_arrstAppendListItems[] =	{	{{SCR1_LIST_APPEND1, NULL}, 
 															{{SCR1_LIST_APPEND6, NULL}, SGUI_FALSE}
 														};
 
-static SGUI_LIST        	s_stDemoListObject = 		{0x00};
+static SGUI_LIST		s_stDemoListObject = 		{0x00};
 
 //=======================================================================//
 //= Global variable declaration.									    =//
@@ -82,8 +82,8 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_LIST_PALETTE   stPalette;
-	SGUI_RECT           stListLayout;
+	SGUI_LIST_PALETTE			stPalette;
+	SGUI_RECT					stListLayout;	
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -126,7 +126,7 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
         #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
     #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
      //Initialize list object.
-    stListLayout.iX = 0;
+	stListLayout.iX = 0;
 	stListLayout.iY = 0;
 	stListLayout.iWidth = pstDeviceIF->stSize.iWidth;
 	stListLayout.iHeight = pstDeviceIF->stSize.iHeight;
@@ -162,7 +162,7 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	SGUI_UINT16					uiKeyValue;
 	KEY_PRESS_EVENT*			pstKeyEvent;
 	SGUI_INT					iProcessAction;
-    SGUI_SIZE					sInsertDataIdx;
+	SGUI_SIZE					sInsertDataIdx;
 	SGUI_ITEMS_ITEM*			pstItemObj;
 
 	/*----------------------------------*/
@@ -201,7 +201,7 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 				}
 				case KEY_VALUE_UP:
 				{
-					if(SGUI_List_GetSelection(&s_stDemoListObject)->iIndex>0)
+					if(SGUI_List_GetSelection(&s_stDemoListObject)->iIndex > 0)
 					{
 						SGUI_List_Selecte(&s_stDemoListObject, SGUI_List_GetSelection(&s_stDemoListObject)->iIndex-1);
 					}
@@ -372,7 +372,6 @@ HMI_ENGINE_RESULT HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, HMI_ENGINE
 			}
 			default:
 			{
-
 				/* do nothing. */
 			}
         }

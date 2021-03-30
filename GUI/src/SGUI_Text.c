@@ -6,21 +6,21 @@
 /*************************************************************************/
 
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_Text.h"
 
 //=======================================================================//
-//= Public variable declaration.									    =//
+//= Public variable declaration.										=//
 //=======================================================================//
 SGUI_CSZSTR		SGUI_EMPTY_STRING = {""};
 
 //=======================================================================//
-//= Static function declaration.									    =//
+//= Static function declaration.										=//
 //=======================================================================//
 
 //=======================================================================//
-//= Function define.										            =//
+//= Function define.													=//
 //=======================================================================//
 /*************************************************************************/
 /** Function Name:	SGUI_Text_GetTextExtent								**/
@@ -37,14 +37,14 @@ void SGUI_Text_GetTextExtent(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRe
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	const SGUI_CHAR*            pcChar;
+	const SGUI_CHAR*			pcChar;
 	SGUI_UINT32					uiCharacterCode;
-	SGUI_BMP_RES                stCharBitmap;
+	SGUI_BMP_RES				stCharBitmap;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	pcChar =				    (SGUI_CSZSTR)ENCODE(cszText);
+	pcChar =					(SGUI_CSZSTR)ENCODE(cszText);
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -84,7 +84,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	const SGUI_CHAR*            pcChar;							// Text character pointer.
+	const SGUI_CHAR*			pcChar;							// Text character pointer.
 	SGUI_UINT32					uiCharacterCode;				// Character byte, might be tow bytes.
 	SGUI_BMP_RES				stCharBitmap;
 	SGUI_POINT					stPaintPos;
@@ -93,15 +93,15 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 	/* Initialize						*/
 	/*----------------------------------*/
 	// Initialize variable.
-	pcChar =				    (SGUI_CSZSTR)ENCODE(cszText);
+	pcChar =					(SGUI_CSZSTR)ENCODE(cszText);
 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	if((NULL != pcChar) && (RECT_X_START(*pstDisplayArea) < RECT_WIDTH(pstDeviceIF->stSize)))
-    {
-        // Adapt text display area and data area.
-        SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
+	{
+		// Adapt text display area and data area.
+		SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
 		// Initialize drawing area data.
 		RECT_X_START(stPaintPos) = RECT_X_START(*pstInnerPos);
 		RECT_Y_START(stPaintPos) = RECT_Y_START(*pstInnerPos);
@@ -110,14 +110,14 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 		// Loop for Each char.
 		while(((NULL != pcChar) && ('\0' != *pcChar)) && (RECT_X_START(stPaintPos) < RECT_WIDTH(*pstDisplayArea)))
 		{
-		    uiCharacterCode = 0;
-            pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
-            //if(SGUI_IS_VISIBLE_CHAR(uiCharacterCode))
+			uiCharacterCode = 0;
+			pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
+			//if(SGUI_IS_VISIBLE_CHAR(uiCharacterCode))
 			{
-			    #if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
+				#if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
 					stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
 				#else
-                    stCharBitmap.pData=NULL;
+					stCharBitmap.pData=NULL;
 				#endif
 				pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 				if((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0)
@@ -148,7 +148,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	const SGUI_CHAR*            pcChar;
+	const SGUI_CHAR*			pcChar;
 	SGUI_UINT32					uiCharacterCode;
 	SGUI_SIZE					uiLines;
 	SGUI_BMP_RES				stCharBitmap;
@@ -171,8 +171,8 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 		RECT_X_START(stPaintPos) = 0;
 		RECT_Y_START(stPaintPos) = iTopOffset;
 		// Adapt text display area and data area.
-        SGUI_Common_AdaptDisplayInfo(pstDisplayArea, &stPaintPos);
-        iStartOffsetX = stPaintPos.iX;
+		SGUI_Common_AdaptDisplayInfo(pstDisplayArea, &stPaintPos);
+		iStartOffsetX = stPaintPos.iX;
 
 		RECT_HEIGHT(stCharBitmap) = pstFontRes->iHeight;
 		uiLines = 1;
@@ -180,7 +180,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 		while(((NULL != pcChar) && ('\0' != *pcChar)))
 		{
 			uiCharacterCode = 0;
-            pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
+			pcChar = pstFontRes->fnStepNext(pcChar, &uiCharacterCode);
 
 			// Judge change line symbol.
 			if(uiCharacterCode == '\n')
@@ -192,11 +192,11 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 				continue;
 			}
 			#if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
-                stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
+				stCharBitmap.pData=pstDeviceIF->arrBmpDataBuffer;
 			#else
-                stCharBitmap.pData=NULL;
-            #endif
-            pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
+				stCharBitmap.pData=NULL;
+			#endif
+			pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,false);
 
 			// Judge change line
 			if((stPaintPos.iX+stCharBitmap.iWidth-1) >= RECT_WIDTH(*pstDisplayArea))
@@ -210,7 +210,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 			if(((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0) && (RECT_Y_START(stPaintPos) < RECT_HEIGHT(*pstDisplayArea)))
 			{
 				// Draw character.
-                SGUI_Basic_DrawAlphaBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontColor);
+				SGUI_Basic_DrawAlphaBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontColor);
 			}
 			else
 			{
@@ -240,7 +240,7 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 	SGUI_SIZE					uiLineNumber, uiLineLength;
 	SGUI_UINT32					uiCharacterCode;
 	SGUI_CSZSTR					pcChar;
-	SGUI_BMP_RES                stCharBitmap;
+	SGUI_BMP_RES				stCharBitmap;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -264,7 +264,7 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 		else
 		{
 			pstFontRes->fnGetBitmap(&stCharBitmap,uiCharacterCode,true);
-            if((uiLineLength+stCharBitmap.iWidth)>uiDisplayAreaWidth)
+			if((uiLineLength+stCharBitmap.iWidth)>uiDisplayAreaWidth)
 			{
 				uiLineNumber++;
 				uiLineLength  = stCharBitmap.iWidth;
@@ -279,32 +279,32 @@ SGUI_SIZE SGUI_Text_GetMultiLineTextLines(SGUI_CSZSTR cszText, const SGUI_FONT_R
 }
 
 /*****************************************************************************/
-/** Function Name:	SGUI_Text_StringLength      						    **/
-/** Purpose:		Get string length in given font.                        **/
+/** Function Name:	SGUI_Text_StringLength	  							**/
+/** Purpose:		Get string length in given font.						**/
 /** Params:																	**/
-/**	@ cszText[in]:       String head pointer.   							**/
-/**	@ pstFontRes[in]:    Font resource which will be used to parse string.	**/
-/** Return:				The char block index inside of the library.         **/
+/**	@ cszText[in]:	   String head pointer.   							**/
+/**	@ pstFontRes[in]:	Font resource which will be used to parse string.	**/
+/** Return:				The char block index inside of the library.		 **/
 /*****************************************************************************/
 SGUI_SIZE SGUI_Text_StringLength(SGUI_CSZSTR cszText,const SGUI_FONT_RES* pstFontRes)
 {
-    SGUI_SIZE       sStrLen=0;
-    SGUI_UINT32     uiCharCode;
-    while(*cszText!='\0')
-    {
-        cszText=pstFontRes->fnStepNext(cszText,&uiCharCode);
-        sStrLen++;
-    }
-    return sStrLen;
+	SGUI_SIZE	   sStrLen=0;
+	SGUI_UINT32	 uiCharCode;
+	while(*cszText!='\0')
+	{
+		cszText=pstFontRes->fnStepNext(cszText,&uiCharCode);
+		sStrLen++;
+	}
+	return sStrLen;
 }
 
 /*****************************************************************************/
-/** Function Name:	SGUI_Text_IndexMapper_Direct						    **/
+/** Function Name:	SGUI_Text_IndexMapper_Direct							**/
 /** Purpose:		Directly use character code as the index while getting  **/
-/**                 character index inside the mono space font library.     **/
+/**				 character index inside the mono space font library.	 **/
 /** Params:																	**/
-/**	@ uiCode[in]:       Character code.										**/
-/** Return:				The char block index inside of the library.         **/
+/**	@ uiCode[in]:	   Character code.										**/
+/** Return:				The char block index inside of the library.		 **/
 /*****************************************************************************/
 SGUI_UINT32 SGUI_Text_IndexMapper_Direct(SGUI_UINT32 uiCode)
 {
@@ -314,7 +314,7 @@ SGUI_UINT32 SGUI_Text_IndexMapper_Direct(SGUI_UINT32 uiCode)
 /*************************************************************************/
 /** Function Name:	SGUI_Text_StepNext_ASCII							**/
 /** Purpose:		Read current character code order by input pointer  **/
-/**                 and step to next character start pointer in ASCII.  **/
+/**				 and step to next character start pointer in ASCII.  **/
 /** Resources:		None.												**/
 /** Params:																**/
 /**	@ cszSrc[in]:	Current char pointer.								**/
@@ -326,12 +326,12 @@ SGUI_CSZSTR SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	const SGUI_CHAR*            pcNextChar;
+	const SGUI_CHAR*			pcNextChar;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	pcNextChar =                cszSrc;
+	pcNextChar =				cszSrc;
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -348,11 +348,11 @@ SGUI_CSZSTR SGUI_Text_StepNext_ASCII(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 /*************************************************************************/
 /** Function Name:	SGUI_Resource_StepNext_GB2312						**/
 /** Purpose:		Read current character code order by input pointer  **/
-/**                 and step to next character start pointer in GB2312. **/
+/**				 and step to next character start pointer in GB2312. **/
 /** Resources:		None.												**/
 /** Params:																**/
 /**	@ cszSrc[in]:	Current char pointer.								**/
-/**	@ puiCode[out]:	Character code read from string.    				**/
+/**	@ puiCode[out]:	Character code read from string.					**/
 /** Return:			Next character start pointer.   					**/
 /*************************************************************************/
 SGUI_CSZSTR SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
@@ -360,13 +360,13 @@ SGUI_CSZSTR SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	const SGUI_CHAR*            pcNextChar;
+	const SGUI_CHAR*			pcNextChar;
 	SGUI_UINT32					uiCode;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	pcNextChar =                cszSrc;
+	pcNextChar =				cszSrc;
 	uiCode =					0;
 
 	/*----------------------------------*/
@@ -394,11 +394,11 @@ SGUI_CSZSTR SGUI_Text_StepNext_GB2312(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 /*************************************************************************/
 /** Function Name:	SGUI_Resource_StepNext_UTF8 						**/
 /** Purpose:		Read current character code order by input pointer  **/
-/**                 and step to next character start pointer in UTF8.   **/
+/**				 and step to next character start pointer in UTF8.   **/
 /** Resources:		None.												**/
 /** Params:																**/
 /**	@ cszSrc[in]:	Current char pointer.								**/
-/**	@ puiCode[out]:	Character code read from string.    				**/
+/**	@ puiCode[out]:	Character code read from string.					**/
 /** Return:			Next character start pointer.   					**/
 /*************************************************************************/
 SGUI_CSZSTR SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
@@ -406,34 +406,34 @@ SGUI_CSZSTR SGUI_Text_StepNext_UTF8(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	const SGUI_CHAR*            pcNextChar;
+	const SGUI_CHAR*			pcNextChar;
 	SGUI_UINT32					uiCode;
-    SGUI_UINT8                  uiTempByte;
-    SGUI_UINT8                  uiCharacterLength;
+	SGUI_UINT8				  uiTempByte;
+	SGUI_UINT8				  uiCharacterLength;
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	pcNextChar          = cszSrc;
-	uiCode              = 0;
-    uiCharacterLength   = 0;
+	pcNextChar		  = cszSrc;
+	uiCode			  = 0;
+	uiCharacterLength   = 0;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	if(NULL != pcNextChar)
 	{
-	    uiTempByte = *pcNextChar++;
-	    if(uiTempByte < 0x7F){
-            uiCode = uiTempByte;
-	    }else{
-	        while(uiTempByte & 0x80){
-                uiCharacterLength ++;
-                uiTempByte <<= 1;
-	        }
-	        uiCode |= uiTempByte >> uiCharacterLength;
-	        while((--uiCharacterLength)>0){
-                uiCode = (uiCode)<<6 | ((*pcNextChar++) & 0x3F);
-	        }
-	    }
+		uiTempByte = *pcNextChar++;
+		if(uiTempByte < 0x7F){
+			uiCode = uiTempByte;
+		}else{
+			while(uiTempByte & 0x80){
+				uiCharacterLength ++;
+				uiTempByte <<= 1;
+			}
+			uiCode |= uiTempByte >> uiCharacterLength;
+			while((--uiCharacterLength)>0){
+				uiCode = (uiCode)<<6 | ((*pcNextChar++) & 0x3F);
+			}
+		}
 	}
 	*puiCode = uiCode;
 	return pcNextChar;

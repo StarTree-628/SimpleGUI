@@ -44,7 +44,7 @@ static SGUI_ITEMS_ITEM		s_arrstSubMenuItems[] =		{	{SCR6_SUB_MENU_ITEM1, NULL},
 static SGUI_MENU		s_stDemoMenuObject = 		{0x00};
 static SGUI_MENU		s_stDemoSubMenuObject =		{0x00};
 
-static SGUI_MENU*		s_pstActivedMenu =			&s_stDemoMenuObject;
+static SGUI_MENU*	s_pstActivedMenu =			&s_stDemoMenuObject;
 
 //=======================================================================//
 //= Global variable declaration.									    =//
@@ -73,8 +73,8 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-	stLayout.iX =		    0;
-	stLayout.iY =		    0;
+	stLayout.iX =			0;
+	stLayout.iY =			0;
 	stLayout.iWidth = 		48;
 	stLayout.iHeight =		60;
     #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1

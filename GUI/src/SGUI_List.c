@@ -5,25 +5,25 @@
 /** Description: Draw list interface.									**/
 /*************************************************************************/
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_List.h"
 
 //=======================================================================//
-//= User Macro definition.											    =//
+//= User Macro definition.												=//
 //=======================================================================//
 // User settings
 #define		LIST_SCROLLBAR_WIDTH						(5)
 // Automatic calculation
 #define		LIST_EDGE_SIZE								1
-#define		LIST_TITLE_HEIGHT(FONT)               		((FONT)->iHeight+2)
+#define		LIST_TITLE_HEIGHT(FONT)			   		((FONT)->iHeight+2)
 
 //=======================================================================//
-//= Static function declaration.									    =//
+//= Static function declaration.										=//
 //=======================================================================//
 
 //=======================================================================//
-//= Function define.										            =//
+//= Function define.													=//
 //=======================================================================//
 /*************************************************************************/
 /** Function Name:	SGUI_List_InitializeListData						**/
@@ -40,12 +40,12 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 	/* Variable Declaration				*/
 	/*----------------------------------*/
 	SGUI_SCROLLBAR_PARAM	stScrollBarParam;
-    SGUI_RECT               stSubLayout;
+	SGUI_RECT				stSubLayout;
 
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
-    SGUI_SystemIF_MemorySet(&stSubLayout, 0x00, sizeof(SGUI_RECT));
+	SGUI_SystemIF_MemorySet(&stSubLayout, 0x00, sizeof(SGUI_RECT));
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -55,21 +55,21 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 		// Initialize member object pointer.
 		pstObj->stPallete = *cpstPalette;
 
-        #ifdef SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
+		#ifdef SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
 		// Initialize palette
-	    pstObj->stPallete.stScrollBar.uiDepthBits = cpstPalette->uiDepthBits;
-	    pstObj->stPallete.stItemBase.uiDepthBits = cpstPalette->uiDepthBits;
-        #endif // SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
+		pstObj->stPallete.stScrollBar.uiDepthBits = cpstPalette->uiDepthBits;
+		pstObj->stPallete.stItemBase.uiDepthBits = cpstPalette->uiDepthBits;
+		#endif // SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
 
-	    // Copy layout
-	    SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
-	    // Title
-	    pstObj->szTitle = cszTitle;
-	    // Initialize font resource.
+		// Copy layout
+		SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
+		// Title
+		pstObj->szTitle = cszTitle;
+		// Initialize font resource.
 		pstObj->pstFontRes = pstFontRes;
 		// Initialize Items
 		stSubLayout.iX = pstObj->stLayout.iX+2;
-        stSubLayout.iWidth = pstObj->stLayout.iWidth-4-LIST_SCROLLBAR_WIDTH;
+		stSubLayout.iWidth = pstObj->stLayout.iWidth-4-LIST_SCROLLBAR_WIDTH;
 		if(NULL == pstObj->szTitle)
 		{
 			stSubLayout.iY = pstObj->stLayout.iY+2;
@@ -137,6 +137,7 @@ void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj)
 		SGUI_ScrollBar_Repaint(pstDeviceIF, &(pstObj->stScrollBar));
 	}
 }
+
 /*************************************************************************/
 /** Function Name:	SGUI_List_Resize									**/
 /** Purpose:		Resize and calculate layout parameter for display 	**/

@@ -92,7 +92,7 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_I
 /** Function Name:	SGUI_Basic_ClearScreen								**/
 /** Purpose:		Clean LCD screen display.							**/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:	Device driver object pointer.   				**/
+/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
@@ -120,7 +120,7 @@ void SGUI_Basic_ClearScreen(SGUI_SCR_DEV* pstDeviceIF)
 /** Function Name:	SGUI_Basic_DrawLine									**/
 /** Purpose:		Draw a line by the Bresenham algorithm.				**/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:	Device driver object pointer.					**/
+/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
 /**	@ iStartX[in]:		X coordinate of start point of line.			**/
 /**	@ iStartY[in]:		Y coordinate of start point of line.			**/
 /**	@ iEndX[in]:		X coordinate of end point of line.				**/
@@ -215,10 +215,66 @@ void SGUI_Basic_DrawLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT i
 }
 
 /*************************************************************************/
+/** Function Name:	SGUI_Basic_DrawHorizontalLine						**/
+/** Purpose:		Draw a horizontal line by the Bresenham algorithm.  **/
+/** Params:																**/
+/**	@ pstDeviceIF[in]:  Device driver object pointer.					**/
+/**	@ iStartX[in]:		X coordinate of start point of line.			**/
+/**	@ iEndX[in]:		X coordinate of end point of line.				**/
+/**	@ iY[in]:           Y coordinate of the line.                       **/
+/**	@ eColor[in]:		Line color.										**/
+/** Return:			None.												**/
+/** Notice:			None.												**/
+/*************************************************************************/
+void SGUI_Basic_DrawHorizontalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iEndX, SGUI_INT iY, SGUI_COLOR eColor)
+{
+    /*----------------------------------*/
+    /* Variable Declaration				*/
+    /*----------------------------------*/
+    SGUI_INT                iPointX;
+
+    /*----------------------------------*/
+    /* Process							*/
+    /*----------------------------------*/
+    for(iPointX=iStartX; iPointX<=iEndX; iPointX++)
+    {
+        SGUI_Basic_DrawPoint(pstDeviceIF, iPointX, iY, eColor);
+    }
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_DrawVerticalLine                         **/
+/** Purpose:		Draw a vertical line by the Bresenham algorithm.    **/
+/** Params:																**/
+/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
+/**	@ iX[in]:       X coordinate of the line.                           **/
+/**	@ iStartY[in]:  Y coordinate of start point of line.                **/
+/**	@ iEndY[in]:	Y coordinate of end point of line.			    	**/
+/**	@ eColor[in]:	Line color.											**/
+/** Return:			None.												**/
+/** Notice:			None.												**/
+/*************************************************************************/
+void SGUI_Basic_DrawVerticalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iStartY, SGUI_INT iEndY, SGUI_COLOR eColor)
+{
+    /*----------------------------------*/
+    /* Variable Declaration				*/
+    /*----------------------------------*/
+    SGUI_INT                iPointY;
+
+    /*----------------------------------*/
+    /* Process							*/
+    /*----------------------------------*/
+    for(iPointY=iStartY; iPointY<=iEndY; iPointY++)
+    {
+        SGUI_Basic_DrawPoint(pstDeviceIF, iX, iPointY, eColor);
+    }
+}
+
+/*************************************************************************/
 /** Function Name:	SGUI_Basic_DrawLine									**/
 /** Purpose:		Draw a line by the Bresenham algorithm.				**/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:	SimpleGUI object pointer.						**/
+/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
 /**	@ pstStartPoint[in]: Start point coordinate.						**/
 /**	@ pstEndPoint[in]: End point coordinate.							**/
 /**	@ pcstArea[in]:	Visible area.										**/
@@ -319,69 +375,14 @@ void SGUI_Basic_DrawLineInArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_POINT* pstStartPo
     }
 }
 /*************************************************************************/
-/** Function Name:	SGUI_Basic_DrawHorizontalLine						**/
-/** Purpose:		Draw a horizontal line by the Bresenham algorithm.  **/
-/** Params:																**/
-/**	@ pstDeviceIF[in]:  Device driver object pointer.					**/
-/**	@ iStartX[in]:		X coordinate of start point of line.			**/
-/**	@ iEndX[in]:		X coordinate of end point of line.				**/
-/**	@ iY[in]:           Y coordinate of the line.                       **/
-/**	@ eColor[in]:		Line color.										**/
-/** Return:			None.												**/
-/** Notice:			None.												**/
-/*************************************************************************/
-void SGUI_Basic_DrawHorizontalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iEndX, SGUI_INT iY, SGUI_COLOR eColor)
-{
-    /*----------------------------------*/
-    /* Variable Declaration				*/
-    /*----------------------------------*/
-    SGUI_INT                iPointX;
-
-    /*----------------------------------*/
-    /* Process							*/
-    /*----------------------------------*/
-    for(iPointX=iStartX; iPointX<=iEndX; iPointX++)
-    {
-        SGUI_Basic_DrawPoint(pstDeviceIF, iPointX, iY, eColor);
-    }
-}
-
-/*************************************************************************/
-/** Function Name:	SGUI_Basic_DrawVerticalLine                         **/
-/** Purpose:		Draw a vertical line by the Bresenham algorithm.    **/
-/** Params:																**/
-/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
-/**	@ iX[in]:       X coordinate of the line.                           **/
-/**	@ iStartY[in]:  Y coordinate of start point of line.                **/
-/**	@ iEndY[in]:	Y coordinate of end point of line.			    	**/
-/**	@ eColor[in]:	Line color.											**/
-/** Return:			None.												**/
-/** Notice:			None.												**/
-/*************************************************************************/
-void SGUI_Basic_DrawVerticalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iStartY, SGUI_INT iEndY, SGUI_COLOR eColor)
-{
-    /*----------------------------------*/
-    /* Variable Declaration				*/
-    /*----------------------------------*/
-    SGUI_INT                iPointY;
-
-    /*----------------------------------*/
-    /* Process							*/
-    /*----------------------------------*/
-    for(iPointY=iStartY; iPointY<=iEndY; iPointY++)
-    {
-        SGUI_Basic_DrawPoint(pstDeviceIF, iX, iPointY, eColor);
-    }
-}
-/*************************************************************************/
 /** Function Name:	SGUI_Basic_DrawRectangle							**/
 /** Purpose:		Draw a rectangle on screen. 						**/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:	Device driver object pointer.					**/
-/**	@ uiStartX[in]:		X coordinate of the upper-left corner.			**/
-/**	@ uiStartY[in]:		Y coordinate of the upper-left corner.			**/
-/**	@ uiWidth[in]: .	Width of rectangle.								**/
-/**	@ uiHeight[in]:		Height of rectangle.							**/
+/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
+/**	@ iStartX[in]:		X coordinate of the upper-left corner.			**/
+/**	@ iStartY[in]:		Y coordinate of the upper-left corner.			**/
+/**	@ iWidth[in]: .	Width of rectangle.									**/
+/**	@ iHeight[in]:		Height of rectangle.							**/
 /**	@ eEdgeColor[in]:	Edge color.										**/
 /**	@ eFillColor[in]:	Fill color.										**/
 /** Return:			None.												**/
@@ -528,7 +529,7 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
     /*----------------------------------*/
     /* Variable Declaration				*/
     /*----------------------------------*/
-    SGUI_UINT					iIdxW, iIdxH;
+    SGUI_INT					iIdxW, iIdxH;
     SGUI_COLOR 					eColor;
 
     /*----------------------------------*/
@@ -660,7 +661,7 @@ void SGUI_Basic_DrawAlphaBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplay
 /** Function Name:	SGUI_Basic_DrawBitMap								**/
 /** Purpose:		Draw a rectangular area bit map on LCD screen.		**/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:	 Device driver object pointer.					**/
+/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
 /**	@ pstDisplayArea[in]: Display area position and size.				**/
 /**	@ pstInnerPos[in]:	Data area size and display offset.				**/
 /**	@ pstBitmapData[in]: Bitmap object, include size, depth and data.	**/
@@ -675,7 +676,7 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
 	/*----------------------------------*/
 	SGUI_INT					iDrawPixX, iDrawPixY;
 	SGUI_INT					iBmpPixX, iBmpPixY;
-	SGUI_UINT					iDrawnWidthIndex, iDrawnHeightIndex;
+	SGUI_INT					iDrawnWidthIndex, iDrawnHeightIndex;
 	SGUI_COLOR                  eColor;
 
 	/*----------------------------------*/
@@ -994,6 +995,7 @@ SGUI_BOOL SGUI_Basic_PointIsInArea(const SGUI_RECT* pstArea, const SGUI_POINT* p
 	}
 	return bReturn;
 }
+
 /*************************************************************************/
 /** Function Name:	SGUI_Basic_GetReverseColor							**/
 /** Purpose:		Calculate the reverse color of eOriginColor when 	**/

@@ -88,7 +88,7 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     g_stDeviceInterface.uiDepthBits = PARAM_DEFAULT_PIXEL_DEPTH_BITS;
     #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
-    /* Initialize interface object. */
+	/* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
 	g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;
@@ -124,7 +124,6 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 		}
 		/* Active engine object. */
 		eProcessResult = HMI_ActiveEngine(&g_stDemoEngine, HMI_SCREEN_ID_DEMO_LIST);
-		//eProcessResult = HMI_ActiveEngine(&g_stDemoEngine, HMI_SCREEN_ID_DEMO_ITEMS_BASE);
 		if(HMI_PROCESS_FAILED(eProcessResult))
 		{
 			/* Active engine failed. */
@@ -225,7 +224,7 @@ void KeyPressEventProc(void)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	KEY_PRESS_EVENT		stEvent;
+	KEY_PRESS_EVENT	    stEvent;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
     const SDK_KB_EVENT*     pstSDKEvent;
 #endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_
@@ -354,6 +353,8 @@ bool RTCTimerTriggered(void)
 	return CheckEventFlag(ENV_FLAG_IDX_SDK_SEC_EVENT);
 #else
 	#error Add RTC timer trigger process here.
+    // // Add Dummy RTC trigger process here.
+	return false;
 #endif
 }
 

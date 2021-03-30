@@ -18,6 +18,7 @@
 #define SCR1_LIST_APPEND4				("Add item 4")
 #define SCR1_LIST_APPEND5				("Add item 5")
 #define SCR1_LIST_APPEND6				("Add item 6")
+
 /* Screen 2: Basic Paint*/
 /* No text used. */
 

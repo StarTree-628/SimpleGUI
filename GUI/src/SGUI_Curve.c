@@ -366,7 +366,7 @@ void SGUI_Curve_CalculatePointPosition(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POI
 /**					at 0.												**/
 /** Params:																**/
 /**	@ pstObj[in]:	Curve object pointer.								**/
-/**	@ sIndex[in]:	Index start at 0 form the head point.				**/
+/**	@ iIndex[in]:	Index start at 0 form the head point.				**/
 /** Return:			Focused point object pointer. NULL pointer will be	**/
 /**					returned when index is invalid.						**/
 /*************************************************************************/

@@ -8,9 +8,9 @@
 //=======================================================================//
 //= Public variable declaration.									    =//
 //=======================================================================//
-extern const SGUI_FONT_RES  SGUI_DEFAULT_FONT_MiniNum;
-extern const SGUI_FONT_RES  SGUI_DEFAULT_FONT_8;
-extern const SGUI_FONT_RES 	SGUI_DEFAULT_FONT_12;
-extern const SGUI_FONT_RES 	SGUI_DEFAULT_FONT_16;
+SGUI_FONT_RESOURCE_DECLARE(MiniNum);
+SGUI_FONT_RESOURCE_DECLARE(FONT_8);
+SGUI_FONT_RESOURCE_DECLARE(FONT_12);
+SGUI_FONT_RESOURCE_DECLARE(FONT_16);
 
 #endif // _INCLUDED_SGUI_FONT_SOURCE_H_

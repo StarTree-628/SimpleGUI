@@ -14,17 +14,29 @@
 //=======================================================================//
 typedef struct
 {
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_UINT8                  uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_ITEMS_BASE_PALETTE     stItemBase;
+    SGUI_SCROLLBAR_PALETTE      stScrollBar;
+    SGUI_COLOR                  eBorderColor;
+    SGUI_COLOR                  eBackgroundColor;
+    SGUI_COLOR                  eTitleTextColor;
+} SGUI_LIST_PALETTE;
+typedef struct
+{
 	SGUI_RECT					stLayout;
 	SGUI_ITEMS_BASE				stItems;
 	SGUI_CSZSTR					szTitle;
 	SGUI_SCROLLBAR_STRUCT		stScrollBar;
 	const SGUI_FONT_RES*        pstFontRes;
+	SGUI_LIST_PALETTE           stPallete;
 }SGUI_LIST;
 
 //=======================================================================//
 //= Public function declaration.									    =//
 //=======================================================================//
-void					SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount);
+void					SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_LIST_PALETTE* cpstPalette, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount);
 void					SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj);
 void					SGUI_List_Resize(SGUI_LIST* pstObj, const SGUI_RECT* pstNewLayout);
 #define					SGUI_List_Count(/* SGUI_LIST */OBJ) \

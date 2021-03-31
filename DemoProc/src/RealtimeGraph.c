@@ -59,7 +59,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_Prepare(SGUI_SCR_DEV* pstDeviceIF, const voi
 	// Reinitialize data.
 	SGUI_RealtimeGraph_Initialize(&s_stRealtimeGraph);
 	// Paint frame.
-	SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, RECT_WIDTH(pstDeviceIF->stSize), RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+	SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, RECT_WIDTH(pstDeviceIF->stSize), RECT_HEIGHT(pstDeviceIF->stSize), 0x0A, SGUI_COLOR_BKGCLR);
 	// Update screen display.
 	SGUI_RealtimeGraph_Repaint(pstDeviceIF, &s_stRealtimeGraph);
 	// Start dummy heart-beat timer.
@@ -75,7 +75,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, con
 	SGUI_POINT			stInnerPos;
 
 	// Paint frame.
-	SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, RECT_WIDTH(pstDeviceIF->stSize), RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+	SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, RECT_WIDTH(pstDeviceIF->stSize), RECT_HEIGHT(pstDeviceIF->stSize), 0x0A, SGUI_COLOR_BKGCLR);
 	// Paint title
 	stTextDisplayArea.iX = 1;
 	stTextDisplayArea.iY = 1;
@@ -83,7 +83,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, con
 	stTextDisplayArea.iHeight = 8;
 	stInnerPos.iX = 0;
 	stInnerPos.iY = 0;
-	SGUI_Text_DrawText(pstDeviceIF, SCR5_RT_GRAPH_TITLE, &SGUI_DEFAULT_FONT_8, &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawText(pstDeviceIF, SCR5_RT_GRAPH_TITLE, SGUI_FONT_REF(FONT_8), &stTextDisplayArea, &stInnerPos, 0x0F);
 	// Paint value.
 	SGUI_Common_IntegerToString(s_stRealtimeGraph.Data->ValueArray[s_stRealtimeGraph.Data->ValueCount-1], szTextBuffer, 10, 4, ' ');
 	stTextDisplayArea.iX = 1;
@@ -92,7 +92,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, con
 	stTextDisplayArea.iHeight = 5;
 	stInnerPos.iX = 0;
 	stInnerPos.iY = 0;
-	SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_MiniNum, &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+	SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, SGUI_FONT_REF(MiniNum), &stTextDisplayArea, &stInnerPos, 0x0F);
 	SGUI_RealtimeGraph_Repaint(pstDeviceIF, &s_stRealtimeGraph);
 	return HMI_RET_NORMAL;
 }

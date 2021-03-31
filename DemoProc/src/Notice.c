@@ -28,7 +28,7 @@ static HMI_ENGINE_RESULT	HMI_DemoNotice_PostProcess(SGUI_SCR_DEV* pstDeviceIF, H
 //=======================================================================//
 //= Static variable declaration.									    =//
 //=======================================================================//
-static SGUI_NOTICT_BOX	s_stDemoNoticeBox =				{0x00};
+static SGUI_NOTICE_BOX	s_stDemoNoticeBox =				{0x00};
 static SGUI_CHAR		s_szDemoNoticeText[NOTICE_TEXT_BUFFER_SIZE+1] = {0x00};
 
 HMI_SCREEN_ACTION		s_stDemoNoticeActions =			{	HMI_DemoNotice_Initialize,
@@ -54,6 +54,20 @@ HMI_ENGINE_RESULT HMI_DemoNotice_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	s_stDemoNoticeBox.cszNoticeText = s_szDemoNoticeText;
 	s_stDemoNoticeBox.pstIcon = NULL;
 	SGUI_Notice_FitArea(pstDeviceIF, &(s_stDemoNoticeBox.stLayout));
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+    s_stDemoNoticeBox.stPalette.eEdgeColor  = 0x01;
+	s_stDemoNoticeBox.stPalette.eTextColor  = 0x01;
+	s_stDemoNoticeBox.stPalette.eFillColor  = 0x00;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	s_stDemoNoticeBox.stPalette.uiDepthBits = 4;
+	#endif
+	s_stDemoNoticeBox.stPalette.eEdgeColor  = 0x0A;
+	s_stDemoNoticeBox.stPalette.eTextColor  = 0x0F;
+	s_stDemoNoticeBox.stPalette.eFillColor  = 0x01;
+	#else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+	#endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 	return HMI_RET_NORMAL;
 }
 
@@ -71,13 +85,13 @@ HMI_ENGINE_RESULT HMI_DemoNotice_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* 
 		SGUI_SystemIF_StringLengthCopy(s_szDemoNoticeText, (SGUI_SZSTR)pstParameters, NOTICE_TEXT_BUFFER_SIZE);
 		s_szDemoNoticeText[NOTICE_TEXT_BUFFER_SIZE] = '\0';
 	}
-	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, &GB2312_FZXS12, 0);
+	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, SGUI_FONT_REF(GB2312_FZXS12), 0);
 	return HMI_RET_NORMAL;
 }
 
 HMI_ENGINE_RESULT HMI_DemoNotice_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const void* pstParameters)
 {
-	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, &GB2312_FZXS12, 0);
+	SGUI_Notice_Repaint(pstDeviceIF, &s_stDemoNoticeBox, SGUI_FONT_REF(GB2312_FZXS12), 0);
 	return HMI_RET_NORMAL;
 }
 

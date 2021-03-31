@@ -17,6 +17,8 @@ class wxLCD: public wxLCDBase
 	private:
 		wxColour				m_clsPixelHColour;
 		wxColour				m_clsPixelLColour;
+        wxColour*               m_clsPixelPalette;
+        int                     m_iPixelDepth;
 
 	protected:
 
@@ -29,6 +31,7 @@ class wxLCD: public wxLCDBase
 		void					CleanScreen(void);
 		void					SetPanelColour(const wxColour& clsPanelColour, bool bRefreshNow = true);
 		void					SetPixelColour(const wxColour& clsPixelColour, bool bRefreshNow = true);
+		void                    SetPixelDepth(const int depth);
 
 		// Prepare to remove.
 		void				    SetParameter(PixelPanelParameter* pstPanelParameter);

@@ -1,17 +1,17 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_ScrollBar.c											**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Create and display a scrollbar on screen.				**/
 /*************************************************************************/
 
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_ScrollBar.h"
 
 //=======================================================================//
-//= Function define.										            =//
+//= Function define.													=//
 //=======================================================================//
 /*************************************************************************/
 /** Function Name:	SGUI_ScrollBar_Initialize							**/
@@ -72,6 +72,7 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 	/*----------------------------------*/
 	SGUI_INT					uiScrollBlockPos;
 	SGUI_SIZE					uiScrollBlockSize;
+	SGUI_SCROLLBAR_PALETTE*	 pstPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -84,6 +85,7 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 	{
 		uiScrollBlockSize = pstObj->stParam.stLayout.iHeight-2;
 	}
+	pstPalette = &pstObj->stParam.stPalette;
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -95,10 +97,20 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 		{
 			pstObj->stData.sValue = pstObj->stParam.sMaxValue;
 		}
+		#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+		// Mapping Color
+		if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
+		{
+			pstPalette->eBackgroundColor	= SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+			pstPalette->eHandleColor		= SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eHandleColor,pstDeviceIF->uiDepthBits);
+			pstPalette->eEdgeColor		  = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
+			pstPalette->uiDepthBits		 = pstDeviceIF->uiDepthBits;
+		}
+		#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 		// Draw scroll bar edge.
 		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX, pstObj->stParam.stLayout.iY,
 									pstObj->stParam.stLayout.iWidth, pstObj->stParam.stLayout.iHeight,
-									SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+									pstPalette->eEdgeColor, pstPalette->eBackgroundColor);
 
 		if(SGUI_SCROLLBAR_VERTICAL == pstObj->stParam.eDirection)
 		{
@@ -108,12 +120,12 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 				uiScrollBlockPos = pstObj->stParam.stLayout.iY+1+((pstObj->stParam.stLayout.iHeight-uiScrollBlockSize-2)*pstObj->stData.sValue/pstObj->stParam.sMaxValue);
 				// Redraw process block
 				SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX+1, uiScrollBlockPos,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstPalette->eHandleColor, pstPalette->eHandleColor);
 			}
 			else
 			{
 				SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX+1, pstObj->stParam.stLayout.iY+1,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstPalette->eHandleColor, pstPalette->eHandleColor);
 			}
 		}
 		else // Horizontal
@@ -124,12 +136,12 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 				uiScrollBlockPos = pstObj->stParam.stLayout.iX+1+((pstObj->stParam.stLayout.iWidth-uiScrollBlockSize-2)*pstObj->stData.sValue/pstObj->stParam.sMaxValue);
 				// Redraw process block
 				SGUI_Basic_DrawRectangle(pstDeviceIF, uiScrollBlockPos, pstObj->stParam.stLayout.iY+1,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstPalette->eHandleColor, pstPalette->eHandleColor);
 			}
 			else
 			{
 				SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX+1, pstObj->stParam.stLayout.iY+1,
-										uiScrollBlockSize, uiScrollBlockSize, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+										uiScrollBlockSize, uiScrollBlockSize, pstPalette->eHandleColor, pstPalette->eHandleColor);
 			}
 		}
 	}

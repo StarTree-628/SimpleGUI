@@ -1,7 +1,7 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_Notice.c												**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Notice box display interface.							**/
 /*************************************************************************/
 
@@ -30,7 +30,7 @@
 /** Return:			Remaining text height display.						**/
 /** Notice:			None.												**/
 /*************************************************************************/
-SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICT_BOX* pstObject, const SGUI_FONT_RES* pstFontRes, SGUI_INT uiTextOffset)
+SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICE_BOX* pstObject, const SGUI_FONT_RES* pstFontRes, SGUI_INT uiTextOffset)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -39,14 +39,24 @@ SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICT_BOX* pstObj
 	SGUI_RECT				stIconDisplayArea;
 	SGUI_POINT				stIconPosition;
 	SGUI_RECT				stTextDisplayArea;
+	SGUI_NOTICE_PALETTE*    pstPalette;
 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 	if((NULL != pstObject) && (NULL != pstObject->cszNoticeText))
 	{
+	    pstPalette = &pstObject->stPalette;
+	    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING
+	    // Mapping Color
+	    if(pstDeviceIF->uiDepthBits != pstPalette->uiDepthBits){
+            pstPalette->eEdgeColor = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eEdgeColor,pstDeviceIF->uiDepthBits);
+            pstPalette->eFillColor = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eFillColor,pstDeviceIF->uiDepthBits);
+            pstPalette->uiDepthBits= pstDeviceIF->uiDepthBits;
+	    }
+	    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING
 		// Draw edgeNOTICE_BOX_MARGIN
-		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObject->stLayout.iX, pstObject->stLayout.iY, pstObject->stLayout.iWidth, pstObject->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObject->stLayout.iX, pstObject->stLayout.iY, pstObject->stLayout.iWidth, pstObject->stLayout.iHeight, pstPalette->eEdgeColor, pstPalette->eFillColor);
 
 		stTextDisplayArea.iY = pstObject->stLayout.iY+2;
 		stTextDisplayArea.iHeight = pstObject->stLayout.iHeight-4;
@@ -70,7 +80,7 @@ SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICT_BOX* pstObj
 			SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconDisplayArea, &stIconPosition, pstObject->pstIcon, SGUI_DRAW_NORMAL);
 		}
 		// Draw text;
-		uiTextLines = SGUI_Text_DrawMultipleLinesText(pstDeviceIF, pstObject->cszNoticeText, pstFontRes, &stTextDisplayArea, uiTextOffset, SGUI_DRAW_NORMAL);
+		uiTextLines = SGUI_Text_DrawMultipleLinesText(pstDeviceIF, pstObject->cszNoticeText, pstFontRes, &stTextDisplayArea, uiTextOffset, pstObject->stPalette.eTextColor);
 	}
     return uiTextLines;
 }

@@ -7,12 +7,12 @@
 /*************************************************************************/
 
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_ItemsBase.h"
 
 //=======================================================================//
-//= User Macro definition.											    =//
+//= User Macro definition.												=//
 //=======================================================================//
 #define		ITEMS_SENECT_IDX(ITEMS_PTR)			(ITEMS_PTR->stSelection.iIndex)
 #define		ITEMS_SENECT_ITEM(ITEMS_PTR)			(ITEMS_PTR->stSelection.pstItem)
@@ -25,11 +25,11 @@
 #define		ITEMS_VISIBLE_ITEMS(ITEMS_PTR)		(ITEMS_PTR->iVisibleItems)
 
 //=======================================================================//
-//= Static function declaration.									    =//
+//= Static function declaration.										=//
 //=======================================================================//
 
 //=======================================================================//
-//= Function define.										            =//
+//= Function define.													=//
 //=======================================================================//
 /*************************************************************************/
 /** Function Name:	SGUI_ItemsBase_Initialize							**/
@@ -42,7 +42,7 @@
 /** @ iItemsCount[in]: Number of list item data.						**/
 /** Return:			None.												**/
 /*************************************************************************/
-void SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstLayout, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
+void SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstLayout, const SGUI_ITEMS_BASE_PALETTE* cpstPalette, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -53,12 +53,14 @@ void SGUI_ItemsBase_Initialize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstLay
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstObj) && (NULL != pstFontRes))
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL != cpstPalette))
 	{
 		/* Paint font. */
 		pstObj->pstFontRes = pstFontRes;
 		/* Layout */
 		SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
+		/* Palette */
+		pstObj->stPalette = *cpstPalette;
 		/* Calculate the number of visible items. */
 		ITEMS_VISIBLE_ITEMS(pstObj) = (pstObj->stLayout.iHeight-1)/ITEM_HEIGHT(pstObj->pstFontRes)+1;
 		/* Items count. */
@@ -169,7 +171,7 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 	SGUI_POINT				stItemTextPos;
 	SGUI_ITEMS_ITEM*		pstPaintingItem;
 	SGUI_CSZSTR				cszItemText;
-
+	SGUI_ITEMS_BASE_PALETTE*	pstPalette;
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
@@ -180,10 +182,23 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 	/*----------------------------------*/
 	if((NULL != pstDeviceIF) && (NULL != pstObj))
 	{
+
+		pstPalette = &(pstObj->stPalette);
+		#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING
+		// Map color
+		if(pstPalette->uiDepthBits != pstDeviceIF->uiDepthBits)
+		{
+			pstPalette->eBackgroundColor	= SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+			pstPalette->eFocusColor		 = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eFocusColor,pstDeviceIF->uiDepthBits);
+			pstPalette->eFocusTextColor	 = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+			pstPalette->eTextColor		  = SGUI_Basic_MapColor(pstPalette->uiDepthBits,pstPalette->eBackgroundColor,pstDeviceIF->uiDepthBits);
+			pstPalette->uiDepthBits		 = pstDeviceIF->uiDepthBits;
+		}
+		#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING
 		/* Clear background */
 		if(pstObj->iCount < pstObj->iVisibleItems)
 		{
-			SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+			SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstPalette->eBackgroundColor, pstPalette->eBackgroundColor);
 		}
 
 		if(pstObj->iCount > 0)
@@ -235,7 +250,13 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 			pstPaintingItem = ITEMS_VISIBLE_START_ITEM(pstObj);
 			stItemTextPos.iY = pstObj->iItemPaintOffset+1;
 			cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
-			SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+			if(pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)){
+				SGUI_Basic_DrawRectangle(pstDeviceIF, stItemPaintArea.iX, stItemPaintArea.iY, stItemPaintArea.iWidth, stItemPaintArea.iHeight, pstPalette->eFocusColor, pstPalette->eFocusColor);
+				SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPalette->eFocusTextColor);
+			}else{
+				SGUI_Basic_DrawRectangle(pstDeviceIF, stItemPaintArea.iX, stItemPaintArea.iY, stItemPaintArea.iWidth, stItemPaintArea.iHeight, pstPalette->eBackgroundColor, pstPalette->eBackgroundColor);
+				SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPalette->eTextColor);
+			}
 			/* Paint remaining items if existed. */
 			pstPaintingItem = pstPaintingItem->pstNext;
 			stItemPaintArea.iHeight = ITEM_HEIGHT(pstObj->pstFontRes);
@@ -246,7 +267,13 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 				while((pstPaintingItem != ITEMS_VISIBLE_END_ITEM(pstObj)) && (NULL != pstPaintingItem))
 				{
 					cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
-					SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+					if(pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)){
+						SGUI_Basic_DrawRectangle(pstDeviceIF, stItemPaintArea.iX, stItemPaintArea.iY, stItemPaintArea.iWidth, stItemPaintArea.iHeight, pstPalette->eFocusColor, pstPalette->eFocusColor);
+						SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPalette->eFocusTextColor);
+					}else{
+						SGUI_Basic_DrawRectangle(pstDeviceIF, stItemPaintArea.iX, stItemPaintArea.iY, stItemPaintArea.iWidth, stItemPaintArea.iHeight, pstPalette->eBackgroundColor, pstPalette->eBackgroundColor);
+						SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPalette->eTextColor);
+					}
 					stItemPaintArea.iY += ITEM_HEIGHT(pstObj->pstFontRes);
 					pstPaintingItem = pstPaintingItem->pstNext;
 				}
@@ -258,7 +285,14 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 					/* Correct last visible item height when items area height is an integer multiple of item height. */
 					stItemPaintArea.iHeight = (0==stItemPaintArea.iHeight)?ITEM_HEIGHT(pstObj->pstFontRes):stItemPaintArea.iHeight;
 					cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
-					SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+
+					if(pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)){
+						SGUI_Basic_DrawRectangle(pstDeviceIF, stItemPaintArea.iX, stItemPaintArea.iY, stItemPaintArea.iWidth, stItemPaintArea.iHeight, pstPalette->eFocusColor, pstPalette->eFocusColor);
+						SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPalette->eFocusTextColor);
+					}else{
+						SGUI_Basic_DrawRectangle(pstDeviceIF, stItemPaintArea.iX, stItemPaintArea.iY, stItemPaintArea.iWidth, stItemPaintArea.iHeight, pstPalette->eBackgroundColor, pstPalette->eBackgroundColor);
+						SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPalette->eTextColor);
+					}
 				}
 			}
 		}

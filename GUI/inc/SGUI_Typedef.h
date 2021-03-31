@@ -6,28 +6,12 @@
 #include "stdint.h"
 #include "stddef.h"
 #include <stdbool.h>
-
+#include <SGUI_Config.h>
 //=======================================================================//
 //= User Macro definition.											    =//
 //=======================================================================//
-#define		SGUI_MAX_OF(A, B)						(A>B?A:B)
-#define		SGUI_MIN_OF(A, B)						(A<B?A:B)
-#define		RANGE_SIZE(RANGE)						((RANGE).iMax-(RANGE).iMin+1)
-#define 	RECT_X_START(ST)						((ST).iX)
-#define 	RECT_X_END(RECT)						(((RECT).iX + (RECT).iWidth - 1))
-#define 	RECT_Y_START(ST)						((ST).iY)
-#define 	RECT_Y_END(RECT)						(((RECT).iY + (RECT).iHeight - 1))
-#define 	RECT_WIDTH(ST)							((ST).iWidth)
-#define 	RECT_HEIGHT(ST)							((ST).iHeight)
-#define 	RECT_VALID_WIDTH(DATA, POS)				((RECT_X_START(POS)>0)?RECT_WIDTH(DATA):(RECT_WIDTH(DATA)+RECT_X_START(POS)))
-#define		RECT_VALID_HEIGHT(DATA, POS)			((RECT_Y_START(POS)>0)?RECT_HEIGHT(DATA):(RECT_HEIGHT(DATA)+RECT_Y_START(POS)))
-
 #define		SGUI_DEVPF_IF_DEFINE(R, FN, PARAM)		typedef R(*FN)PARAM
-#define		SGUI_BMP_DATA_BUFFER_SIZE				(512)
 
-#define	SGUI_BMP_RESOURCE_DECLARE(NAME)				extern const SGUI_BMP_RES NAME
-#define	SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, ...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
-													const SGUI_BMP_RES NAME = {W, H, NAME##DATA}
 //=======================================================================//
 //= Data type definition.											    =//
 //=======================================================================//
@@ -60,6 +44,15 @@ typedef	SGUI_UINT32						SGUI_ROM_ADDRESS;
 #define SGUI_FALSE						(0)
 #define SGUI_TRUE						(!SGUI_FALSE)
 
+#define SGUI_COLOR_TRANS                (-1)
+/******
+ * Deprecated!
+ * Prepared to delete this guy!
+ * DO NOT USE THIS MACRO ANY MORE!
+ */
+#define SGUI_COLOR_FRGCLR               (0x0A)
+#define SGUI_COLOR_BKGCLR               (0)
+
 typedef struct
 {
 	SGUI_INT							iX;
@@ -86,12 +79,7 @@ typedef struct
 	SGUI_INT							iMax;
 }SGUI_RANGE;
 
-typedef enum
-{
-	SGUI_COLOR_BKGCLR =					0,
-	SGUI_COLOR_FRGCLR =					1,
-	SGUI_COLOR_TRANS =					2,
-}SGUI_COLOR;
+typedef SGUI_INT8 SGUI_COLOR ;
 
 typedef enum
 {
@@ -114,8 +102,8 @@ typedef SGUI_UINT16                     SGUI_PALETTE_COLOUR;
 // Screen device operation interface type declare.
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_INITIALIZE,				(void));
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_CLEAR,					(void));
-SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_SET_POINT,				(SGUI_INT iX, SGUI_INT iY, SGUI_INT iColor));
-SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_GET_POINT,				(SGUI_INT iX, SGUI_INT iY));
+SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_SET_POINT,				(SGUI_INT iX, SGUI_INT iY, SGUI_COLOR iColor));
+SGUI_DEVPF_IF_DEFINE(SGUI_COLOR,		SGUI_FN_IF_GET_POINT,				(SGUI_INT iX, SGUI_INT iY));
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_SET_BYTE,				(SGUI_INT iPage, SGUI_INT iColumn));
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_GET_BYTE,				(SGUI_INT iPage, SGUI_INT iColumn));
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_REFRESH,					(void));
@@ -123,17 +111,19 @@ SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_SET_PALETTE,             (SGUI_PALETTE_
 
 // System function interface type declare.
 SGUI_DEVPF_IF_DEFINE(void,				SGUI_FN_IF_GET_RTC,					(SGUI_INT iYear, SGUI_INT iMounth, SGUI_INT iDay, SGUI_INT iWeekDay, SGUI_INT iHour, SGUI_INT iMinute, SGUI_INT iSecond));
-SGUI_DEVPF_IF_DEFINE(SGUI_INT,			SGUI_FN_IF_GET_CHAR_INDEX,			(SGUI_UINT32 uiCode));
-SGUI_DEVPF_IF_DEFINE(SGUI_CSZSTR,       SGUI_FN_IF_STEP_NEXT,               (SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode));
-SGUI_DEVPF_IF_DEFINE(SGUI_SIZE,         SGUI_FN_IF_GET_DATA,                (SGUI_SIZE sStartAddr, SGUI_BYTE* pDataBuffer, SGUI_SIZE sReadSize));
-SGUI_DEVPF_IF_DEFINE(SGUI_BOOL,         SGUI_FN_IF_IS_FULL_WIDTH,           (SGUI_UINT32 uiCode));
 
 typedef struct
 {
 	//Screen display area size in pixel.
 	SGUI_AREA_SIZE						stSize;
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	// Screen display pixel depth in bit count(eg. 4(bits) means 16 grayscale)
+    SGUI_UINT8                          uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    #if SGUI_CONF_BMP_DATA_BUFFER_SIZE>0
 	//Bitmap data buffer.
-	SGUI_BYTE							arrBmpDataBuffer[SGUI_BMP_DATA_BUFFER_SIZE];
+	SGUI_BYTE							arrBmpDataBuffer[SGUI_CONF_BMP_DATA_BUFFER_SIZE];
+	#endif // SGUI_CONF_BMP_DATA_BUFFER_SIZE
     //Engine & device initialize function.
     SGUI_FN_IF_INITIALIZE				fnInitialize;
     //Clear screen function.
@@ -147,23 +137,35 @@ typedef struct
     // Set palette function.
     SGUI_FN_IF_SET_PALETTE			    fnSetPalette;
 }SGUI_SCR_DEV;
-
-typedef struct
-{
-    SGUI_INT							iHalfWidth;
-    SGUI_INT							iFullWidth;
-    SGUI_INT							iHeight;
-	SGUI_FN_IF_GET_CHAR_INDEX			fnGetIndex;
-	SGUI_FN_IF_GET_DATA                 fnGetData;
-	SGUI_FN_IF_STEP_NEXT                fnStepNext;
-	SGUI_FN_IF_IS_FULL_WIDTH            fnIsFullWidth;
-}SGUI_FONT_RES;
-
-typedef struct
+// Bitmap operation Interface type declare
+struct _bmp_res;
+SGUI_DEVPF_IF_DEFINE(SGUI_COLOR,        SGUI_FN_IF_BMP_GET_PIXEL,   (const struct _bmp_res* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY));
+typedef struct _bmp_res
 {
 	SGUI_INT							iWidth;
     SGUI_INT							iHeight;
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_UINT8                          uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_FN_IF_BMP_GET_PIXEL            fnGetPixel;
+    //SGUI_COLOR                          (*fnGetPixel)(const struct _bmp_res* pstBitmapData,SGUI_UINT8 uiX,SGUI_UINT8 uiY);
     const SGUI_BYTE*					pData;
 }SGUI_BMP_RES;
+
+// Font operation Interface type declare
+struct _font_res;
+SGUI_DEVPF_IF_DEFINE(SGUI_CSZSTR,       SGUI_FN_IF_STEP_NEXT,               (SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode));
+SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_GET_BITMAP,              (SGUI_BMP_RES* pBitmapData,SGUI_UINT32 uiCode,SGUI_BOOL bDryRun));
+
+typedef struct _font_res
+{
+    SGUI_INT							iHeight;
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_UINT8                          uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	SGUI_FN_IF_GET_BITMAP               fnGetBitmap;
+	SGUI_FN_IF_STEP_NEXT                fnStepNext;
+}SGUI_FONT_RES;
+
 
 #endif // _INCLUDE_GUI_TYPEDEF_H_

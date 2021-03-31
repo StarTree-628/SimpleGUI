@@ -5,6 +5,7 @@
 //=======================================================================//
 #include <stdint.h>
 #include <stdbool.h>
+#include <SGUI_Typedef.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -41,8 +42,8 @@ void			    SGUI_SDK_SyncKeyEventData(const SDK_KB_EVENT* pcstKBEvent);
 const SDK_KB_EVENT* SGUI_SDK_GetKeyEventData(void);
 bool			    SGUI_SDK_GetEventSyncFlag(ENV_FLAG_INDEX eIndex);
 bool			    SGUI_SDK_Initialize(void);
-void			    SGUI_SDK_SetPixel(int uiPosX, int uiY, int uiPixelValue);
-int				    SGUI_SDK_GetPixel(int uiPosX, int uiY);
+void			    SGUI_SDK_SetPixel(int uiPosX, int uiY, SGUI_COLOR uiPixelValue);
+SGUI_COLOR		    SGUI_SDK_GetPixel(int uiPosX, int uiY);
 void			    SGUI_SDK_RefreshDisplay(void);
 void			    SGUI_SDK_ClearDisplay(void);
 bool			    SGUI_SDK_ConfigGeneralTimer(unsigned int uiIntervalMs);

@@ -1,29 +1,29 @@
 /*************************************************************************/
 /** Copyright.															**/
 /** FileName: SGUI_List.c												**/
-/** Author: XuYulin														**/
+/** Author: XuYulin,Jerry												**/
 /** Description: Draw list interface.									**/
 /*************************************************************************/
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.														=//
 //=======================================================================//
 #include "SGUI_List.h"
 
 //=======================================================================//
-//= User Macro definition.											    =//
+//= User Macro definition.												=//
 //=======================================================================//
 // User settings
 #define		LIST_SCROLLBAR_WIDTH						(5)
 // Automatic calculation
 #define		LIST_EDGE_SIZE								1
-#define		LIST_TITLE_HEIGHT(FONT)               		((FONT)->iHeight+2)
+#define		LIST_TITLE_HEIGHT(FONT)			   		((FONT)->iHeight+2)
 
 //=======================================================================//
-//= Static function declaration.									    =//
+//= Static function declaration.										=//
 //=======================================================================//
 
 //=======================================================================//
-//= Function define.										            =//
+//= Function define.													=//
 //=======================================================================//
 /*************************************************************************/
 /** Function Name:	SGUI_List_InitializeListData						**/
@@ -34,7 +34,7 @@
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
+void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_LIST_PALETTE* cpstPalette, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
@@ -50,34 +50,47 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	// Copy layout.
-	SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
-	// Title
-	pstObj->szTitle = cszTitle;
-	// Initialize font resource.
-	pstObj->pstFontRes = pstFontRes;
-	// Initialize Items.
-	stSubLayout.iX = pstObj->stLayout.iX+2;
-	stSubLayout.iWidth = pstObj->stLayout.iWidth-4-LIST_SCROLLBAR_WIDTH;
-	if(NULL == pstObj->szTitle)
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL!=cpstPalette))
 	{
-		stSubLayout.iY = pstObj->stLayout.iY+2;
-		stSubLayout.iHeight = pstObj->stLayout.iHeight-4;
+		// Initialize member object pointer.
+		pstObj->stPallete = *cpstPalette;
+
+		#ifdef SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
+		// Initialize palette
+		pstObj->stPallete.stScrollBar.uiDepthBits = cpstPalette->uiDepthBits;
+		pstObj->stPallete.stItemBase.uiDepthBits = cpstPalette->uiDepthBits;
+		#endif // SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
+
+		// Copy layout
+		SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
+		// Title
+		pstObj->szTitle = cszTitle;
+		// Initialize font resource.
+		pstObj->pstFontRes = pstFontRes;
+		// Initialize Items
+		stSubLayout.iX = pstObj->stLayout.iX+2;
+		stSubLayout.iWidth = pstObj->stLayout.iWidth-4-LIST_SCROLLBAR_WIDTH;
+		if(NULL == pstObj->szTitle)
+		{
+			stSubLayout.iY = pstObj->stLayout.iY+2;
+			stSubLayout.iHeight = pstObj->stLayout.iHeight-4;
+		}
+		else
+		{
+			stSubLayout.iY = pstObj->stLayout.iY+LIST_TITLE_HEIGHT(pstObj->pstFontRes)+2;
+			stSubLayout.iHeight = pstObj->stLayout.iHeight-LIST_TITLE_HEIGHT(pstObj->pstFontRes)-3;
+		}
+		SGUI_ItemsBase_Initialize(&(pstObj->stItems), &stSubLayout, &(pstObj->stPallete.stItemBase), pstObj->pstFontRes, pstItemsData, iItemsCount);
+		// Initialize scroll bar.
+		stScrollBarParam.eDirection = SGUI_SCROLLBAR_VERTICAL;
+		stScrollBarParam.stLayout.iX = pstObj->stItems.stLayout.iX+pstObj->stItems.stLayout.iWidth+1;
+		stScrollBarParam.stLayout.iY = pstObj->stItems.stLayout.iY;
+		stScrollBarParam.stLayout.iWidth = LIST_SCROLLBAR_WIDTH;
+		stScrollBarParam.stLayout.iHeight = pstObj->stItems.stLayout.iHeight;
+		stScrollBarParam.sMaxValue = (pstObj->stItems.iCount > pstObj->stItems.iVisibleItems)?(pstObj->stItems.iCount - pstObj->stItems.iVisibleItems):0;
+		stScrollBarParam.stPalette = pstObj->stPallete.stScrollBar;
+		SGUI_ScrollBar_Initialize(&(pstObj->stScrollBar), &stScrollBarParam);
 	}
-	else
-	{
-		stSubLayout.iY = stSubLayout.iY+LIST_TITLE_HEIGHT(pstFontRes)+2;
-		stSubLayout.iHeight = pstObj->stLayout.iHeight-LIST_TITLE_HEIGHT(pstFontRes)-3;
-	}
-	SGUI_ItemsBase_Initialize(&(pstObj->stItems), &stSubLayout, pstFontRes, pstItemsData, iItemsCount);
-	// Initialize scroll bar.
-	stScrollBarParam.eDirection = SGUI_SCROLLBAR_VERTICAL;
-	stScrollBarParam.stLayout.iX = pstObj->stItems.stLayout.iX+pstObj->stItems.stLayout.iWidth+1;
-	stScrollBarParam.stLayout.iY = pstObj->stItems.stLayout.iY;
-	stScrollBarParam.stLayout.iWidth = LIST_SCROLLBAR_WIDTH;
-	stScrollBarParam.stLayout.iHeight = pstObj->stItems.stLayout.iHeight;
-	stScrollBarParam.sMaxValue = (pstObj->stItems.iCount > pstObj->stItems.iVisibleItems)?(pstObj->stItems.iCount - pstObj->stItems.iVisibleItems):0;
-	SGUI_ScrollBar_Initialize(&(pstObj->stScrollBar), &stScrollBarParam);
 }
 
 /*************************************************************************/
@@ -104,7 +117,7 @@ void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj)
 	if(NULL != pstObj)
 	{
 		// Clear list item display area.
-		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstObj->stPallete.eBorderColor, pstObj->stPallete.eBackgroundColor);
 		// Paint title.
 		if(NULL != pstObj->szTitle)
 		{
@@ -114,8 +127,8 @@ void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj)
 			stTitleTextDisplayArea.iHeight = pstObj->pstFontRes->iHeight;
 			stInnerPos.iX = 0;
 			stInnerPos.iY = 0;
-			SGUI_Text_DrawText(pstDeviceIF, pstObj->szTitle, pstObj->pstFontRes, &stTitleTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
-			SGUI_Basic_DrawLine(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stLayout.iX+pstObj->stLayout.iWidth-1, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, SGUI_COLOR_FRGCLR);
+			SGUI_Text_DrawText(pstDeviceIF, pstObj->szTitle, pstObj->pstFontRes, &stTitleTextDisplayArea, &stInnerPos, pstObj->stPallete.eTitleTextColor);
+			SGUI_Basic_DrawLine(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stLayout.iX+pstObj->stLayout.iWidth-1, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stPallete.eBorderColor);
 		}
 		// Paint items.
 		SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));

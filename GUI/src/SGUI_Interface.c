@@ -22,7 +22,7 @@
 #include <time.h>
 #else
 	// Include platform RTC interface declare here.
-#include "RTC.h"
+    //#include "RTC.h"
 #endif
 
 // Dynamic memory operation switch.

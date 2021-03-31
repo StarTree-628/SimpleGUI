@@ -82,18 +82,55 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
+	SGUI_LIST_PALETTE			stPalette;
 	SGUI_RECT					stListLayout;	
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
     // Initialize list data.
     SGUI_SystemIF_MemorySet(&s_stDemoListObject, 0x00, sizeof(SGUI_LIST));
+
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+    stPalette.stItemBase.eBackgroundColor = 0x00;
+    stPalette.stItemBase.eTextColor = 0x01;
+    stPalette.stItemBase.eFocusColor = 0x01;
+    stPalette.stItemBase.eFocusTextColor = 0x00;
+
+    stPalette.stScrollBar.eBackgroundColor = 0x00;
+    stPalette.stScrollBar.eEdgeColor = 0x01;
+    stPalette.stScrollBar.eHandleColor = 0x01;
+
+    stPalette.eBackgroundColor = 0x00;
+    stPalette.eBorderColor = 0x01;
+    stPalette.eTitleTextColor = 0x01;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    stPalette.uiDepthBits = 4;
+    stPalette.stItemBase.uiDepthBits = 4;
+    stPalette.stScrollBar.uiDepthBits = 4;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+
+    stPalette.stItemBase.eBackgroundColor = 0x02;
+    stPalette.stItemBase.eFocusColor = 0x0D;
+    stPalette.stItemBase.eTextColor = 0x0F;
+    stPalette.stItemBase.eFocusTextColor = 0x00;
+
+    stPalette.stScrollBar.eBackgroundColor = 0x02;
+    stPalette.stScrollBar.eEdgeColor = 0x0F;
+    stPalette.stScrollBar.eHandleColor = 0x0F;
+
+    stPalette.eBackgroundColor = 0x02;
+    stPalette.eBorderColor = 0x0A;
+    stPalette.eTitleTextColor = 0x0F;
+    #else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+    #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
      //Initialize list object.
 	stListLayout.iX = 0;
 	stListLayout.iY = 0;
 	stListLayout.iWidth = pstDeviceIF->stSize.iWidth;
 	stListLayout.iHeight = pstDeviceIF->stSize.iHeight;
-	SGUI_List_Initialize(&s_stDemoListObject, &stListLayout, &GB2312_FZXS12, SCR1_TITLE, s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
+	SGUI_List_Initialize(&s_stDemoListObject, &stListLayout, &stPalette, SGUI_FONT_REF(GB2312_FZXS12),SCR1_TITLE, s_arrstListItems, sizeof(s_arrstListItems)/sizeof(SGUI_ITEMS_ITEM));
 	return HMI_RET_NORMAL;
 }
 

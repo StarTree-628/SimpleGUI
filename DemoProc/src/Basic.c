@@ -1,4 +1,4 @@
-﻿/*************************************************************************/
+/*************************************************************************/
 /** Copyright.															**/
 /** FileName: RTCNotice.c												**/
 /** Author: Polarix														**/
@@ -74,26 +74,26 @@ HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
 	// Paint background.
 	for(iPaintBkgIdx=0; iPaintBkgIdx<pstDeviceIF->stSize.iHeight; iPaintBkgIdx+=5)
     {
-        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, SGUI_COLOR_FRGCLR);
+        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, iPaintBkgIdx*0x0F/pstDeviceIF->stSize.iHeight);
     }
     // Paint rectangle
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 1, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 22, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 43, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 1, 30, 20, 0x0F, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 22, 30, 20, 0x0A, 0x07);
+    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 43, 30, 20, 0x0F, 0x00);
     // Paint circle
-	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 10, 9, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 32, 9, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 54, 9, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 10, 9, 0x0F, SGUI_COLOR_TRANS);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 32, 9, 0x0A, 0x07);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 54, 9, 0x0F, 0x00);
 
     // Paint rounded rectangle
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 1, 30, 20, 4, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 22, 30, 20, 4, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 43, 30, 20, 4, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 1, 30, 20, 4, 0x0F, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 22, 30, 20, 4, 0x0A, 0x07);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 43, 30, 20, 4, 0x0F, 0x00);
 
     // Paint rounded rectangle
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 1, 20, 20, 7, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 22, 20, 20, 7, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 43, 20, 20, 7, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 1, 20, 20, 7, 0x0F, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 22, 20, 20, 7, 0x0A, 0x07);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 43, 20, 20, 7, 0x0F, 0x00);
 
 	return HMI_RET_NORMAL;
 }

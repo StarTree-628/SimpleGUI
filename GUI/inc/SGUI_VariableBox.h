@@ -13,7 +13,21 @@
 // Data type of number variable box.
 typedef struct
 {
+    SGUI_COLOR              eTextColor;
+    SGUI_COLOR              eBackgroundColor;
+} SGUI_VARBOX_SUB_PALETTE;
+typedef struct
+{
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_UINT8              uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    SGUI_VARBOX_SUB_PALETTE stNormal;
+    SGUI_VARBOX_SUB_PALETTE stFocus;
+}SGUI_VARBOX_PALETTE;
+typedef struct
+{
 	SGUI_RECT				stLayout;
+	SGUI_VARBOX_PALETTE     stPalette;
 	SGUI_INT				iMin;
 	SGUI_INT				iMax;
 	const SGUI_FONT_RES*	pstFontRes;
@@ -23,6 +37,7 @@ typedef struct
 typedef struct
 {
 	SGUI_INT				iValue;
+	SGUI_BOOL               iFocused;
 }SGUI_NUM_VARBOX_DATA;
 
 typedef struct
@@ -35,13 +50,16 @@ typedef struct
 typedef struct
 {
 	SGUI_RECT				stLayout;
+	SGUI_VARBOX_PALETTE     stPalette;
 	const SGUI_FONT_RES*	pstFontRes;
+	SGUI_ALIG_MODE          eAlignment;
 	SGUI_SIZE				sTextLengthMax;
 }SGUI_TEXT_VARBOX_PARAM;
 
 typedef struct
 {
 	SGUI_SIZE				sFocusIndex;
+	SGUI_BOOL               iFocused;
 	SGUI_SZSTR				szValue;
 }SGUI_TEXT_VARBOX_DATA;
 
@@ -96,7 +114,7 @@ typedef enum
 															}
 #define		SGUI_NumberVariableBox_GetValue(POBJ)			((POBJ)->stData.iValue)
 void		SGUI_NumberVariableBox_Initialize(SGUI_NUM_VARBOX_STRUCT* pstObj, const SGUI_NUM_VARBOX_PARAM* pcstInitParam);
-void		SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstValue, SGUI_DRAW_MODE eMode);
+void		SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstValue);
 void		SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGUI_TEXT_VARBOX_PARAM* pcstInitParam, SGUI_SZSTR szTextBuffer);
 #define		SGUI_TextVariableBox_GetFocusIndex(POBJ)		((POBJ)->stData.sFocusIndex)
 #define		SGUI_TextVariableBox_SetFocusIndex(POBJ, IDX)	if((IDX) < (POBJ)->stParam.sTextLengthMax)\
@@ -124,6 +142,6 @@ void		SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGU
 															}
 #define 	SGUI_TextVariableBox_GetText(POBJ)				((POBJ)->stData.szValue)
 #define		SGUI_TextVariableBox_GetChar(POBJ, IDX)			(IDX<(POBJ)->stParam.sMaxTextLength?(POBJ)->stData.szValue[IDX]:'\0')
-void		SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_DRAW_MODE eMode);
+void		SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj);
 
 #endif // __INCLUDE_GUI_VARIABLEBOX_H__

@@ -4,7 +4,7 @@
 /* Screen 1: List Components. */
 /* Start screen with list. */
 #define SCR1_TITLE						("列表组件")
-#define SCR1_LIST_ITEM1					("基础绘图")
+#define SCR1_LIST_ITEM1					("基础绘图组件")
 #define SCR1_LIST_ITEM2					("文本")
 #define SCR1_LIST_ITEM3					("输入框")
 #define SCR1_LIST_ITEM4					("实时曲线")

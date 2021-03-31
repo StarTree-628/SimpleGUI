@@ -34,8 +34,9 @@
 																EVENT.Head.iType = EVENT_TYPE_ANY;						\
 															}
 
-#define		HMI_EVENT_SIZE_CHK(EVENT, TYPE)					(((EVENT).Head.iSize == sizeof(TYPE))?SGUI_TRUE:SGUI_FALSE)
 
+#define     HMI_PEVENT_SIZE_CHK(PEVENT,TYPE)                (((TYPE*)PEVENT)->Head.iSize == sizeof(TYPE)?SGUI_TRUE:SGUI_FALSE)
+#define		HMI_EVENT_SIZE_CHK(EVENT, TYPE)					HMI_PEVENT_SIZE_CHK(&EVENT,TYPE)
 //=======================================================================//
 //= Data type definition.											    =//
 //=======================================================================//

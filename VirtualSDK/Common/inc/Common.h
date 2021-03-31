@@ -6,6 +6,7 @@
 //=======================================================================//
 #include <stddef.h>
 #include <stdint.h>
+#include <../../../GUI/inc/SGUI_Config.h>
 
 //=======================================================================//
 //= User Macro definition.											    =//
@@ -28,12 +29,20 @@
 #define LCD_COLOR_OBJ_PIX						    	(0xFF258562)
 #define LCD_COLOR_OBJ_BKG						    	(0xFF2BEEDE)
 #define LCD_COLOR_OBJ_GRID						    	(0xFF38E3D0)
+// White LCD
+/*
+#define LCD_COLOR_OBJ_PIX						    	(0xFFFFFFFF)
+#define LCD_COLOR_OBJ_BKG						    	(0x00000000)
+#define LCD_COLOR_OBJ_GRID						    	(0xFFCC1209)
+*/
 
 #define PARAM_DEFAULT_PIXEL_NUM_H                       (128)
 #define PARAM_DEFAULT_PIXEL_NUM_V                       (64)
 #define PARAM_DEFAULT_PANEL_BORDER_WIDTH				(8)
 #define PARAM_DEFAULT_PIXEL_WIDTH					    (2)
 #define PARAM_DEFAULT_PIXEL_HEIGHT					    (2)
+#define PARAM_DEFAULT_PIXEL_DEPTH_BITS                  (SGUI_CONF_GRAYSCALE_DEPTH_BITS)
+#define PARAM_DEFAULT_PIXEL_DEPTH                       (1<<PARAM_DEFAULT_PIXEL_DEPTH_BITS)
 #define PARAM_DEFAULT_GRID_ENABLE                       (true)
 #define PARAM_DEFAULT_GRID_DISABLE                      (false)
 
@@ -46,6 +55,7 @@ typedef struct
     size_t					VerticalPixelNumber;
     size_t					PixelUnitWidth;
     size_t					PixelUnitHeight;
+    int                     PixelUnitDepth;
     size_t					BorderWidth;
     bool					EnableGrid;
 	unsigned int			PanelColor;

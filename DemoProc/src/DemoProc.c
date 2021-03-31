@@ -10,6 +10,7 @@
 #include "DemoProc.h"
 
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
+#include "Common.h"
 #include "SDKInterface.h"
 #include "SGUI_FontResource.h"
 #else
@@ -82,8 +83,11 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	SGUI_SystemIF_MemorySet(&g_stDemoEngine, 0x00, sizeof(HMI_ENGINE_OBJECT));
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	/* Initialize display size. */
-	g_stDeviceInterface.stSize.iWidth = 128;
-	g_stDeviceInterface.stSize.iHeight = 64;
+	g_stDeviceInterface.stSize.iWidth = PARAM_DEFAULT_PIXEL_NUM_H;
+	g_stDeviceInterface.stSize.iHeight = PARAM_DEFAULT_PIXEL_NUM_V;
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+    g_stDeviceInterface.uiDepthBits = PARAM_DEFAULT_PIXEL_DEPTH_BITS;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	/* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
@@ -348,6 +352,7 @@ bool RTCTimerTriggered(void)
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	return CheckEventFlag(ENV_FLAG_IDX_SDK_SEC_EVENT);
 #else
+	#error Add RTC timer trigger process here.
     // // Add Dummy RTC trigger process here.
 	return false;
 #endif
@@ -408,6 +413,8 @@ void RTCTimerEnable(bool bEnable)
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 	(void)SGUI_SDK_EnableSecondInterrupt(bEnable);
+#else
+	#error Add RTC timer enable/disable process here.
 #endif
 }
 

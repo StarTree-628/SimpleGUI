@@ -22,17 +22,21 @@
 //=======================================================================//
 #define FRAME_TITLE						(_T("SimpleGUI Simulator"))
 
-#define wxID_MAIN						1000
-#define wxID_TOOLBAR					2000
-#define wxID_TOOLBAR_QUICKSHOTS         2100
-#define wxID_TOOLBAR_COPY				2101
-#define wxID_TOOLBAR_SCREENSHOTS_FOLDER	2102
-#define wxID_TOOLBAR_ABOUT				2103
-#define wxID_TOOLBAR_EXIT				2104
-#define wxID_STATUSBAR					3000
-#define wxID_PANEL						4000
-#define WXID_SYSTICK_TIMER          	5001
-#define WXID_RTC_TIMER                  5002
+enum
+{
+    ID_MAIN_FRAME = wxID_HIGHEST + 1,
+    ID_TOOLSBAR,
+    ID_TOOL_QUICKSHOTS,
+    ID_TOOL_COPY,
+    ID_TOOL_OPEN_FOLDER,
+    ID_TOOL_ABOUT,
+    ID_TOOL_EXIT,
+    ID_STATUSBAR,
+    ID_LCD_PANEL,
+    ID_GENERAL_TIMER,
+    ID_SECOND_TIMER,
+};
+
 
 #define SCREENSHOTS_FOLDER_T			"ScreenShots"
 #define SCREENSHOTS_FILE_NAME_T			"LCD_%04u%02u%02u_%02u%02u-%u.bmp"
@@ -53,44 +57,43 @@ class LCDFrame
 : public wxFrame
 , public wxThreadHelper
 {
-	DECLARE_EVENT_TABLE();
+	wxDECLARE_NO_COPY_CLASS(LCDFrame);
+	wxDECLARE_EVENT_TABLE();
 
 	private:
 	    // Controlers
-		wxStatusBar*            	m_pclsCtrlStatusBar;
-		wxToolBar*              	m_pclsCtrlToolBar;
-		wxLCD*						m_pclsCtrlPaintPanel;
-		wxTimer*               		m_pclsMilliSecondTimer;
-		wxTimer*                	m_pclsRTCTimer;
-		static LCDFrame*        	m_pclsInstance;
+		wxStatusBar*                m_pclsCtrlStatusBar;
+		wxToolBar*                  m_pclsCtrlToolBar;
+		wxLCD*                      m_pclsCtrlPaintPanel;
+		wxTimer*                    m_pclsGeneralTimer;
+        wxTimer*                    m_pclsSecondTimer;
+        static LCDFrame*            m_pclsInstance;
 
 		// Members.
 		void						_createToolbar(void);
 		void					    _setStatusText(const wxString& strString);
-		void					    OnClose(wxCloseEvent& clsEvent)							{OnClose();}
-		void					    OnScreenshots(wxCommandEvent& clsEvent)					{Screenshots();}
-		void					    OnToolCopy(wxCommandEvent& clsEvent)					{Copy();}
-		void						OnOpenScreenshotsFolder(wxCommandEvent &clsEvent)		{OpenScreenshotsFolder();}
-		void						OnAbout(wxCommandEvent& clsEvent)						{/* Do noting */;}
-		void				    	OnToolClose(wxCommandEvent& clsEvent)					{OnClose();}
 
 	protected:
-		virtual void		    	OnClose(void);
+		virtual void                Close(void);
 		virtual void				OnKeyDown(wxKeyEvent& clsEvent);
 		virtual void				OnMouseEvent(wxMouseEvent& clsEvent);
 		virtual void				Screenshots(void);
 		virtual void				Copy(void);
 		virtual void				OpenScreenshotsFolder(void);
-		virtual void				OnSysTickTimerEvent(wxTimerEvent& clsEvent);
-		virtual void				OnRTCEvent(wxTimerEvent& clsEvent);
+		virtual void				OnGeneralTimerTrigger(wxTimerEvent& clsEvent);
+		virtual void				OnSecondTimerTrigger(wxTimerEvent& clsEvent);
 		virtual void				OnSDKInitialize(InitEvent& clsEvent);
-		virtual void				OnSDKSysTickSet(TimerSetEvent& clsEvent);
-		virtual void				OnRTCTimerEnabled(RTCSwitchEvent& clsEvent);
-		virtual	wxThread::ExitCode	Entry(void);
+		virtual void				OnSDKGeneralTimerSet(TimerSetEvent& clsEvent);
+		virtual void				OnSecondTimerEnabled(RTCSwitchEvent& clsEvent);
+        virtual void                OnClose(wxCloseEvent& clsEvent)							{Close();}
+		virtual void                OnScreenshots(wxCommandEvent& clsEvent)					{Screenshots();}
+		virtual void                OnToolCopy(wxCommandEvent& clsEvent)					{Copy();}
+		virtual void                OnOpenScreenshotsFolder(wxCommandEvent &clsEvent)		{OpenScreenshotsFolder();}
+		virtual void                OnAbout(wxCommandEvent& clsEvent)						{/* Do noting */;}
+		virtual void                OnToolClose(wxCommandEvent& clsEvent)					{Close();}
+		virtual	wxThread::ExitCode  Entry(void);
 	public:
-									LCDFrame(	wxWindow* pclsParent,
-												wxWindowID iID =                wxID_MAIN,
-												const wxString& strTitle =      FRAME_TITLE);
+									LCDFrame(wxWindow* pclsParent = nullptr);
 
 									~LCDFrame(void);
         static LCDFrame*        	GetInstance(void);

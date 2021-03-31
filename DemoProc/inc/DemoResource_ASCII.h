@@ -10,6 +10,14 @@
 #define SCR1_LIST_ITEM4					("Realtime graph")
 #define SCR1_LIST_ITEM5					("Menu")
 #define SCR1_LIST_ITEM6					("Notice box")
+#define SCR1_LIST_ITEM7					("Tuning curve")
+
+#define SCR1_LIST_APPEND1				("Add item 1")
+#define SCR1_LIST_APPEND2				("Add item 2")
+#define SCR1_LIST_APPEND3				("Add item 3")
+#define SCR1_LIST_APPEND4				("Add item 4")
+#define SCR1_LIST_APPEND5				("Add item 5")
+#define SCR1_LIST_APPEND6				("Add item 6")
 
 /* Screen 2: Basic Paint*/
 /* No text used. */

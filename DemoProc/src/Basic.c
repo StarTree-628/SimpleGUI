@@ -62,20 +62,39 @@ HMI_ENGINE_RESULT HMI_DemoBasic_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
 
 HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const void* pstParameters)
 {
+    /*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_INT                iPaintBkgIdx;
+
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	SGUI_Basic_DrawRectangle(pstDeviceIF, 5, 16, 40, 40, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-	SGUI_Basic_DrawCircle(pstDeviceIF, 30, 30, 12, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
-	SGUI_Basic_DrawCircle(pstDeviceIF, 96, 40, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
 
-    // GrayScale Demos
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 2, 50, 2, 0x02);
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 4, 60, 4, 0x04);
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 6, 70, 6, 0x06);
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 8, 80, 8, 0x08);
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 10, 90, 10, 0x0B);
-	SGUI_Basic_DrawLine(pstDeviceIF, 0, 12, 100, 12, 0x0E);
+	// Paint background.
+	for(iPaintBkgIdx=0; iPaintBkgIdx<pstDeviceIF->stSize.iHeight; iPaintBkgIdx+=5)
+    {
+        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, iPaintBkgIdx*0x0F/pstDeviceIF->stSize.iHeight);
+    }
+    // Paint rectangle
+    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 1, 30, 20, 0x0F, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 22, 30, 20, 0x0A, 0x07);
+    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 43, 30, 20, 0x0F, 0x00);
+    // Paint circle
+	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 10, 9, 0x0F, SGUI_COLOR_TRANS);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 32, 9, 0x0A, 0x07);
+	SGUI_Basic_DrawCircle(pstDeviceIF, 45, 54, 9, 0x0F, 0x00);
+
+    // Paint rounded rectangle
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 1, 30, 20, 4, 0x0F, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 22, 30, 20, 4, 0x0A, 0x07);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 60, 43, 30, 20, 4, 0x0F, 0x00);
+
+    // Paint rounded rectangle
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 1, 20, 20, 7, 0x0F, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 22, 20, 20, 7, 0x0A, 0x07);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 95, 43, 20, 20, 7, 0x0F, 0x00);
+
 	return HMI_RET_NORMAL;
 }
 

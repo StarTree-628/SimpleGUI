@@ -18,18 +18,20 @@ typedef struct
 } SGUI_VARBOX_SUB_PALETTE;
 typedef struct
 {
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_UINT8              uiDepthBits;
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     SGUI_VARBOX_SUB_PALETTE stNormal;
     SGUI_VARBOX_SUB_PALETTE stFocus;
 }SGUI_VARBOX_PALETTE;
 typedef struct
 {
 	SGUI_RECT				stLayout;
+	SGUI_VARBOX_PALETTE     stPalette;
 	SGUI_INT				iMin;
 	SGUI_INT				iMax;
 	const SGUI_FONT_RES*	pstFontRes;
 	SGUI_ALIG_MODE			eAlignment;
-	SGUI_VARBOX_PALETTE     stPalette;
 }SGUI_NUM_VARBOX_PARAM;
 
 typedef struct
@@ -48,10 +50,10 @@ typedef struct
 typedef struct
 {
 	SGUI_RECT				stLayout;
+	SGUI_VARBOX_PALETTE     stPalette;
 	const SGUI_FONT_RES*	pstFontRes;
 	SGUI_ALIG_MODE          eAlignment;
 	SGUI_SIZE				sTextLengthMax;
-	SGUI_VARBOX_PALETTE     stPalette;
 }SGUI_TEXT_VARBOX_PARAM;
 
 typedef struct

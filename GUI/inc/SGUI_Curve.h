@@ -65,7 +65,7 @@ void				SGUI_Curve_AddPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POINT* pstNewP
 SGUI_BOOL			SGUI_Curve_InsertBeforePoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POINT* pstNewPoint);
 SGUI_BOOL			SGUI_Curve_InsertAfterPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POINT* pstNewPoint);
 SGUI_BOOL			SGUI_Curve_RemovePoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POINT* pstPoint);
-SGUI_CURVE_POINT*	SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INDEX sIndex);
+SGUI_CURVE_POINT*	SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iIndex);
 #define				SGUI_Curve_FocusedPoint(OBJ)		((OBJ)->stData.pstFocused)
 SGUI_BOOL			SGUI_Curve_UpdateFocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iX, SGUI_INT iY);
 void				SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pstObj);

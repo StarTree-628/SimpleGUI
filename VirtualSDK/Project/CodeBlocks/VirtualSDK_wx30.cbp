@@ -96,9 +96,7 @@
 		<Unit filename="../../../DemoProc/inc/DemoResource_ASCII.h" />
 		<Unit filename="../../../DemoProc/inc/DemoResource_GB2312.h" />
 		<Unit filename="../../../DemoProc/inc/DemoResource_UTF8.h" />
-		<Unit filename="../../../DemoProc/inc/Resource.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="../../../DemoProc/inc/Resource.h" />
 		<Unit filename="../../../DemoProc/src/Basic.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -145,11 +143,9 @@
 		<Unit filename="../../../GUI/inc/SGUI_ScrollBar.h" />
 		<Unit filename="../../../GUI/inc/SGUI_Text.h" />
 		<Unit filename="../../../GUI/inc/SGUI_Typedef.h" />
+		<Unit filename="../../../GUI/inc/SGUI_Utility.h" />
 		<Unit filename="../../../GUI/inc/SGUI_VariableBox.h" />
 		<Unit filename="../../../GUI/src/SGUI_Basic.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../../GUI/src/SGUI_Common.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../GUI/src/SGUI_Curve.c">
@@ -188,6 +184,9 @@
 		<Unit filename="../../../GUI/src/SGUI_Text.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../GUI/src/SGUI_Utility.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../GUI/src/SGUI_VariableBox.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -213,10 +212,6 @@
 		<Unit filename="../../Resource/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

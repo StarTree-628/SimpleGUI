@@ -6,6 +6,7 @@
 //=======================================================================//
 #include <stddef.h>
 #include <stdint.h>
+#include <../../../GUI/inc/SGUI_Config.h>
 
 //=======================================================================//
 //= User Macro definition.											    =//
@@ -38,9 +39,9 @@
 #define PARAM_DEFAULT_PIXEL_NUM_H                       (128)
 #define PARAM_DEFAULT_PIXEL_NUM_V                       (64)
 #define PARAM_DEFAULT_PANEL_BORDER_WIDTH				(8)
-#define PARAM_DEFAULT_PIXEL_WIDTH					    (3)
-#define PARAM_DEFAULT_PIXEL_HEIGHT					    (3)
-#define PARAM_DEFAULT_PIXEL_DEPTH_BITS                  (4)
+#define PARAM_DEFAULT_PIXEL_WIDTH					    (2)
+#define PARAM_DEFAULT_PIXEL_HEIGHT					    (2)
+#define PARAM_DEFAULT_PIXEL_DEPTH_BITS                  (SGUI_CONF_GRAYSCALE_DEPTH_BITS)
 #define PARAM_DEFAULT_PIXEL_DEPTH                       (1<<PARAM_DEFAULT_PIXEL_DEPTH_BITS)
 #define PARAM_DEFAULT_GRID_ENABLE                       (true)
 #define PARAM_DEFAULT_GRID_DISABLE                      (false)
@@ -50,16 +51,16 @@
 //=======================================================================//
 typedef struct
 {
-    size_t					HorizontalPixelNumber;
+	size_t					HorizontalPixelNumber;
     size_t					VerticalPixelNumber;
     size_t					PixelUnitWidth;
     size_t					PixelUnitHeight;
     int                     PixelUnitDepth;
     size_t					BorderWidth;
     bool					EnableGrid;
-    unsigned int			PanelColor;
-    unsigned int			PixelColor;
-    unsigned int			GridColor;
+	unsigned int			PanelColor;
+	unsigned int			PixelColor;
+	unsigned int			GridColor;
 }PixelPanelParameter;
 
 //=======================================================================//

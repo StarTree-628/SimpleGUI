@@ -85,8 +85,10 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 	/* Initialize display size. */
 	g_stDeviceInterface.stSize.iWidth = PARAM_DEFAULT_PIXEL_NUM_H;
 	g_stDeviceInterface.stSize.iHeight = PARAM_DEFAULT_PIXEL_NUM_V;
+	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     g_stDeviceInterface.uiDepthBits = PARAM_DEFAULT_PIXEL_DEPTH_BITS;
-    /* Initialize interface object. */
+    #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+	/* Initialize interface object. */
 	g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
 	g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
 	g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;
@@ -122,7 +124,6 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 		}
 		/* Active engine object. */
 		eProcessResult = HMI_ActiveEngine(&g_stDemoEngine, HMI_SCREEN_ID_DEMO_LIST);
-		//eProcessResult = HMI_ActiveEngine(&g_stDemoEngine, HMI_SCREEN_ID_DEMO_ITEMS_BASE);
 		if(HMI_PROCESS_FAILED(eProcessResult))
 		{
 			/* Active engine failed. */
@@ -223,7 +224,10 @@ void KeyPressEventProc(void)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	KEY_PRESS_EVENT		stEvent;
+	KEY_PRESS_EVENT		    stEvent;
+#ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
+    const SDK_KB_EVENT*     pstSDKEvent;
+#endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -236,7 +240,20 @@ void KeyPressEventProc(void)
 	stEvent.Head.iType = EVENT_TYPE_ACTION;
 	stEvent.Head.iID = EVENT_ID_KEY_PRESS;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	stEvent.Data.uiKeyValue = SGUI_SDK_GetKeyEventData();
+    pstSDKEvent = SGUI_SDK_GetKeyEventData();
+	stEvent.Data.uiKeyValue = pstSDKEvent->iKeyCode;
+	if(pstSDKEvent->bShift)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_SHIFT;
+    }
+    if(pstSDKEvent->bCtrl)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_CTRL;
+    }
+    if(pstSDKEvent->bAlt)
+    {
+        stEvent.Data.uiKeyValue |= KEY_OPTION_ALT;
+    }
 #else
 	#error Add key event data prepare process here.
 #endif
@@ -333,9 +350,11 @@ bool RTCTimerTriggered(void)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	return CheckEventFlag(ENV_FLAG_IDX_SDK_RTC_EVENT);
+	return CheckEventFlag(ENV_FLAG_IDX_SDK_SEC_EVENT);
 #else
 	#error Add RTC timer trigger process here.
+    // // Add Dummy RTC trigger process here.
+	return false;
 #endif
 }
 
@@ -372,7 +391,7 @@ void SysTickTimerEnable(bool bEnable)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	(void)SGUI_SDK_ConfigHearBeatTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
+	(void)SGUI_SDK_ConfigGeneralTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
 #else
 	#error Add sys-tick timer enable/disable process here.
 #endif
@@ -393,7 +412,7 @@ void RTCTimerEnable(bool bEnable)
     /* Process							*/
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-	(void)SGUI_SDK_EnableRTCInterrupt(bEnable);
+	(void)SGUI_SDK_EnableSecondInterrupt(bEnable);
 #else
 	#error Add RTC timer enable/disable process here.
 #endif

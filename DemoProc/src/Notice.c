@@ -54,11 +54,20 @@ HMI_ENGINE_RESULT HMI_DemoNotice_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	s_stDemoNoticeBox.cszNoticeText = s_szDemoNoticeText;
 	s_stDemoNoticeBox.pstIcon = NULL;
 	SGUI_Notice_FitArea(pstDeviceIF, &(s_stDemoNoticeBox.stLayout));
-
+    #if SGUI_CONF_GRAYSCALE_DEPTH_BITS==1
+    s_stDemoNoticeBox.stPalette.eEdgeColor  = 0x01;
+	s_stDemoNoticeBox.stPalette.eTextColor  = 0x01;
+	s_stDemoNoticeBox.stPalette.eFillColor  = 0x00;
+    #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
+    #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	s_stDemoNoticeBox.stPalette.uiDepthBits = 4;
+	#endif
 	s_stDemoNoticeBox.stPalette.eEdgeColor  = 0x0A;
 	s_stDemoNoticeBox.stPalette.eTextColor  = 0x0F;
 	s_stDemoNoticeBox.stPalette.eFillColor  = 0x01;
+	#else
+        #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
+	#endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
 	return HMI_RET_NORMAL;
 }
 

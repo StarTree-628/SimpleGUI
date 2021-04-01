@@ -34,14 +34,14 @@
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_LIST_PALETTE* cpstPalette, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
+void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_LIST_PALETTE_INIT_PARAM* cpstPaletteInit, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_SCROLLBAR_PARAM	stScrollBarParam;
-	SGUI_RECT				stSubLayout;
-
+	SGUI_SCROLLBAR_PARAM			stScrollBarParam;
+	SGUI_RECT						stSubLayout;
+    SGUI_LIST_PALETTE_INIT_PARAM	stSubPalette;
 	/*----------------------------------*/
 	/* Initialize						*/
 	/*----------------------------------*/
@@ -50,23 +50,23 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL!=cpstPalette))
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL!=cpstPaletteInit))
 	{
-		// Initialize member object pointer.
-		pstObj->stPallete = *cpstPalette;
-
-		#ifdef SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
-		// Initialize palette
-		pstObj->stPallete.stScrollBar.uiDepthBits = cpstPalette->uiDepthBits;
-		pstObj->stPallete.stItemBase.uiDepthBits = cpstPalette->uiDepthBits;
-		#endif // SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
-
-		// Copy layout
+        // Copy layout
 		SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
 		// Title
 		pstObj->szTitle = cszTitle;
 		// Initialize font resource.
 		pstObj->pstFontRes = pstFontRes;
+		// Initialize palette.
+		SGUI_SystemIF_MemoryCopy(&stSubPalette, cpstPaletteInit, sizeof(SGUI_LIST_PALETTE_INIT_PARAM));
+		#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+		// Initialize palette
+		stSubPalette.stItemBase.uiDepthBits     = stSubPalette.uiDepthBits;
+		stSubPalette.stList.uiDepthBits         = stSubPalette.uiDepthBits;
+		stSubPalette.stScrollBar.uiDepthBits    = stSubPalette.uiDepthBits;
+		#endif // SGUI_GRAYSCALE_COLOR_MAPPING_ENABLED
+		pstObj->stPallete = stSubPalette.stList;
 		// Initialize Items
 		stSubLayout.iX = pstObj->stLayout.iX+2;
 		stSubLayout.iWidth = pstObj->stLayout.iWidth-4-LIST_SCROLLBAR_WIDTH;
@@ -80,7 +80,7 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 			stSubLayout.iY = pstObj->stLayout.iY+LIST_TITLE_HEIGHT(pstObj->pstFontRes)+2;
 			stSubLayout.iHeight = pstObj->stLayout.iHeight-LIST_TITLE_HEIGHT(pstObj->pstFontRes)-3;
 		}
-		SGUI_ItemsBase_Initialize(&(pstObj->stItems), &stSubLayout, &(pstObj->stPallete.stItemBase), pstObj->pstFontRes, pstItemsData, iItemsCount);
+		SGUI_ItemsBase_Initialize(&(pstObj->stItems), &stSubLayout, &(cpstPaletteInit->stItemBase), pstObj->pstFontRes, pstItemsData, iItemsCount);
 		// Initialize scroll bar.
 		stScrollBarParam.eDirection = SGUI_SCROLLBAR_VERTICAL;
 		stScrollBarParam.stLayout.iX = pstObj->stItems.stLayout.iX+pstObj->stItems.stLayout.iWidth+1;
@@ -88,7 +88,7 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 		stScrollBarParam.stLayout.iWidth = LIST_SCROLLBAR_WIDTH;
 		stScrollBarParam.stLayout.iHeight = pstObj->stItems.stLayout.iHeight;
 		stScrollBarParam.sMaxValue = (pstObj->stItems.iCount > pstObj->stItems.iVisibleItems)?(pstObj->stItems.iCount - pstObj->stItems.iVisibleItems):0;
-		stScrollBarParam.stPalette = pstObj->stPallete.stScrollBar;
+		stScrollBarParam.stPalette = stSubPalette.stScrollBar;
 		SGUI_ScrollBar_Initialize(&(pstObj->stScrollBar), &stScrollBarParam);
 	}
 }

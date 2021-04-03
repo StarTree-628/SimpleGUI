@@ -469,7 +469,7 @@ void SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
     /*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_INT                iFillPosY;
+	SGUI_INT                iFillPos;
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -477,9 +477,25 @@ void SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
 	// Fill center.
     if(eFillColor != SGUI_COLOR_TRANS)
     {
-        for(iFillPosY=iStartY; iFillPosY<iStartY+iHeight; iFillPosY++)
+
         {
-            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX, iStartX+iWidth-1, iFillPosY, eFillColor);
+            if(iWidth > iHeight)
+            {
+                /* Filled with horizontal line when width is greater then height. */
+                for(iFillPos=iStartY; iFillPos<iStartY+iHeight; iFillPos++)
+                {
+                    SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX, iStartX+iWidth-1, iFillPos, eFillColor);
+                }
+
+            }
+            else
+            {
+                /* Filled with vertical line when height greater then width. */
+                for(iFillPos=iStartX; iFillPos<iStartX+iWidth; iFillPos++)
+                {
+                    SGUI_Basic_DrawVerticalLine(pstDeviceIF, iFillPos, iStartY, iStartY+iHeight-1, eFillColor);
+                }
+            }
         }
     }
 }

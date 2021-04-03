@@ -285,111 +285,6 @@ void SGUI_Basic_DrawVerticalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_IN
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_Basic_DrawLine									**/
-/** Purpose:		Draw a line by the Bresenham algorithm.				**/
-/** Params:																**/
-/**	@ pstDeviceIF[in]: Device driver object pointer.					**/
-/**	@ pstStartPoint[in]: Start point coordinate.						**/
-/**	@ pstEndPoint[in]: End point coordinate.							**/
-/**	@ pcstArea[in]:	Visible area.										**/
-/**	@ eColor[in]:	Line color.											**/
-/** Return:			None.												**/
-/** Notice:			Only paint in visible area order by pcstArea, point	**/
-/**					out of range will be ignore.						**/
-/*************************************************************************/
-void SGUI_Basic_DrawLineInArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_POINT* pstStartPoint, SGUI_POINT* pstEndPoint, const SGUI_RECT* pcstArea, SGUI_COLOR eColor)
-{
-	/*----------------------------------*/
-    /* Variable Declaration				*/
-    /*----------------------------------*/
-    SGUI_INT					iDx, iDy;
-    SGUI_INT					iIncX, iIncY;
-    SGUI_INT					iErrX = 0, iErrY = 0;
-    SGUI_INT					i, iDs;
-    SGUI_INT					iCurrentPosX, iCurrentPosY;
-
-    /*----------------------------------*/
-    /* Initialize						*/
-    /*----------------------------------*/
-    iErrX = 0;
-    iErrY = 0;
-    iDx = pstEndPoint->iX - pstStartPoint->iX;
-    iDy = pstEndPoint->iY - pstStartPoint->iY;
-    iCurrentPosX = pstStartPoint->iX;
-    iCurrentPosY = pstStartPoint->iY;
-
-    if(iDx > 0)
-    {
-        iIncX = 1;
-    }
-    else
-    {
-        if(iDx == 0)
-        {
-            iIncX = 0;
-        }
-        else
-        {
-            iIncX = -1;
-            iDx = -iDx;
-        }
-    }
-
-    if(iDy > 0)
-    {
-        iIncY = 1;
-    }
-    else
-    {
-        if(iDy == 0)
-        {
-            iIncY = 0;
-        }
-        else
-        {
-            iIncY = -1;
-            iDy = -iDy;
-        }
-    }
-
-    if(iDx > iDy)
-    {
-        iDs = iDx;
-    }
-    else
-    {
-        iDs = iDy;
-    }
-
-    /*----------------------------------*/
-    /* Process							*/
-    /*----------------------------------*/
-    for(i = 0; i <= iDs+1; i++)
-    {
-    	/* Only paint in visible area. */
-    	if(	(iCurrentPosX >= RECT_X_START(*pcstArea)) &&
-			(iCurrentPosX <= RECT_X_END(*pcstArea)) &&
-			(iCurrentPosY >= RECT_Y_START(*pcstArea)) &&
-			(iCurrentPosY <= RECT_Y_END(*pcstArea)))
-		{
-			SGUI_Basic_DrawPoint(pstDeviceIF, iCurrentPosX,iCurrentPosY, eColor);
-		}
-        iErrX += iDx;
-        if(iErrX > iDs)
-        {
-            iErrX -= iDs;
-            iCurrentPosX += iIncX;
-        }
-        iErrY += iDy;
-        if(iErrY > iDs)
-        {
-            iErrY -= iDs;
-            iCurrentPosY += iIncY;
-        }
-    }
-}
-
-/*************************************************************************/
 /** Function Name:	SGUI_Basic_DrawRectangle							**/
 /** Purpose:		Draw a rectangle on screen. 						**/
 /** Params:																**/
@@ -405,11 +300,6 @@ void SGUI_Basic_DrawLineInArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_POINT* pstStartPo
 /*************************************************************************/
 void SGUI_Basic_DrawRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor)
 {
-    /*----------------------------------*/
-    /* Variable Declaration				*/
-    /*----------------------------------*/
-    SGUI_INT					iColumnIndex;
-
     /*----------------------------------*/
     /* Process							*/
     /*----------------------------------*/
@@ -442,10 +332,7 @@ void SGUI_Basic_DrawRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_
             // Fill area.
             if((eFillColor != SGUI_COLOR_TRANS) && (iWidth > 2) && (iHeight > 2))
             {
-                for(iColumnIndex=(iStartX+1); iColumnIndex<(iStartX+iWidth-1); iColumnIndex++)
-                {
-                    SGUI_Basic_DrawVerticalLine(pstDeviceIF, iColumnIndex, iStartY+1, iStartY+iHeight-2, eFillColor);
-                }
+                SGUI_Basic_FillRectangleArea(pstDeviceIF, iStartX+1, iStartY+1, iWidth-2, iHeight-2, eFillColor);
             }
         }
     }
@@ -561,6 +448,38 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
             {
                 SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iIdxW, iStartY+iIdxH, SGUI_COLOR_FRGCLR);
             }
+        }
+    }
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_Basic_FillRectangleArea                        **/
+/** Purpose:		Draw a rectangular area bit map on LCD screen.		**/
+/** Params:																**/
+/**	@ iStartX[in]:  X coordinate of the rectangle area upper-left.      **/
+/**	@ iStartY[in]:  Y coordinate of the rectangle area upper-left.      **/
+/**	@ iWidth[in]:   Width of rectangle area.                            **/
+/**	@ iHeight[in]:  Height of rectangle area.                           **/
+/**	@ eFillColor[in]: Edge color.										**/
+/** Return:			None.												**/
+/** Notice:			None.												**/
+/*************************************************************************/
+void SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eFillColor)
+{
+    /*----------------------------------*/
+	/* Variable Declaration				*/
+	/*----------------------------------*/
+	SGUI_INT                iFillPosY;
+
+	/*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	// Fill center.
+    if(eFillColor != SGUI_COLOR_TRANS)
+    {
+        for(iFillPosY=iStartY; iFillPosY<iStartY+iHeight; iFillPosY++)
+        {
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX, iStartX+iWidth-1, iFillPosY, eFillColor);
         }
     }
 }
@@ -736,7 +655,6 @@ void SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX
     SGUI_INT				iXChange = 1 - (iFillet << 1); /* iFillet*2 */
     SGUI_INT                iYChange = 1;
     SGUI_INT                iRadiusError = 0;
-    SGUI_INT                iFillIdx;
 
 	/*----------------------------------*/
 	/* Process							*/
@@ -764,7 +682,6 @@ void SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX
                     {
                         SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosYOffset+1, iStartX+iWidth-iFillet+iPosYOffset-2, iStartY+iFillet-iPosXOffset, eFillColor);
                     }
-                    pstDeviceIF->fnSyncBuffer();
                 }
                 // Draw arc edge for 2nd quadrant(Left top arc).
                 SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosXOffset, iStartY+iFillet-iPosYOffset, eEdgeColor);
@@ -813,10 +730,7 @@ void SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX
         // Fill center.
         if(eFillColor != SGUI_COLOR_TRANS)
         {
-            for(iFillIdx=iStartY+iFillet+1; iFillIdx<iStartY+iHeight-iFillet-1; iFillIdx++)
-            {
-                SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+1, iStartX+iWidth-2, iFillIdx, eFillColor);
-            }
+            SGUI_Basic_FillRectangleArea(pstDeviceIF, iStartX+1, iStartY+iFillet+1, iWidth-2, iHeight-(iFillet<<1)-2, eFillColor);
         }
     }
 }

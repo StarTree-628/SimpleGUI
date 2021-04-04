@@ -67,8 +67,8 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_RECT				stLayout;
-	SGUI_MENU_PALETTE	   stPalette;
+	SGUI_RECT						stLayout;
+	SGUI_MENU_PALETTE_INIT_PARAM	stPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -82,19 +82,18 @@ HMI_ENGINE_RESULT HMI_DemoMenu_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	stPalette.stItemBase.eTextColor = 0x01;
 	stPalette.stItemBase.eFocusColor = 0x01;
 	stPalette.stItemBase.eFocusTextColor = 0x00;
-	stPalette.eBorder = 0x01;
-	stPalette.eDirectionIconColor = 0x01;
+	stPalette.stMenu.eBorder = 0x01;
+	stPalette.stMenu.eDirectionIconColor = 0x01;
 	#elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
 	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.uiDepthBits = 4;
-	stPalette.stItemBase.uiDepthBits = 4;
 	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.stItemBase.eBackgroundColor = 0x02;
 	stPalette.stItemBase.eTextColor = 0x0F;
 	stPalette.stItemBase.eFocusColor = 0x08;
 	stPalette.stItemBase.eFocusTextColor = 0x0F;
-	stPalette.eBorder = 0x0F;
-	stPalette.eDirectionIconColor = 0x0F;
+	stPalette.stMenu.eBorder = 0x0F;
+	stPalette.stMenu.eDirectionIconColor = 0x0F;
 	#else
 		#error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
 	#endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS
@@ -133,13 +132,13 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	HMI_ENGINE_RESULT		eProcessResult;
-	SGUI_UINT16				uiKeyCode;
-	SGUI_UINT16				uiKeyValue;
-	KEY_PRESS_EVENT*		pstKeyEvent;
-	SGUI_INT				iProcessAction;
-	SGUI_RECT				stItemArea;
-	SGUI_MENU_PALETTE	   stPalette;
+	HMI_ENGINE_RESULT					eProcessResult;
+	SGUI_UINT16							uiKeyCode;
+	SGUI_UINT16							uiKeyValue;
+	KEY_PRESS_EVENT*					pstKeyEvent;
+	SGUI_INT							iProcessAction;
+	SGUI_RECT							stItemArea;
+	SGUI_MENU_PALETTE_INIT_PARAM		stPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -157,14 +156,13 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
 	#elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
 	#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.uiDepthBits = 4;
-	stPalette.stItemBase.uiDepthBits = 4;
 	#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 	stPalette.stItemBase.eBackgroundColor = 0x02;
 	stPalette.stItemBase.eTextColor = 0x0F;
 	stPalette.stItemBase.eFocusColor = 0x08;
 	stPalette.stItemBase.eFocusTextColor = 0x0F;
-	stPalette.eBorder = 0x0F;
-	stPalette.eDirectionIconColor = 0x0F;
+	stPalette.stMenu.eBorder = 0x0F;
+	stPalette.stMenu.eDirectionIconColor = 0x0F;
 	#else
 		#error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
 	#endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS

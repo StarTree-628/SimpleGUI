@@ -159,6 +159,7 @@ SGUI_ITEMS_ITEM* SGUI_ItemsBase_JumpItem(SGUI_ITEMS_ITEM* pstBaseItem, SGUI_INT 
 /** Params:																**/
 /**	@ pstDeviceIF[in]: Device driver object pointer.					**/
 /** @ pstObj[in]:	Pointer of items-base object will be paint.			**/
+/** @ bEraseBack[in]: For true, erase background before repaint items.	**/
 /** Return:			None.												**/
 /*************************************************************************/
 void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
@@ -318,7 +319,8 @@ SGUI_ITEMS_ITEM* SGUI_ItemsBase_GetItem(SGUI_ITEMS_BASE* pstObj, SGUI_INT iIndex
 	/* Initialize						*/
 	/*----------------------------------*/
 	pstSelectedItem =			pstObj->pstFirstItem;
-	iLoopIdx =				0;
+	iLoopIdx =					0;
+
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -352,7 +354,7 @@ void SGUI_ItemsBase_GetItemExtent(SGUI_ITEMS_BASE* pstObj, SGUI_INT iSelection, 
 		pstItemExtent->iX = pstObj->stLayout.iX;
 		pstItemExtent->iWidth = pstObj->stLayout.iWidth;
 		/* Item is not visible. */
-		if((iSelection < ITEMS_VISIBLE_START_IDX(pstObj)) || (iSelection > ITEMS_VISIBLE_END_IDX(pstObj)))
+        if((iSelection < ITEMS_VISIBLE_START_IDX(pstObj)) || (iSelection > ITEMS_VISIBLE_END_IDX(pstObj)))
 		{
 			pstItemExtent->iY = 0;
 			pstItemExtent->iHeight = 0;
@@ -401,7 +403,7 @@ void SGUI_ItemsBase_Resize(SGUI_ITEMS_BASE* pstObj, const SGUI_RECT* cpstNewLayo
 	ITEMS_VISIBLE_ITEMS(pstObj) = (pstObj->stLayout.iHeight-1)/ITEM_HEIGHT(pstObj->pstFontRes)+1;
 	/* Visible items number is greater then items count. */
 	if(ITEMS_VISIBLE_ITEMS(pstObj) > pstObj->iCount)
-		{
+        {
 		ITEMS_VISIBLE_START_ITEM(pstObj) = ITEMS_FIRST_ITEM(pstObj);
 		ITEMS_VISIBLE_START_IDX(pstObj) = 0;
 		ITEMS_VISIBLE_END_ITEM(pstObj) = NULL;
@@ -676,12 +678,12 @@ SGUI_ITEMS_ITEM* SGUI_ItemsBase_InsertItem(SGUI_ITEMS_BASE* pstObj, SGUI_ITEMS_I
 
 SGUI_BOOL SGUI_ItemsBase_CanScrollUp(SGUI_ITEMS_BASE* pstObj)
 {
-	/*----------------------------------*/
+    /*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_BOOL			   bReturn;
+	SGUI_BOOL               bReturn;
 
-	/*----------------------------------*/
+    /*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
 
@@ -695,7 +697,7 @@ SGUI_BOOL SGUI_ItemsBase_CanScrollDown(SGUI_ITEMS_BASE* pstObj)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_BOOL			   bReturn;
+	SGUI_BOOL               bReturn;
 
 	/*----------------------------------*/
 	/* Process							*/

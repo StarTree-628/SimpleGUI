@@ -82,8 +82,8 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_LIST_PALETTE			stPalette;
-	SGUI_RECT					stListLayout;	
+	SGUI_LIST_PALETTE_INIT_PARAM	stPalette;
+	SGUI_RECT						stListLayout;
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
@@ -100,14 +100,12 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
     stPalette.stScrollBar.eEdgeColor = 0x01;
     stPalette.stScrollBar.eHandleColor = 0x01;
 
-    stPalette.eBackgroundColor = 0x00;
-    stPalette.eBorderColor = 0x01;
-    stPalette.eTitleTextColor = 0x01;
+    stPalette.stList.eBackgroundColor = 0x00;
+    stPalette.stList.eBorderColor = 0x01;
+    stPalette.stList.eTitleTextColor = 0x01;
     #elif SGUI_CONF_GRAYSCALE_DEPTH_BITS==4 || defined(SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED)
     #ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
     stPalette.uiDepthBits = 4;
-    stPalette.stItemBase.uiDepthBits = 4;
-    stPalette.stScrollBar.uiDepthBits = 4;
     #endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 
     stPalette.stItemBase.eBackgroundColor = 0x02;
@@ -119,9 +117,9 @@ HMI_ENGINE_RESULT HMI_DemoList_Initialize(SGUI_SCR_DEV* pstDeviceIF)
     stPalette.stScrollBar.eEdgeColor = 0x0F;
     stPalette.stScrollBar.eHandleColor = 0x0F;
 
-    stPalette.eBackgroundColor = 0x02;
-    stPalette.eBorderColor = 0x0A;
-    stPalette.eTitleTextColor = 0x0F;
+    stPalette.stList.eBackgroundColor = 0x02;
+    stPalette.stList.eBorderColor = 0x0A;
+    stPalette.stList.eTitleTextColor = 0x0F;
     #else
         #error Demo only support 1bit and 4bits screen, for other gray scale bits, please add more palette or turn on color mapping.
     #endif // SGUI_CONF_GRAYSCALE_DEPTH_BITS

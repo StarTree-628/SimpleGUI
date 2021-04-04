@@ -72,7 +72,7 @@ void SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* ps
 	/*----------------------------------*/
 	SGUI_INT					uiScrollBlockPos;
 	SGUI_SIZE					uiScrollBlockSize;
-	SGUI_SCROLLBAR_PALETTE*	 pstPalette;
+	SGUI_SCROLLBAR_PALETTE*		pstPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/

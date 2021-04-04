@@ -58,7 +58,6 @@
 //=======================================================================//
 //= Used for SimpleGUI virtual SDK.									    =//
 //=======================================================================//
-
 #ifdef _SIMPLE_GUI_ENCODE_TEXT_
  #define _SIMPLE_GUI_ENCODE_TEXT_SRC_		("UTF-8")
  #define _SIMPLE_GUI_ENCODE_TEXT_DEST_		("GB2312")

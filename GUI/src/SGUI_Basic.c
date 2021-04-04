@@ -218,7 +218,7 @@ void SGUI_Basic_DrawLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT i
 /** Function Name:	SGUI_Basic_DrawHorizontalLine						**/
 /** Purpose:		Draw a horizontal line by the Bresenham algorithm.  **/
 /** Params:																**/
-/**	@ pstDeviceIF[in]:  Device driver object pointer.					**/
+/**	@ pstDeviceIF[in]:  SimpleGUI object pointer.						**/
 /**	@ iStartX[in]:		X coordinate of start point of line.			**/
 /**	@ iEndX[in]:		X coordinate of end point of line.				**/
 /**	@ iY[in]:           Y coordinate of the line.                       **/
@@ -381,7 +381,7 @@ void SGUI_Basic_DrawLineInArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_POINT* pstStartPo
 /**	@ pstDeviceIF[in]: Device driver object pointer.					**/
 /**	@ iStartX[in]:		X coordinate of the upper-left corner.			**/
 /**	@ iStartY[in]:		Y coordinate of the upper-left corner.			**/
-/**	@ iWidth[in]: .	Width of rectangle.									**/
+/**	@ iWidth[in]: .	Width of rectangle.								    **/
 /**	@ iHeight[in]:		Height of rectangle.							**/
 /**	@ eEdgeColor[in]:	Edge color.										**/
 /**	@ eFillColor[in]:	Fill color.										**/

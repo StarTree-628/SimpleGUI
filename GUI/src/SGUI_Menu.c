@@ -47,12 +47,13 @@ static SGUI_BMP_RESOURCE_DEFINE(
 /** Return:			None.												**/
 /** Notice:			None.												**/
 /*************************************************************************/
-void SGUI_Menu_Initialize(SGUI_MENU* pstObj, const SGUI_RECT* cpstLayout, const SGUI_MENU_PALETTE* cpstPalette, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
+void SGUI_Menu_Initialize(SGUI_MENU* pstObj, const SGUI_RECT* cpstLayout, const SGUI_MENU_PALETTE_INIT_PARAM* cpstPaletteInit, const SGUI_FONT_RES* pstFontRes, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount)
 {
 	/*----------------------------------*/
 	/* Variable Declaration				*/
 	/*----------------------------------*/
-	SGUI_RECT				sItemstLayout;
+	SGUI_RECT						sItemstLayout;
+	SGUI_MENU_PALETTE_INIT_PARAM	stSubPalette;
 
 	/*----------------------------------*/
 	/* Initialize						*/
@@ -61,13 +62,18 @@ void SGUI_Menu_Initialize(SGUI_MENU* pstObj, const SGUI_RECT* cpstLayout, const 
 	/*----------------------------------*/
 	/* Process							*/
 	/*----------------------------------*/
-	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL != cpstPalette))
+	if((NULL != pstObj) && (NULL != pstFontRes) && (NULL != cpstPaletteInit))
 	{
-		// Save layout
+		// Save layout.
 		SGUI_SystemIF_MemoryCopy(&(pstObj->stLayout), cpstLayout, sizeof(SGUI_RECT));
 
 		// Save Palette
-		pstObj->stPalette = *cpstPalette;
+		SGUI_SystemIF_MemoryCopy(&(stSubPalette),cpstPaletteInit,sizeof(SGUI_MENU_PALETTE_INIT_PARAM));
+		#ifdef SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+		stSubPalette.stItemBase.uiDepthBits	= stSubPalette.uiDepthBits;
+		stSubPalette.stMenu.uiDepthBits		= stSubPalette.uiDepthBits;
+		#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
+		pstObj->stPalette = stSubPalette.stMenu;
 
 		// Initialize member object pointer.
 		pstObj->pstFontRes = pstFontRes;
@@ -76,7 +82,7 @@ void SGUI_Menu_Initialize(SGUI_MENU* pstObj, const SGUI_RECT* cpstLayout, const 
 		sItemstLayout.iY = pstObj->stLayout.iY+SGUI_MENU_ICON_MOVEUP.iHeight+1;
 		sItemstLayout.iWidth = pstObj->stLayout.iWidth-2;
 		sItemstLayout.iHeight = pstObj->stLayout.iHeight-(SGUI_MENU_ICON_MOVEUP.iHeight+SGUI_MENU_ICON_MOVEDOWN.iHeight+2);
-		SGUI_ItemsBase_Initialize(&(pstObj->stItems), &sItemstLayout, &(pstObj->stPalette.stItemBase), pstObj->pstFontRes, pstItemsData, iItemsCount);
+		SGUI_ItemsBase_Initialize(&(pstObj->stItems), &sItemstLayout, &(stSubPalette.stItemBase), pstObj->pstFontRes, pstItemsData, iItemsCount);
 	}
 }
 
@@ -120,7 +126,7 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
 		#endif // SGUI_CONF_GRAYSCALE_COLOR_MAPPING_ENABLED
 
 		/* Clear list item display area. */
-		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstPalette->eBorder, pstPalette->stItemBase.eBackgroundColor);
+		SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, pstPalette->eBorder, pstObj->stItems.stPalette.eBackgroundColor);
 		// Paint items.
 		//SGUI_ItemsBase_Resize(&(pstObj->stItems));
 		SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));

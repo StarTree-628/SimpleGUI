@@ -27,7 +27,7 @@
 >从Windows Vista开始，由于UAC的引入，系统分区中进行操作的权限可能会受到限制，导致一些问题，所以推荐将CodeBlocks和GCC编译器的目录放在系统分区以外的地方。
 >包含中文字符、空格或其他字符的路径可能会导致CodeBlocks中配置号编译器以后，GCC的编译、以及GDB的调试操作不能正常执行，所以请确保编译器的路径中不包含字母、数字之外的任何字符。    
 >- **操作系统、应用程序和编译器的位模式**
->从20.03版本开始，CodeBlocks提供了64位版的下载，附带的编译器也为64位。但是需要注意的是，这里编译器的位模式并不取决于当前计算机的系统环境，而是准备编译生成的可执行文件的位模式。例如64位编译器编译出来的是64位可执行文件，无法在32位机上运行，32位编译器编译出来的是64位可执行文件，虽然可以在64位系统中运行，使用的内存资源却有所限制。 
+>从20.03版本开始，CodeBlocks提供了64位版的下载，附带的编译器也为64位。但是需要注意的是，这里编译器的位模式并不取决于当前计算机的系统环境，而是准备编译生成的可执行文件的位模式。例如64位编译器编译出来的是64位可执行文件，无法在32位机上运行，32位编译器编译出来的是32位可执行文件，虽然可以在64位系统中运行，使用的内存资源却有所限制。 
 >如果下载的是带有编译器的CodeBlocks，那么默认情况下，附带的GCC编译器会在CodeBlocks程序目录下的MinGW文件夹中部署。  
 
 #### 2.2. 部署wxWidgets
@@ -53,7 +53,7 @@
       │     ├─ [DIR](子文件夹)
       │     └─ *.h（头文件）
       └─ lib  
-         └─ gcc_x64_dll(如果使用64位编译器，此文件夹名应为gcc_x64_dll)  
+         └─ gcc_dll(这个文件夹的名字依据个人使用习惯可能有所不同，通常为gcc_dll或gcc_x64_dll)  
              ├─ mswu
              ├─ mswud   
              └─ *.a(库文件) 
@@ -159,13 +159,13 @@
 &emsp;&emsp;接下来需要选择的是将要使用的wxWidgets库的一些特性，这些特性将决定工程向导将对工程添加哪些库的引用。
 ><p align='center'><img src='images/A1/23.png' title='wxWidgets工程创建' style='max-width:800px'></img></p> 
 
-&emsp;&emsp;比较重要的是“wxWidgets Library Setting”中的三个选项。第一个选项“Use wxWidgets DLL”决定使用的是wxWidgets的动态库还是静态库，按前文，我们使用的是wxWidgets发布的Release库，wxWidgets发布的版本均为动态库，所以这里需要勾选。第二个选项“wxWidgets is built as a monolithic library”则决定链接那些库，这里涉及到是否使用wxWidgets库的monolithic模式编译，如果在编译wxWidgets库时，参数指定为true，那么wxWidgets库会被编译成为一个合成库，所有功能都包含在一个库文件中，如果monolithic参数指定为false，那么wxWidgets将会按照功能划分分别编译每一个功能库，通常为了减小编译体积加快编译速度，都不勾选此项目，wxWidgets的Release版本也不包含monolithic模式编译的库文件。第三个选项“Enable Unicode”则决定了文字处理是否使用Unicode，wxWidgets的Release版本均为Unicode发布，所以此项目需要勾选。
-&emsp;&emsp;选择完成后，点击“Next”继续。   
+&emsp;&emsp;比较重要的是“wxWidgets Library Setting”中的三个选项。第一个选项“Use wxWidgets DLL”决定使用的是wxWidgets的动态库还是静态库，按前文，我们使用的是wxWidgets发布的Release库，wxWidgets发布的版本均为动态库，所以这里需要勾选。第二个选项“wxWidgets is built as a monolithic library”则决定链接那些库，这里涉及到是否使用wxWidgets库的monolithic模式编译，如果在编译wxWidgets库时，参数指定为true，那么wxWidgets库会被编译成为一个合成库，所有功能都包含在一个库文件中，如果monolithic参数指定为false，那么wxWidgets将会按照功能划分分别编译每一个功能库，通常为了减小编译体积加快编译速度，都不勾选此项目，wxWidgets的Release版本也不包含monolithic模式编译的库文件。第三个选项“Enable Unicode”则决定了文字处理是否使用Unicode，wxWidgets的Release版本均为Unicode发布，所以此项目需要勾选。  
+&emsp;&emsp;选择完成后，点击“Next”继续。  
 
 &emsp;&emsp;下一项需要选择的是需要包含的功能库。
 ><p align='center'><img src='images/A1/24.png' title='wxWidgets工程创建' style='max-width:800px'></img></p> 
 
-&emsp;&emsp;如果上一步的设定中没有勾选“wxWidgets is built as a monolithic library”设定项，则可以在此画面中选择除了基本GUI功能外，当前创建工程中额外需要包含的更能支持，例如XML解析、PNG或JPG图像解析、正则、ODBC等，此列表中项目可以多选。如果之前“wxWidgets is built as a monolithic library”设定项被选择，则不会出现此设定画面。
+&emsp;&emsp;如果上一步的设定中没有勾选“wxWidgets is built as a monolithic library”设定项，则可以在此画面中选择除了基本GUI功能外，当前创建工程中额外需要包含的更能支持，例如XML解析、PNG或JPG图像解析、正则、ODBC等，此列表中项目可以多选。如果之前“wxWidgets is built as a monolithic library”设定项被选择，则不会出现此设定画面。  
 &emsp;&emsp;选择完成后，点击“Finish”按钮完成工程创建。  
 ><p align='center'><img src='images/A1/25.png' title='wxWidgets工程创建' style='max-width:800px'></img></p>  
 >
@@ -199,7 +199,7 @@
 >在Windows下创建软链接的命令为“mklink /J”，在Linux中为“ln -s”，具体操作方法可以自行在网上搜索。
 
 ### 5. 联系开发者
-&emsp;&emsp;首先，感谢您对SimpleGUI的赏识与支持。
+&emsp;&emsp;首先，感谢您对SimpleGUI的赏识与支持。  
 &emsp;&emsp;虽然最早仅仅作为一套GUI接口库使用，但我最终希望SimpleGUI能够为您提供一套完整的单色屏GUI及交互设计解决方案，如果您有新的需求、提议亦或想法，欢迎在以下地址留言，或加入[QQ交流群799501887](https://jq.qq.com/?_wv=1027&k=5ahGPvK)留言交流。  
 >SimpleGUI@开源中国：https://www.oschina.net/p/simplegui  
 >SimpleGUI@码云：https://gitee.com/Polarix/simplegui  

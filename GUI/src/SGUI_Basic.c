@@ -770,7 +770,7 @@ void SGUI_Basic_ResetActiveArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGU
     if(pstDeviceIF->stActiveArea.iX < 0)
     {
         pstDeviceIF->stActiveArea.iWidth -= pstDeviceIF->stActiveArea.iX;
-        pstDeviceIF->stActiveArea.iX;
+        pstDeviceIF->stActiveArea.iX = 0;
     }
     if(pstDeviceIF->stActiveArea.iY < 0)
     {

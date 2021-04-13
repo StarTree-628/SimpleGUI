@@ -42,12 +42,13 @@ SimpleGUI发布已经有很长时间了，在发布后很多人都来询问一�
 
 |内容|地址|  
 |:- |----|  
-|概述|https://www.bilibili.com/video/av86593220/|  
-|基础绘图|https://www.bilibili.com/video/av86890300/|  
-|文本文字|https://www.bilibili.com/video/av87098997/|  
-|组件|https://www.bilibili.com/video/av87432375/|  
-|HMI引擎|https://www.bilibili.com/video/av87530421/|  
-|VirtualSDK|https://www.bilibili.com/video/av87713369/|  
+|01 SimpleGUI概述|https://www.bilibili.com/video/av86593220/|  
+|02 基础绘图|https://www.bilibili.com/video/av86890300/|  
+|03 文本文字|https://www.bilibili.com/video/av87098997/|  
+|04 拓展组件概述|https://www.bilibili.com/video/av87432375/|  
+|05 交互引擎HMI|https://www.bilibili.com/video/av87530421/|  
+|06 VirtualSDK概述|https://www.bilibili.com/video/av87713369/|  
+|07 基于VirtualSDK的GUI开发|https://www.bilibili.com/video/BV1qz4y12771/| 
 
 #### 参与讨论
 如果您有意参与SimpleGUI的讨论与改进，可以在以下地方留言：

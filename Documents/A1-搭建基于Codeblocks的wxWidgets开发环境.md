@@ -193,10 +193,25 @@
 
 然后分别检查所有编译目标下“Search directories”下的“Compiler”标签中定义的包含路径，通常这个路径都被CodeBlocks的wxWidgets工程向导指定为“$(#wx)\lib\gcc_dll\mswu”，这里需要依实际情况，按需修改。  
 ><p align='center'><img src='images/A1/QA02.png' title='修改包含路径' style='max-width:800px'></img></p>  
->
+
+&emsp;&emsp;修改好包含路径，然后单击“OK”，重新开始编译即可。
+
 >- 关于多版本wxWidgets库之间的切换
 >如果确实需要多版本wxWidgets库之间进行切换，那么可以考虑使用软连接的思想。软连接的使用类似于快捷方式，但却有类似文件夹的特性，相比于快捷方式，可以提供一个稳定的绝对路径，配合wxWidgets的全局变量，就可以实现wxWidgets库多版本之间的切换了。
 >在Windows下创建软链接的命令为“mklink /J”，在Linux中为“ln -s”，具体操作方法可以自行在网上搜索。
+
+#### 4.3. 编译错误：无效的工具链配置
+
+&emsp;&emsp;这个错误是因为编译器配置错误导致的无法开始编译，通常出现在编译一个已经存在的工程，这个工程可能是在别的电脑上建立的或者从网络上下载的。    
+&emsp;&emsp;作为一个通用型IDE，CodeBlocks可以保存多个预置的编译器环境，同样的，在一个CodeBlocks工程中，也会记录这个歌工程使用的编译工具链配置。而这个错误，就是当工程中记录的编译工具链配置在当前的CodeBlocks环境中并不存在时出现的。  
+
+><p align='center'><img src='images/A1/QA03.png' title='工具链配置错误导致的无法开始编译' style='max-width:800px'></img></p>
+
+&emsp;&emsp;其实这个错误的解决方法已经写在提示中了，参照前文的章节“2.4. 配置编译器与调试器”确保编译器已正确配置即可。同时在工程设置里，确保选择的编译工具链配置为之前配置好的工具链即可。
+
+><p align='center'><img src='images/A1/QA04.png' title='设置工程使用的编译工具配置' style='max-width:800px'></img></p>
+
+&emsp;&emsp;选择设置好的的编译器配置，然后单击“OK”，重新开始编译即可。
 
 ### 5. 联系开发者
 &emsp;&emsp;首先，感谢您对SimpleGUI的赏识与支持。  

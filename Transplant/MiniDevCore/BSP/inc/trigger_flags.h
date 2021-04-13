@@ -10,15 +10,15 @@
 
 typedef union
 {
-	uint8_t		uiByte[2];
-	uint16_t	uiKeyCode;
+    uint8_t     uiByte[2];
+    uint16_t    uiKeyCode;
 }KEY_VALUE;
 
 typedef struct
 {
-	KEY_VALUE	unKeyValue;
-	__IO bool	bIsTriggered;
-	__IO bool	bHalfRev;
+    KEY_VALUE   unKeyValue;
+    __IO bool   bIsTriggered;
+    __IO bool   bHalfRev;
 }USART_INPUT;
 
 

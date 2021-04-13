@@ -3,10 +3,10 @@
 
 #include <stm32f10x_gpio.h>
 
-void		LED_Initialize(void);
-void		LED_On(void);
-void		LED_Off(void);
-void		LED_Reverse(void);
-uint8_t		LED_GetState(void);
+void        LED_Initialize(void);
+void        LED_On(void);
+void        LED_Off(void);
+void        LED_Reverse(void);
+uint8_t     LED_GetState(void);
 
 #endif

@@ -110,7 +110,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 		RECT_X_START(stPaintPos) = RECT_X_START(*pstInnerPos);
 		RECT_Y_START(stPaintPos) = RECT_Y_START(*pstInnerPos);
 		RECT_HEIGHT(stCharBitmap) = pstFontRes->iHeight;
-		stCharBitmap.pData = pstDeviceIF->arrBmpDataBuffer;
+		stCharBitmap.pData = pstDeviceIF->stBuffer.pBuffer;
 
 		// Loop for Each char.
 		while(((NULL != pcChar) && ('\0' != *pcChar)) && (RECT_X_START(stPaintPos) < RECT_WIDTH(*pstDisplayArea)))
@@ -122,7 +122,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 				RECT_WIDTH(stCharBitmap) = pstFontRes->fnIsFullWidth(uiCharacterCode)?pstFontRes->iFullWidth:pstFontRes->iHalfWidth;
 				if((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0)
 				{
-					SGUI_Text_GetCharacterData(pstFontRes, uiCharacterCode, pstDeviceIF->arrBmpDataBuffer, SGUI_BMP_DATA_BUFFER_SIZE);
+					SGUI_Text_GetCharacterData(pstFontRes, uiCharacterCode, pstDeviceIF->stBuffer.pBuffer, pstDeviceIF->stBuffer.sSize);
 					SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
 				}
 				RECT_X_START(stPaintPos) += RECT_WIDTH(stCharBitmap);
@@ -184,7 +184,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 
 		RECT_HEIGHT(stCharBitmap) = pstFontRes->iHeight;
 		uiLines = 1;
-		stCharBitmap.pData = pstDeviceIF->arrBmpDataBuffer;
+		stCharBitmap.pData = pstDeviceIF->stBuffer.pBuffer;
 		// Loop for each word in display area.
 		while(((NULL != pcChar) && ('\0' != *pcChar)))
 		{
@@ -215,7 +215,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
 			if(((stPaintPos.iX+stCharBitmap.iWidth-1) >= 0) && (RECT_Y_START(stPaintPos) < RECT_HEIGHT(*pstDisplayArea)))
 			{
 				// Draw character.
-				SGUI_Text_GetCharacterData(pstFontRes, uiCharacterCode, pstDeviceIF->arrBmpDataBuffer, SGUI_BMP_DATA_BUFFER_SIZE);
+				SGUI_Text_GetCharacterData(pstFontRes, uiCharacterCode, pstDeviceIF->stBuffer.pBuffer, pstDeviceIF->stBuffer.sSize);
                 SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, &stPaintPos, &stCharBitmap, eFontMode);
 			}
 			else

@@ -74,7 +74,8 @@ void SGUI_Curve_Repaint(SGUI_SCR_DEV* pstDeviceIF, const SGUI_CURVE_STRUCT* pstO
 			while(NULL != pcstLineEndPoint)
 			{
 				/* Paint visible line. */
-				if(SGUI_Basic_PointIsInArea(&(pstObj->stParam.stLayout), &(pcstLineStartPoint->stPosition)) || SGUI_Basic_PointIsInArea(&(pstObj->stParam.stLayout), &(pcstLineEndPoint->stPosition)))
+				if(SGUI_Basic_PointIsInArea(&(pstObj->stParam.stLayout), pcstLineStartPoint->stPosition.iX, pcstLineStartPoint->stPosition.iY) ||
+					SGUI_Basic_PointIsInArea(&(pstObj->stParam.stLayout), pcstLineStartPoint->stPosition.iX, pcstLineStartPoint->stPosition.iY))
 				{
 					SGUI_Basic_DrawLine(pstDeviceIF, pcstLineStartPoint->stPosition.iX, pcstLineStartPoint->stPosition.iY,
 											pcstLineEndPoint->stPosition.iX, pcstLineEndPoint->stPosition.iY, SGUI_COLOR_FRGCLR);

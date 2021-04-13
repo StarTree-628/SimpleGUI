@@ -8,6 +8,7 @@
 //= Include files.													    =//
 //=======================================================================//
 #include "DemoProc.h"
+#include "SGUI_Basic.h"
 
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 #include "SDKInterface.h"
@@ -21,6 +22,11 @@
 #include "trigger_flags.h"
 #include "keyboard.h"
 #endif
+
+//=======================================================================//
+//= User Macro definition.											    =//
+//=======================================================================//
+#define		BMP_DATA_BUFFER_SIZE	(512)
 
 //=======================================================================//
 //= Static variable declaration.									    =//
@@ -39,6 +45,7 @@ HMI_SCREEN_OBJECT*			g_arrpstScreenObjs[] =
 							};
 HMI_ENGINE_OBJECT			g_stDemoEngine;
 
+SGUI_BYTE					s_pBmpDataBuffer[BMP_DATA_BUFFER_SIZE];
 //=======================================================================//
 //= Static function declare.								            =//
 //=======================================================================//
@@ -92,6 +99,9 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 #else
 	#error Add screen device object initialize process here.
 #endif
+	g_stDeviceInterface.stBuffer.pBuffer = s_pBmpDataBuffer;
+	g_stDeviceInterface.stBuffer.sSize = BMP_DATA_BUFFER_SIZE;
+	SGUI_Basic_ResetActiveArea(&g_stDeviceInterface, 10, 10, g_stDeviceInterface.stSize.iWidth-20, g_stDeviceInterface.stSize.iHeight-20);
 	do
 	{
 		/* Prepare HMI engine object. */

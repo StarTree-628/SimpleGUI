@@ -23,7 +23,6 @@
 #define		RECT_VALID_HEIGHT(DATA, POS)			((RECT_Y_START(POS)>0)?RECT_HEIGHT(DATA):(RECT_HEIGHT(DATA)+RECT_Y_START(POS)))
 
 #define		SGUI_DEVPF_IF_DEFINE(R, FN, PARAM)		typedef R(*FN)PARAM
-#define		SGUI_BMP_DATA_BUFFER_SIZE				(512)
 
 #define	SGUI_BMP_RESOURCE_DECLARE(NAME)				extern const SGUI_BMP_RES NAME
 #define	SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, ...)	const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
@@ -86,6 +85,12 @@ typedef struct
 	SGUI_INT							iMax;
 }SGUI_RANGE;
 
+typedef struct
+{
+	SGUI_BYTE*							pBuffer;
+	SGUI_SIZE							sSize;
+}SGUI_BUFFER;
+
 typedef enum
 {
 	SGUI_COLOR_BKGCLR =					0,
@@ -132,8 +137,10 @@ typedef struct
 {
 	//Screen display area size in pixel.
 	SGUI_AREA_SIZE						stSize;
+	//The area currently allowed to paint.
+	SGUI_RECT							stActiveArea;
 	//Bitmap data buffer.
-	SGUI_BYTE							arrBmpDataBuffer[SGUI_BMP_DATA_BUFFER_SIZE];
+	SGUI_BUFFER							stBuffer;
     //Engine & device initialize function.
     SGUI_FN_IF_INITIALIZE				fnInitialize;
     //Clear screen function.

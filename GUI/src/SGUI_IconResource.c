@@ -1,16 +1,16 @@
 /*************************************************************************/
-/** Copyright.															**/
-/** FileName: SGUI_IconResource.c										**/
-/** Author: XuYulin														**/
-/** Description: Simple GUI basic drawing operating interface.			**/
+/** Copyright.                                                          **/
+/** FileName: SGUI_IconResource.c                                       **/
+/** Author: XuYulin                                                     **/
+/** Description: Simple GUI basic drawing operating interface.          **/
 /*************************************************************************/
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.                                                      =//
 //=======================================================================//
 #include "SGUI_IconResource.h"
 
 //=======================================================================//
-//= Static variable define.												=//
+//= Static variable define.                                             =//
 //=======================================================================//
 SGUI_BMP_RESOURCE_DEFINE(SGUI_RES_ICON_ERROR_16, 16, 16,
 0xFF,0x01,0x01,0x19,0x39,0x71,0xE1,0xC1,0xC1,0xE1,0x71,0x39,0x19,0x01,0x01,0xFF,

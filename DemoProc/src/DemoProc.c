@@ -101,7 +101,7 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 #endif
 	g_stDeviceInterface.stBuffer.pBuffer = s_pBmpDataBuffer;
 	g_stDeviceInterface.stBuffer.sSize = BMP_DATA_BUFFER_SIZE;
-	SGUI_Basic_ResetActiveArea(&g_stDeviceInterface, 10, 10, g_stDeviceInterface.stSize.iWidth-20, g_stDeviceInterface.stSize.iHeight-20);
+	SGUI_Basic_ResetActiveArea(&g_stDeviceInterface, 0, 0, g_stDeviceInterface.stSize.iWidth, g_stDeviceInterface.stSize.iHeight);
 	do
 	{
 		/* Prepare HMI engine object. */

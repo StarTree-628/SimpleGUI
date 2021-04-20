@@ -1,12 +1,12 @@
 #ifndef _INCLUDE_SGUI_RESOURCE_H_
 #define _INCLUDE_SGUI_RESOURCE_H_
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.                                                      =//
 //=======================================================================//
 #include "SGUI_Typedef.h"
 
 //=======================================================================//
-//= Public variable declaration.									    =//
+//= Public variable declaration.                                        =//
 //=======================================================================//
 SGUI_BMP_RESOURCE_DECLARE(SGUI_RES_ICON_ERROR_16);
 SGUI_BMP_RESOURCE_DECLARE(SGUI_RES_ICON_INFORMATION_16);

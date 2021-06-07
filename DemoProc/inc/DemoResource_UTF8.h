@@ -1,4 +1,4 @@
-#ifndef _INCLUDE_DEMO_RESOURCE_UTF8_H_
+﻿#ifndef _INCLUDE_DEMO_RESOURCE_UTF8_H_
 #define _INCLUDE_DEMO_RESOURCE_UTF8_H_
 
 /* Screen 1: List Components. */
@@ -55,4 +55,4 @@
 #define SCR7_NOTICE_TEXT                ("欢迎使用SimpleGUI!")
 
 #endif // _INCLUDE_DEMO_RESOURCE_UTF8_H_
-_
+

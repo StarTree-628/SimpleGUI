@@ -224,6 +224,7 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
             else if(ITEMS_SENECT_IDX(pstObj) == ITEMS_VISIBLE_END_IDX(pstObj))
             {
                 pstObj->iItemPaintOffset = (((pstObj->stLayout.iHeight)%ITEM_HEIGHT(pstObj->pstFontRes))-ITEM_HEIGHT(pstObj->pstFontRes))%ITEM_HEIGHT(pstObj->pstFontRes);
+                //pstObj->iItemPaintOffset = ((pstObj->stLayout.iHeight)%ITEM_HEIGHT(pstObj->pstFontRes))-ITEM_HEIGHT(pstObj->pstFontRes);
                 stItemPaintArea.iHeight = ITEM_HEIGHT(pstObj->pstFontRes)+pstObj->iItemPaintOffset;
             }
             else
@@ -652,7 +653,6 @@ SGUI_BOOL SGUI_ItemsBase_CanScrollUp(SGUI_ITEMS_BASE* pstObj)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-
     bReturn = ((ITEMS_VISIBLE_START_ITEM(pstObj) != ITEMS_FIRST_ITEM(pstObj)) || (pstObj->iItemPaintOffset != 0));
 
     return bReturn;
@@ -668,8 +668,16 @@ SGUI_BOOL SGUI_ItemsBase_CanScrollDown(SGUI_ITEMS_BASE* pstObj)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-
-    bReturn = ((ITEMS_VISIBLE_END_ITEM(pstObj) != ITEMS_LAST_ITEM(pstObj)) || (pstObj->iItemPaintOffset == 0));
+    if(0 == (pstObj->stLayout.iHeight)%ITEM_HEIGHT(pstObj->pstFontRes))
+    {
+        /* When the list height is an integer multiple of the item height. */
+        bReturn = (ITEMS_VISIBLE_END_ITEM(pstObj) != ITEMS_LAST_ITEM(pstObj));
+    }
+    else
+    {
+        /* When the list height is not an integer multiple of the item height. */
+        bReturn = ((ITEMS_VISIBLE_END_ITEM(pstObj) != ITEMS_LAST_ITEM(pstObj)) || ((pstObj->iItemPaintOffset == 0)));
+    }
 
     return bReturn;
 }

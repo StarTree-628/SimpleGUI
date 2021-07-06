@@ -116,6 +116,9 @@
 		<Unit filename="../../../DemoProc/src/Notice.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../DemoProc/src/PolarCoordinates.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../DemoProc/src/RealtimeGraph.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -139,6 +142,7 @@
 		<Unit filename="../../../GUI/inc/SGUI_List.h" />
 		<Unit filename="../../../GUI/inc/SGUI_Menu.h" />
 		<Unit filename="../../../GUI/inc/SGUI_Notice.h" />
+		<Unit filename="../../../GUI/inc/SGUI_PolarCoordinates.h" />
 		<Unit filename="../../../GUI/inc/SGUI_ProcessBar.h" />
 		<Unit filename="../../../GUI/inc/SGUI_RealtimeGraph.h" />
 		<Unit filename="../../../GUI/inc/SGUI_ScrollBar.h" />
@@ -173,6 +177,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../GUI/src/SGUI_Notice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../GUI/src/SGUI_PolarCoordinates.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../GUI/src/SGUI_ProcessBar.c">

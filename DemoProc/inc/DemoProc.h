@@ -69,6 +69,7 @@ HMI_EVENT_TYPE_DECLARE(DATA_EVENT, DUMMY_DATA_EVENT_DATA);
 #define     HMI_SCREEN_ID_DEMO_REAL_TIME_GRAPH          (1007)
 #define     HMI_SCREEN_ID_DEMO_MENU                     (1008)
 #define     HMI_SCREEN_ID_DEMO_CURVE                    (1009)
+#define     HMI_SCREEN_ID_DEMO_POLOR_COORD              (1010)
 
 #define     DEMO_HEART_BEAT_INTERVAL_MS                 (20)
 
@@ -88,6 +89,7 @@ extern HMI_SCREEN_OBJECT        g_stHMIDemo_Menu;
 extern HMI_SCREEN_OBJECT        g_stHMIDemo_BasicPaint;
 extern HMI_SCREEN_OBJECT        g_stHMIDemo_TextPaint;
 extern HMI_SCREEN_OBJECT        g_stHMIDemo_Curve;
+extern HMI_SCREEN_OBJECT		g_stHMIDemo_PolorCoord;
 
 //=======================================================================//
 //= Function declare.                                                   =//

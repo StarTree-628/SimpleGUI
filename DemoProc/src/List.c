@@ -42,7 +42,8 @@ static SGUI_ITEMS_ITEM      s_arrstListItems[] =        {   {SCR1_LIST_ITEM1, NU
                                                             {SCR1_LIST_ITEM4, NULL},
                                                             {SCR1_LIST_ITEM5, NULL},
                                                             {SCR1_LIST_ITEM6, NULL},
-                                                            {SCR1_LIST_ITEM7, NULL}
+                                                            {SCR1_LIST_ITEM7, NULL},
+                                                            {SCR1_LIST_ITEM8, NULL}
                                                         };
 
 typedef struct
@@ -331,6 +332,11 @@ HMI_ENGINE_RESULT HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, HMI_ENGINE
             case 6:
             {
                 HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_CURVE, NULL);
+                break;
+            }
+            case 7:
+            {
+                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_POLOR_COORD, NULL);
                 break;
             }
             default:

@@ -11,6 +11,7 @@
 #define SCR1_LIST_ITEM5                 ("菜单")
 #define SCR1_LIST_ITEM6                 ("消息框")
 #define SCR1_LIST_ITEM7                 ("调整曲线")
+#define SCR1_LIST_ITEM8                 ("极坐标")
 
 #define SCR1_LIST_APPEND1               ("附加测试项1")
 #define SCR1_LIST_APPEND2               ("附加测试项2")

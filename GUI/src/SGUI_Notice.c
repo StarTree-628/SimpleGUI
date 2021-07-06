@@ -23,7 +23,7 @@
 /** Purpose:        Show a notice box.                                  **/
 /** Params:                                                             **/
 /** Params:                                                             **/
-/** @ pstDeviceIF[in]:      SimpleGUI object pointer.                       **/
+/** @ pstDeviceIF[in]:      SimpleGUI object pointer.                   **/
 /** @ pstObject[in]:    Object structure pointer.                       **/
 /** @ pstFontRes[in]:   Text font resource.                             **/
 /** @ uiTextOffset[in]: Text top offset.                                **/

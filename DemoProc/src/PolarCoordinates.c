@@ -76,7 +76,7 @@ HMI_ENGINE_RESULT HMI_DemoPolarCoord_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, co
     RTCTimerEnable(true);
 
 	time_t now_time=time(NULL);
-	tm* pstLocalTime = localtime(&now_time);
+	struct tm* pstLocalTime = localtime(&now_time);
     HMI_DemoPolarCoord_PaintClock(pstDeviceIF, pstLocalTime->tm_hour, pstLocalTime->tm_min, pstLocalTime->tm_sec);
     //HMI_DemoPolarCoord_PaintClock(pstDeviceIF, 15, 40, 20);
     HMI_DemoPolarCoord_PaintClockText(pstDeviceIF, pstLocalTime->tm_hour, pstLocalTime->tm_min, pstLocalTime->tm_sec);
@@ -125,7 +125,7 @@ HMI_ENGINE_RESULT HMI_DemoPolarCoord_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, con
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
 		/* RTC time is update. */
 		time_t now_time=time(NULL);
-		tm* pstLocalTime = localtime(&now_time);
+		struct tm* pstLocalTime = localtime(&now_time);
 		HMI_DemoPolarCoord_PaintClock(pstDeviceIF, pstLocalTime->tm_hour, pstLocalTime->tm_min, pstLocalTime->tm_sec);
 		HMI_DemoPolarCoord_PaintClockText(pstDeviceIF, pstLocalTime->tm_hour, pstLocalTime->tm_min, pstLocalTime->tm_sec);
 #endif

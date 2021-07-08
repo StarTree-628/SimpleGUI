@@ -96,9 +96,9 @@ HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
     SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 70, 43, 30, 20, 4, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
 
     // Paint rounded rectangle
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 105, 1, 20, 20, 7, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 105, 22, 20, 20, 7, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 105, 43, 20, 20, 7, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 105, 1, 20, 20, 6, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 105, 22, 20, 20, 6, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+    SGUI_Basic_DrawRoundedRectangle(pstDeviceIF, 105, 43, 20, 20, 6, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
 
     return HMI_RET_NORMAL;
 }

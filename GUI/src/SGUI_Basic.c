@@ -359,7 +359,6 @@ void SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iCx, SGUI_INT iCy
     SGUI_INT                iPosXOffset = iRadius;
     SGUI_INT                iPosYOffset = 0;
     SGUI_INT                iPosXOffset_Old = -1;
-    SGUI_INT                iPosYOffset_Old = -1;
     SGUI_INT                iXChange = 1 - (iRadius<<1); /* iRadius*2 */
     SGUI_INT                iYChange = 1;
     SGUI_INT                iRadiusError = 0;
@@ -367,51 +366,51 @@ void SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iCx, SGUI_INT iCy
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if(iRadius < 1)
-    {
-        SGUI_Basic_DrawPoint(pstDeviceIF, iCx, iCy, eEdgeColor);
-    }
-    else
-    {
-        while(iPosXOffset >= iPosYOffset)
-        {
-            if((iPosXOffset_Old != iPosXOffset) || (iPosYOffset_Old != iPosYOffset) )
-            {
-                // Fill the circle
-                if((iRadius > 1) && (eFillColor != SGUI_COLOR_TRANS) && (iPosXOffset_Old != iPosXOffset))
-                {
+    if(iRadius > 0)
+	{
+		if(1 == iRadius)
+		{
+			SGUI_Basic_DrawPoint(pstDeviceIF, iCx, iCy, eEdgeColor);
+		}
+		else
+		{
+			while(iPosXOffset >= iPosYOffset)
+			{
+				// Fill the circle
+				if((iRadius > 1) && (eFillColor != SGUI_COLOR_TRANS) && (iPosXOffset_Old != iPosXOffset))
+				{
 
-                    SGUI_Basic_DrawLine(pstDeviceIF, iCx-iPosXOffset, iCy-iPosYOffset+1, iCx-iPosXOffset, iCy+iPosYOffset-1, eFillColor);
-                    SGUI_Basic_DrawLine(pstDeviceIF, iCx+iPosXOffset, iCy-iPosYOffset+1, iCx+iPosXOffset, iCy+iPosYOffset-1, eFillColor);
+					SGUI_Basic_DrawLine(pstDeviceIF, iCx-iPosXOffset, iCy-iPosYOffset+1, iCx-iPosXOffset, iCy+iPosYOffset-1, eFillColor);
+					SGUI_Basic_DrawLine(pstDeviceIF, iCx+iPosXOffset, iCy-iPosYOffset+1, iCx+iPosXOffset, iCy+iPosYOffset-1, eFillColor);
 
-                }
-                SGUI_Basic_DrawLine(pstDeviceIF, iCx-iPosYOffset, iCy-iPosXOffset+1, iCx-iPosYOffset, iCy+iPosXOffset-1, eFillColor);
-                SGUI_Basic_DrawLine(pstDeviceIF, iCx+iPosYOffset, iCy-iPosXOffset+1, iCx+iPosYOffset, iCy+iPosXOffset-1, eFillColor);
+				}
+				SGUI_Basic_DrawLine(pstDeviceIF, iCx-iPosYOffset, iCy-iPosXOffset+1, iCx-iPosYOffset, iCy+iPosXOffset-1, eFillColor);
+				SGUI_Basic_DrawLine(pstDeviceIF, iCx+iPosYOffset, iCy-iPosXOffset+1, iCx+iPosYOffset, iCy+iPosXOffset-1, eFillColor);
 
-                // Draw edge.
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosXOffset, iCy+iPosYOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosXOffset, iCy+iPosYOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosXOffset, iCy-iPosYOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosXOffset, iCy-iPosYOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosYOffset, iCy+iPosXOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosYOffset, iCy+iPosXOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosYOffset, iCy-iPosXOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosYOffset, iCy-iPosXOffset, eEdgeColor);
+				// Draw edge.
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosXOffset, iCy-iPosYOffset, eEdgeColor); /*   0- 45 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosYOffset, iCy-iPosXOffset, eEdgeColor); /*  45- 90 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosYOffset, iCy-iPosXOffset, eEdgeColor); /*  90-135 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosXOffset, iCy-iPosYOffset, eEdgeColor); /* 135-180 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosXOffset, iCy+iPosYOffset, eEdgeColor); /* 180-225 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx-iPosYOffset, iCy+iPosXOffset, eEdgeColor); /* 225-270 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosYOffset, iCy+iPosXOffset, eEdgeColor); /* 270-315 */
+				SGUI_Basic_DrawPoint(pstDeviceIF, iCx+iPosXOffset, iCy+iPosYOffset, eEdgeColor); /* 315-360 */
 
-                iPosYOffset_Old = iPosYOffset;
-                iPosXOffset_Old = iPosXOffset;
-            }
-            iPosYOffset++;
-            iRadiusError += iYChange;
-            iYChange += 2;
-            if ((2 * iRadiusError + iXChange) > 0)
-            {
-                iPosXOffset--;
-                iRadiusError += iXChange;
-                iXChange += 2;
-            }
-        }
-    }
+				iPosXOffset_Old = iPosXOffset;
+
+				iPosYOffset++;
+				iRadiusError += iYChange;
+				iYChange += 2;
+				if ((2 * iRadiusError + iXChange) > 0)
+				{
+					iPosXOffset--;
+					iRadiusError += iXChange;
+					iXChange += 2;
+				}
+			}
+		}
+	}
 }
 
 /*************************************************************************/
@@ -622,10 +621,10 @@ SGUI_BOOL SGUI_Basic_PointIsInArea(const SGUI_RECT* pstArea, SGUI_INT iPosX, SGU
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if( (iPosX < RECT_X_START(*pstArea)) ||
-            (iPosX > RECT_X_END(*pstArea)) ||
-            (iPosY < RECT_Y_START(*pstArea)) ||
-            (iPosY > RECT_Y_END(*pstArea)))
+    if((iPosX < RECT_X_START(*pstArea)) ||
+       (iPosX > RECT_X_END(*pstArea)) ||
+	   (iPosY < RECT_Y_START(*pstArea)) ||
+       (iPosY > RECT_Y_END(*pstArea)))
     {
         bReturn = SGUI_FALSE;
     }
@@ -660,7 +659,6 @@ void SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX
     /*----------------------------------*/
     SGUI_INT                iPosXOffset = iFillet;
     SGUI_INT                iPosYOffset = 0;
-    SGUI_INT                iYOffset_Old = -1;
     SGUI_INT                iXOffset_Old = -1;
     SGUI_INT                iXChange = 1 - (iFillet << 1); /* iFillet*2 */
     SGUI_INT                iYChange = 1;
@@ -679,49 +677,45 @@ void SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX
         // Paint Arc
         while(iPosXOffset >= iPosYOffset)
         {
-            if((iXOffset_Old != iPosXOffset) || (iYOffset_Old != iPosYOffset))
-            {
-                // Fill
-                if(eFillColor != SGUI_COLOR_TRANS)
-                {
-                    if(iPosXOffset != iPosYOffset)
-                    {
-                        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosXOffset+1, iStartX+iWidth-iFillet+iPosXOffset-2, iStartY+iFillet-iPosYOffset, eFillColor);
-                    }
-                    if((iPosXOffset != iFillet) && (iXOffset_Old != iPosXOffset))
-                    {
-                        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosYOffset+1, iStartX+iWidth-iFillet+iPosYOffset-2, iStartY+iFillet-iPosXOffset, eFillColor);
-                    }
-                }
-                // Draw arc edge for 2nd quadrant(Left top arc).
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosXOffset, iStartY+iFillet-iPosYOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosYOffset, iStartY+iFillet-iPosXOffset, eEdgeColor);
-                // Draw arc edge for 1st quadrant(Right top arc).
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosXOffset-1, iStartY+iFillet-iPosYOffset, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosYOffset-1, iStartY+iFillet-iPosXOffset, eEdgeColor);
-                // Fill
-                if(eFillColor != SGUI_COLOR_TRANS)
-                {
-                    if(iPosXOffset != iPosYOffset)
-                    {
-                        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosXOffset+1, iStartX+iWidth-iFillet+iPosXOffset-2, iStartY+iHeight-iFillet+iPosYOffset-1, eFillColor);
-                    }
-                    if((iPosXOffset != iFillet) && (iXOffset_Old != iPosXOffset))
-                    {
-                        SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosYOffset+1, iStartX+iWidth-iFillet+iPosYOffset-2, iStartY+iHeight-iFillet+iPosXOffset-1, eFillColor);
-                    }
-                }
-                // Draw arc edge for 3rd quadrant(Left bottom arc).
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosXOffset, iStartY+iHeight-iFillet+iPosYOffset-1, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosYOffset, iStartY+iHeight-iFillet+iPosXOffset-1, eEdgeColor);
-                // Draw arc edge for 4th quadrant(Right bottom arc).
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosXOffset-1, iStartY+iHeight-iFillet+iPosYOffset-1, eEdgeColor);
-                SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosYOffset-1, iStartY+iHeight-iFillet+iPosXOffset-1, eEdgeColor);
+			// Fill
+			if(eFillColor != SGUI_COLOR_TRANS)
+			{
+				if(iPosXOffset != iPosYOffset)
+				{
+					SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosXOffset+1, iStartX+iWidth-iFillet+iPosXOffset-2, iStartY+iFillet-iPosYOffset, eFillColor);
+				}
+				if((iPosXOffset != iFillet) && (iXOffset_Old != iPosXOffset))
+				{
+					SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosYOffset+1, iStartX+iWidth-iFillet+iPosYOffset-2, iStartY+iFillet-iPosXOffset, eFillColor);
+				}
+			}
+			// Draw arc edge for 2nd quadrant(Left top arc).
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosXOffset, iStartY+iFillet-iPosYOffset, eEdgeColor);
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosYOffset, iStartY+iFillet-iPosXOffset, eEdgeColor);
+			// Draw arc edge for 1st quadrant(Right top arc).
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosXOffset-1, iStartY+iFillet-iPosYOffset, eEdgeColor);
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosYOffset-1, iStartY+iFillet-iPosXOffset, eEdgeColor);
+			// Fill
+			if(eFillColor != SGUI_COLOR_TRANS)
+			{
+				if(iPosXOffset != iPosYOffset)
+				{
+					SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosXOffset+1, iStartX+iWidth-iFillet+iPosXOffset-2, iStartY+iHeight-iFillet+iPosYOffset-1, eFillColor);
+				}
+				if((iPosXOffset != iFillet) && (iXOffset_Old != iPosXOffset))
+				{
+					SGUI_Basic_DrawHorizontalLine(pstDeviceIF, iStartX+iFillet-iPosYOffset+1, iStartX+iWidth-iFillet+iPosYOffset-2, iStartY+iHeight-iFillet+iPosXOffset-1, eFillColor);
+				}
+			}
+			// Draw arc edge for 3rd quadrant(Left bottom arc).
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosXOffset, iStartY+iHeight-iFillet+iPosYOffset-1, eEdgeColor);
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iFillet-iPosYOffset, iStartY+iHeight-iFillet+iPosXOffset-1, eEdgeColor);
+			// Draw arc edge for 4th quadrant(Right bottom arc).
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosXOffset-1, iStartY+iHeight-iFillet+iPosYOffset-1, eEdgeColor);
+			SGUI_Basic_DrawPoint(pstDeviceIF, iStartX+iWidth-iFillet+iPosYOffset-1, iStartY+iHeight-iFillet+iPosXOffset-1, eEdgeColor);
 
-                iYOffset_Old = iPosYOffset;
-                iXOffset_Old = iPosXOffset;
+			iXOffset_Old = iPosXOffset;
 
-            }
             iPosYOffset++;
             iRadiusError += iYChange;
             iYChange += 2;

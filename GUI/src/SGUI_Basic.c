@@ -511,7 +511,7 @@ void SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
 /** Return:         None.                                               **/
 /** Notice:         None.                                               **/
 /*************************************************************************/
-void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, const SGUI_BMP_RES* pstBitmapData, SGUI_DRAW_MODE eDrawMode)
+void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstDisplayArea, const SGUI_POINT* pstInnerPos, const SGUI_BMP_RES* pstBitmapData, SGUI_DRAW_MODE eDrawMode)
 {
     /*----------------------------------*/
     /* Variable Declaration             */
@@ -536,7 +536,7 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_RECT* pstDisplayArea,
             (RECT_X_END(*pstDisplayArea) > 0) && (RECT_Y_END(*pstDisplayArea) > 0))
     {
         // Adapt text display area and data area.
-        SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
+        // -SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
         // Only process drawing when valid display data existed
         if((RECT_VALID_WIDTH(*pstBitmapData, *pstInnerPos) > 0) && (RECT_VALID_HEIGHT(*pstBitmapData, *pstInnerPos) > 0))
         {

@@ -494,7 +494,7 @@ void SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pst
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RECT               stHighlightArea;
+    SGUI_RECT               stFocusMarkArea;
 
     /*----------------------------------*/
     /* Process                          */
@@ -503,34 +503,35 @@ void SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pst
     {
         if(NULL != pstObj->stData.pstFocused)
         {
-            stHighlightArea.iX = pstObj->stData.pstFocused->stPosition.iX-2;
-            stHighlightArea.iY = pstObj->stData.pstFocused->stPosition.iY-2;
-            stHighlightArea.iWidth = 5;
-            stHighlightArea.iHeight = 5;
+            stFocusMarkArea.iX = pstObj->stData.pstFocused->stPosition.iX-2;
+            stFocusMarkArea.iY = pstObj->stData.pstFocused->stPosition.iY-2;
+            stFocusMarkArea.iWidth = 5;
+            stFocusMarkArea.iHeight = 5;
 
-            if(RECT_X_START(stHighlightArea) <= RECT_X_START(pstObj->stParam.stLayout))
+            if(RECT_X_START(stFocusMarkArea) <= RECT_X_START(pstObj->stParam.stLayout))
             {
-                stHighlightArea.iWidth -= (RECT_X_START(pstObj->stParam.stLayout)-stHighlightArea.iX);
-                stHighlightArea.iX = RECT_X_START(pstObj->stParam.stLayout);
+                stFocusMarkArea.iWidth -= (RECT_X_START(pstObj->stParam.stLayout)-stFocusMarkArea.iX);
+                stFocusMarkArea.iX = RECT_X_START(pstObj->stParam.stLayout);
             }
 
-            if(RECT_X_END(stHighlightArea) >= RECT_X_END(pstObj->stParam.stLayout))
+            if(RECT_X_END(stFocusMarkArea) >= RECT_X_END(pstObj->stParam.stLayout))
             {
-                stHighlightArea.iWidth -= (RECT_X_END(stHighlightArea)-RECT_X_END(pstObj->stParam.stLayout));
+                stFocusMarkArea.iWidth -= (RECT_X_END(stFocusMarkArea)-RECT_X_END(pstObj->stParam.stLayout));
             }
 
-            if(RECT_Y_START(stHighlightArea) <= RECT_Y_START(pstObj->stParam.stLayout))
+            if(RECT_Y_START(stFocusMarkArea) <= RECT_Y_START(pstObj->stParam.stLayout))
             {
-                stHighlightArea.iHeight -= (RECT_Y_START(pstObj->stParam.stLayout)-stHighlightArea.iY);
-                stHighlightArea.iY = RECT_Y_START(pstObj->stParam.stLayout);
+                stFocusMarkArea.iHeight -= (RECT_Y_START(pstObj->stParam.stLayout)-stFocusMarkArea.iY);
+                stFocusMarkArea.iY = RECT_Y_START(pstObj->stParam.stLayout);
             }
 
-            if(RECT_Y_END(stHighlightArea) >= RECT_Y_END(pstObj->stParam.stLayout))
+            if(RECT_Y_END(stFocusMarkArea) >= RECT_Y_END(pstObj->stParam.stLayout))
             {
-                stHighlightArea.iHeight -= (RECT_Y_END(stHighlightArea)-RECT_Y_END(pstObj->stParam.stLayout));
+                stFocusMarkArea.iHeight -= (RECT_Y_END(stFocusMarkArea)-RECT_Y_END(pstObj->stParam.stLayout));
             }
 
-            SGUI_Basic_ReverseBlockColor(pstDeviceIF, stHighlightArea.iX, stHighlightArea.iY, stHighlightArea.iWidth, stHighlightArea.iHeight);
+            //SGUI_Basic_ReverseBlockColor(pstDeviceIF, stFocusMarkArea.iX, stFocusMarkArea.iY, stFocusMarkArea.iWidth, stFocusMarkArea.iHeight);
+            SGUI_Basic_DrawRectangle(pstDeviceIF, stFocusMarkArea.iX, stFocusMarkArea.iY, stFocusMarkArea.iWidth, stFocusMarkArea.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
         }
     }
 }

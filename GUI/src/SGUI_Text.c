@@ -65,10 +65,46 @@ void SGUI_Text_GetTextExtent(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRe
 }
 
 /*************************************************************************/
+/** Function Name:  SGUI_Text_DrawASCIICharacter                        **/
+/** Purpose:        Write a single line text in a fixed area.           **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: SimpleGUI object pointer.                        **/
+/** @ cChar[in]:    Character, only allow ASCII characters.             **/
+/** @ pstFontRes[in]: Font resource object.                             **/
+/** @ pstDisplayArea[in]: Display area size.                            **/
+/** @ pstInnerPos[in]: Character paint position in display area.        **/
+/** @ eFontMode[in] Character display mode(normal or reverse color).    **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_Text_DrawASCIICharacter(SGUI_SCR_DEV* pstDeviceIF, SGUI_CHAR cChar, const SGUI_FONT_RES* pstFontRes, const SGUI_RECT* pstDisplayArea, const SGUI_POINT* pstInnerPos, SGUI_DRAW_MODE eFontMode)
+{
+	/*----------------------------------*/
+    /* Variable Declaration             */
+    /*----------------------------------*/
+    SGUI_BMP_RES                stCharBitmap;
+
+	/*----------------------------------*/
+    /* Initialize                       */
+    /*----------------------------------*/
+	stCharBitmap.iHeight = pstFontRes->iHeight;
+	stCharBitmap.iWidth = pstFontRes->iHalfWidth;
+	stCharBitmap.pData = pstDeviceIF->stBuffer.pBuffer;
+
+	/*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if((cChar < 0x7F) && (pstInnerPos->iX < (pstDisplayArea->iX+pstDisplayArea->iWidth)))
+	{
+		SGUI_Text_GetCharacterData(pstFontRes, cChar, pstDeviceIF->stBuffer.pBuffer, pstDeviceIF->stBuffer.sSize);
+		SGUI_Basic_DrawBitMap(pstDeviceIF, pstDisplayArea, pstInnerPos, &stCharBitmap, eFontMode);
+	}
+}
+
+/*************************************************************************/
 /** Function Name:  SGUI_Text_DrawSingleLineText                        **/
 /** Purpose:        Write a single line text in a fixed area.           **/
 /** Params:                                                             **/
-/** @ pstDeviceIF[in]:  SimpleGUI object pointer.                           **/
+/** @ pstDeviceIF[in]:  SimpleGUI object pointer.                       **/
 /** @ cszText[in]:  Text array pointer.                                 **/
 /** @ pstFontRes[in]: Font resource object.                             **/
 /** @ pstDisplayArea[in]: Display area size.                            **/
@@ -76,24 +112,17 @@ void SGUI_Text_GetTextExtent(SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRe
 /** @ eFontMode[in] Character display mode(normal or reverse color).    **/
 /** Return:         None.                                               **/
 /*************************************************************************/
-void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos, SGUI_DRAW_MODE eFontMode)
+void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, const SGUI_RECT* pstDisplayArea, const SGUI_POINT* pstInnerPos, SGUI_DRAW_MODE eFontMode)
 {
 
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    const SGUI_CHAR*            pcChar;                         // Text character pointer.
+    const SGUI_CHAR*            pcChar = (SGUI_CSZSTR)ENCODE(cszText);// Text character pointer.
     SGUI_UINT32                 uiCharacterCode;                // Character byte, might be tow bytes.
-    SGUI_COLOR                  eBackColor;
+    SGUI_COLOR                  eBackColor = (eFontMode == SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR;
     SGUI_BMP_RES                stCharBitmap;
     SGUI_POINT                  stPaintPos;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    // Initialize variable.
-    pcChar =                    (SGUI_CSZSTR)ENCODE(cszText);
-    eBackColor =                (eFontMode == SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR;
 
     /*----------------------------------*/
     /* Process                          */
@@ -101,7 +130,7 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
     if((NULL != pcChar) && (RECT_X_START(*pstDisplayArea) < RECT_WIDTH(pstDeviceIF->stSize)))
     {
         // Adapt text display area and data area.
-        SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
+        //-SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
         // Clear text area.
         SGUI_Basic_DrawRectangle(pstDeviceIF, RECT_X_START(*pstDisplayArea), RECT_Y_START(*pstDisplayArea),
                         RECT_WIDTH(*pstDisplayArea), RECT_HEIGHT(*pstDisplayArea),

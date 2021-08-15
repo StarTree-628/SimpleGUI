@@ -188,7 +188,6 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
 
         if(pstObj->iCount > 0)
         {
-
             /* Judge selection index is valid. */
             if(ITEMS_SENECT_IDX(pstObj) < 0)
             {
@@ -627,7 +626,7 @@ SGUI_ITEMS_ITEM* SGUI_ItemsBase_InsertItem(SGUI_ITEMS_BASE* pstObj, SGUI_ITEMS_I
                 ITEMS_LAST_ITEM(pstObj) = pstNewItem;
                 if(ITEMS_VISIBLE_ITEMS(pstObj) == (SGUI_ItemsBase_Count(pstObj)+1))
                 {
-                    ITEMS_VISIBLE_END_ITEM(pstObj) = pstNewItem->pstNext;
+                    ITEMS_VISIBLE_END_ITEM(pstObj) = pstNewItem;
                 }
             }
         }

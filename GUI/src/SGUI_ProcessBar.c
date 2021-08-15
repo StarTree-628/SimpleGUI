@@ -18,7 +18,7 @@
 /** Purpose:        Display or update a process bar.                    **/
 /** Resources:      Process bar data structure.                         **/
 /** Params:                                                             **/
-/** @ pstDeviceIF[in]:  SimpleGUI object pointer.                           **/
+/** @ pstDeviceIF[in]:  SimpleGUI object pointer.                       **/
 /** @ pstProcessBarData[in]: Process bar data whitch will update on     **/
 /**                 screen.                                             **/
 /** Return:         None.                                               **/

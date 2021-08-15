@@ -29,10 +29,10 @@ static HMI_ENGINE_RESULT    HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, 
 //=======================================================================//
 //= Static variable declaration.                                        =//
 //=======================================================================//
-static const SGUI_RECT      s_arrstLayouts[] =          {   {0, 0, 96, 48},
+static const SGUI_RECT      s_arrstLayouts[] =          {   {0, 0, 96, 45},
                                                             {0, 0, 128, 64},
+                                                            {0, 0, 192, 96},
                                                             {0, 0, 192, 128},
-                                                            {0, 0, 256, 160},
                                                             };
 static SGUI_SIZE            s_iLayoutIndex = 1;
 
@@ -231,7 +231,8 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
                     {
                         if(SGUI_FALSE == s_arrstAppendListItems[sInsertDataIdx].bUsed)
                         {
-                            s_arrstAppendListItems[sInsertDataIdx].bUsed = (SGUI_List_InsertItem(&s_stDemoListObject, &(s_arrstAppendListItems[sInsertDataIdx].stItem), SGUI_List_GetSelection(&s_stDemoListObject)->iIndex))?SGUI_TRUE:SGUI_FALSE;
+                            s_arrstAppendListItems[sInsertDataIdx].bUsed = SGUI_List_InsertItem(&s_stDemoListObject, &(s_arrstAppendListItems[sInsertDataIdx].stItem),
+                                                                                                 (SGUI_List_Count(&s_stDemoListObject)>0)?(SGUI_List_GetSelection(&s_stDemoListObject)->iIndex):0)?SGUI_TRUE:SGUI_FALSE;
                             break;
                         }
                         else

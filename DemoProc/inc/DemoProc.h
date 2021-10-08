@@ -58,7 +58,7 @@ HMI_EVENT_TYPE_DECLARE(KEY_PRESS_EVENT, KEY_EVENT_DATA)
 HMI_EVENT_TYPE_DECLARE(DATA_EVENT, DUMMY_DATA_EVENT_DATA);
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define     HMI_SCREEN_ID_DEMO_SCROLLING_TEXT           (1001)
 #define     HMI_SCREEN_ID_DEMO_PAINT_TEXT               (1002)

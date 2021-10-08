@@ -6,7 +6,7 @@
 #include "SGUI_Typedef.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 // GoBack history size
 #define     HMI_SCREEN_HISTORY_MAX                          (20)
@@ -39,6 +39,9 @@
 //=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 // HMI process result
 typedef enum
 {
@@ -98,14 +101,22 @@ typedef struct
     HMI_SCREEN_OBJECT*              CurrentScreenObject;
     SGUI_SCR_DEV*                   Interface;
 }HMI_ENGINE_OBJECT;
-
+#ifdef __cplusplus
+}
+#endif
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 HMI_ENGINE_RESULT   HMI_ActiveEngine(HMI_ENGINE_OBJECT* pstHMIEngineObject, SGUI_INT iScreenID);
 HMI_ENGINE_RESULT   HMI_StartEngine(const void* pstParameters);
 HMI_ENGINE_RESULT   HMI_ProcessEvent(const HMI_EVENT_BASE* pstEvent);
 HMI_ENGINE_RESULT   HMI_SwitchScreen(SGUI_INT iDestScreenID, const void* pstParameters);
 HMI_ENGINE_RESULT   HMI_GoBack(const void* pstParameters);
 HMI_ENGINE_RESULT   HMI_SetDeviceObject(SGUI_SCR_DEV* pstDeviceObj);
+#ifdef __cplusplus
+}
+#endif
 #endif // __INCLUDE_HMI_ENGINE_H__

@@ -10,7 +10,7 @@
 #include "SGUI_List.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 // User settings
 #define     LIST_SCROLLBAR_WIDTH                        (5)

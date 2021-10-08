@@ -8,25 +8,24 @@
 #include <stdbool.h>
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define     SGUI_MAX_OF(A, B)                       (A>B?A:B)
 #define     SGUI_MIN_OF(A, B)                       (A<B?A:B)
-#define     RANGE_SIZE(RANGE)                       ((RANGE).iMax-(RANGE).iMin+1)
-#define     RECT_X_START(ST)                        ((ST).iX)
-#define     RECT_X_END(RECT)                        (((RECT).iX + (RECT).iWidth - 1))
-#define     RECT_Y_START(ST)                        ((ST).iY)
-#define     RECT_Y_END(RECT)                        (((RECT).iY + (RECT).iHeight - 1))
-#define     RECT_WIDTH(ST)                          ((ST).iWidth)
-#define     RECT_HEIGHT(ST)                         ((ST).iHeight)
-#define     RECT_VALID_WIDTH(DATA, POS)             ((RECT_X_START(POS)>0)?RECT_WIDTH(DATA):(RECT_WIDTH(DATA)+RECT_X_START(POS)))
-#define     RECT_VALID_HEIGHT(DATA, POS)            ((RECT_Y_START(POS)>0)?RECT_HEIGHT(DATA):(RECT_HEIGHT(DATA)+RECT_Y_START(POS)))
-
+#define     SGUI_RANGE_SIZE(RANGE)                  ((RANGE).iMax-(RANGE).iMin+1)
+#define     SGUI_RECT_X_START(ST)                   ((ST).iX)
+#define     SGUI_RECT_X_END(RECT)                   (((RECT).iX + (RECT).iWidth - 1))
+#define     SGUI_RECT_Y_START(ST)                   ((ST).iY)
+#define     SGUI_RECT_Y_END(RECT)                   (((RECT).iY + (RECT).iHeight - 1))
+#define     SGUI_RECT_WIDTH(ST)                     ((ST).iWidth)
+#define     SGUI_RECT_HEIGHT(ST)                    ((ST).iHeight)
+#define     SGUI_RECT_VALID_WIDTH(DATA, POS)        ((SGUI_RECT_X_START(POS)>0)?SGUI_RECT_WIDTH(DATA):(SGUI_RECT_WIDTH(DATA)+SGUI_RECT_X_START(POS)))
+#define     SGUI_RECT_VALID_HEIGHT(DATA, POS)       ((SGUI_RECT_Y_START(POS)>0)?SGUI_RECT_HEIGHT(DATA):(SGUI_RECT_HEIGHT(DATA)+SGUI_RECT_Y_START(POS)))
 #define     SGUI_DEVPF_IF_DEFINE(R, FN, PARAM)      typedef R(*FN)PARAM
-
-#define SGUI_BMP_RESOURCE_DECLARE(NAME)             extern const SGUI_BMP_RES NAME
-#define SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, ...)   const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
+#define     SGUI_BMP_RESOURCE_DECLARE(NAME)         extern const SGUI_BMP_RES NAME
+#define     SGUI_BMP_RESOURCE_DEFINE(NAME, W, H, ...) const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
                                                     const SGUI_BMP_RES NAME = {W, H, NAME##DATA}
+
 //=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
@@ -42,13 +41,11 @@ typedef unsigned int                    SGUI_UINT;
 typedef long                            SGUI_LONG;
 typedef unsigned long                   SGUI_ULONG;
 typedef unsigned char                   SGUI_BYTE;
-typedef const unsigned char             SGUI_CBYTE;
 typedef size_t                          SGUI_SIZE;
 
 typedef char*                           SGUI_SZSTR;
 typedef const char*                     SGUI_CSZSTR;
 typedef char                            SGUI_CHAR;
-typedef const char                      SGUI_CCHAR;
 
 typedef void*                           SGUI_PTR;
 
@@ -59,6 +56,9 @@ typedef SGUI_UINT32                     SGUI_ROM_ADDRESS;
 #define SGUI_FALSE                      (0)
 #define SGUI_TRUE                       (!SGUI_FALSE)
 
+#ifdef __cplusplus
+extern "C"{
+#endif
 typedef struct
 {
     SGUI_INT                            iX;
@@ -93,9 +93,9 @@ typedef struct
 
 typedef enum
 {
+    SGUI_COLOR_TRANS =                  -1,
     SGUI_COLOR_BKGCLR =                 0,
     SGUI_COLOR_FRGCLR =                 1,
-    SGUI_COLOR_TRANS =                  2,
 }SGUI_COLOR;
 
 typedef enum
@@ -111,20 +111,17 @@ typedef enum
     SGUI_LEFT,
 }SGUI_ALIG_MODE;
 
-// Palette color value, 16Bit for RGB555 or RGB565.
-typedef SGUI_UINT16                     SGUI_PALETTE_COLOUR;
-// Palette color value, 16Bit for RGB888.
-//typedef SGUI_UINT32                     SGUI_PALETTE_COLOUR;
-
 // Screen device operation interface type declare.
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,          SGUI_FN_IF_INITIALIZE,              (void));
 SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_CLEAR,                   (void));
-SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_SET_POINT,               (SGUI_INT iX, SGUI_INT iY, SGUI_INT iColor));
+SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_SET_POINT,               (SGUI_INT iX, SGUI_INT iY, SGUI_UINT iColor));
+#ifdef SGUI_GET_POINT_FUNC_EN
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,          SGUI_FN_IF_GET_POINT,               (SGUI_INT iX, SGUI_INT iY));
+#endif // SGUI_GET_POINT_FUNC_EN
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,          SGUI_FN_IF_SET_BYTE,                (SGUI_INT iPage, SGUI_INT iColumn));
 SGUI_DEVPF_IF_DEFINE(SGUI_INT,          SGUI_FN_IF_GET_BYTE,                (SGUI_INT iPage, SGUI_INT iColumn));
+SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_FILL_RECT,               (SGUI_INT iX, SGUI_INT iY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_UINT iColor));
 SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_REFRESH,                 (void));
-SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_SET_PALETTE,             (SGUI_PALETTE_COLOUR, SGUI_PALETTE_COLOUR, SGUI_PALETTE_COLOUR));
 
 // System function interface type declare.
 SGUI_DEVPF_IF_DEFINE(void,              SGUI_FN_IF_GET_RTC,                 (SGUI_INT iYear, SGUI_INT iMounth, SGUI_INT iDay, SGUI_INT iWeekDay, SGUI_INT iHour, SGUI_INT iMinute, SGUI_INT iSecond));
@@ -137,8 +134,6 @@ typedef struct
 {
     //Screen display area size in pixel.
     SGUI_AREA_SIZE                      stSize;
-    //The area currently allowed to paint.
-    SGUI_RECT                           stActiveArea;
     //Bitmap data buffer.
     SGUI_BUFFER                         stBuffer;
     //Engine & device initialize function.
@@ -147,12 +142,13 @@ typedef struct
     SGUI_FN_IF_CLEAR                    fnClear;
     //Set pixel value function.
     SGUI_FN_IF_SET_POINT                fnSetPixel;
+#ifdef SGUI_GET_POINT_FUNC_EN
     //Get pixel value function.
     SGUI_FN_IF_GET_POINT                fnGetPixel;
+#endif // SGUI_GET_POINT_FUNC_EN
+    SGUI_FN_IF_FILL_RECT                fnFillRect;
     // Sync display buffer data to screen device.
     SGUI_FN_IF_REFRESH                  fnSyncBuffer;
-    // Set palette function.
-    SGUI_FN_IF_SET_PALETTE              fnSetPalette;
 }SGUI_SCR_DEV;
 
 typedef struct
@@ -172,5 +168,8 @@ typedef struct
     SGUI_INT                            iHeight;
     const SGUI_BYTE*                    pData;
 }SGUI_BMP_RES;
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _INCLUDE_GUI_TYPEDEF_H_

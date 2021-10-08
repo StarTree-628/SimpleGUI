@@ -24,7 +24,7 @@
 #endif
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define     BMP_DATA_BUFFER_SIZE    (512)
 
@@ -94,7 +94,10 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
     g_stDeviceInterface.stSize.iHeight = 64;
     /* Initialize interface object. */
     g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
+#ifdef SGUI_GET_POINT_FUNC_EN
     g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
+#endif // SGUI_GET_POINT_FUNC_EN
+    g_stDeviceInterface.fnFillRect = SGUI_SDK_FillRectangle;
     g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;
     g_stDeviceInterface.fnSyncBuffer = SGUI_SDK_RefreshDisplay;
 #else
@@ -102,7 +105,6 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 #endif
     g_stDeviceInterface.stBuffer.pBuffer = s_pBmpDataBuffer;
     g_stDeviceInterface.stBuffer.sSize = BMP_DATA_BUFFER_SIZE;
-    SGUI_Basic_ResetActiveArea(&g_stDeviceInterface, 0, 0, g_stDeviceInterface.stSize.iWidth, g_stDeviceInterface.stSize.iHeight);
     do
     {
         /* Prepare HMI engine object. */

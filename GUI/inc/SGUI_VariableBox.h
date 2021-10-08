@@ -10,6 +10,9 @@
 //=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 // Data type of number variable box.
 typedef struct
 {
@@ -54,6 +57,9 @@ typedef struct
     SGUI_TEXT_VARBOX_PARAM  stParam;
     SGUI_TEXT_VARBOX_DATA   stData;
 }SGUI_TEXT_VARBOX_STRUCT;
+#ifdef __cplusplus
+}
+#endif
 
 enum
 {
@@ -72,7 +78,7 @@ typedef enum
 }SGUI_TEXT_VARBOX_OPT;
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define VARBOX_WIDTH(FONT_SIZE, L)      (L*(g_stFontSize[FONT_SIZE].Width)-4)
 #define VARBOX_HEIGHT(FONT_SIZE)        (g_stFontSize[FONT_SIZE].Height+2)
@@ -92,6 +98,20 @@ typedef enum
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
+void        SGUI_NumberVariableBox_Initialize(SGUI_NUM_VARBOX_STRUCT* pstObj, const SGUI_NUM_VARBOX_PARAM* pcstInitParam);
+void        SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstValue, SGUI_DRAW_MODE eMode);
+void        SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGUI_TEXT_VARBOX_PARAM* pcstInitParam, SGUI_SZSTR szTextBuffer);
+void        SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_CHAR cMask, SGUI_DRAW_MODE eMode);
+#ifdef __cplusplus
+}
+#endif
+
+//=======================================================================//
+//= Macro function.                                                     =//
+//=======================================================================//
 #define     SGUI_NumberVariableBox_Increase(POBJ)           SGUI_NumberVariableBox_SetValue((POBJ), (POBJ)->stData.iValue+1)
 #define     SGUI_NumberVariableBox_Decrease(POBJ)           SGUI_NumberVariableBox_SetValue((POBJ), (POBJ)->stData.iValue-1)
 #define     SGUI_NumberVariableBox_SetValue(POBJ, VAL)      if(((VAL) <= (POBJ)->stParam.iMax) && ((VAL) >= (POBJ)->stParam.iMin))\
@@ -99,9 +119,6 @@ typedef enum
                                                                 (POBJ)->stData.iValue = (VAL);\
                                                             }
 #define     SGUI_NumberVariableBox_GetValue(POBJ)           ((POBJ)->stData.iValue)
-void        SGUI_NumberVariableBox_Initialize(SGUI_NUM_VARBOX_STRUCT* pstObj, const SGUI_NUM_VARBOX_PARAM* pcstInitParam);
-void        SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstValue, SGUI_DRAW_MODE eMode);
-void        SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGUI_TEXT_VARBOX_PARAM* pcstInitParam, SGUI_SZSTR szTextBuffer);
 #define     SGUI_TextVariableBox_GetFocusIndex(POBJ)        ((POBJ)->stData.iFocusIndex)
 #define     SGUI_TextVariableBox_SetFocusIndex(POBJ, IDX)   if((IDX) < (POBJ)->stParam.iTextLength)\
                                                             {\
@@ -128,7 +145,6 @@ void        SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, con
                                                             }
 #define     SGUI_TextVariableBox_GetText(POBJ)              ((POBJ)->stData.szValue)
 #define     SGUI_TextVariableBox_GetChar(POBJ, IDX)         (IDX<(POBJ)->stParam.iTextLength?(POBJ)->stData.szValue[IDX]:'\0')
-#define     SGUI_TextVariableBox_SetFocusedChar(POBJ, CH)   ((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] = CH)                                                         
-void        SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_CHAR cMask, SGUI_DRAW_MODE eMode);
+#define     SGUI_TextVariableBox_SetFocusedChar(POBJ, CH)   ((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] = CH)
 
 #endif // __INCLUDE_GUI_VARIABLEBOX_H__

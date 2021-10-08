@@ -13,7 +13,7 @@
 #include "Resource.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define                 NOTICE_TEXT_BUFFER_SIZE             (64)
 
@@ -29,8 +29,7 @@ static HMI_ENGINE_RESULT    HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, 
 //=======================================================================//
 //= Static variable declaration.                                        =//
 //=======================================================================//
-static const SGUI_RECT      s_arrstLayouts[] =          {   {0, 0, 96, 45},
-                                                            {0, 0, 128, 64},
+static const SGUI_RECT      s_arrstLayouts[] =          { {0, 0, 128, 64},
                                                             {0, 0, 192, 96},
                                                             {0, 0, 192, 128},
                                                             };

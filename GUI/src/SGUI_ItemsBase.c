@@ -12,7 +12,7 @@
 #include "SGUI_ItemsBase.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define     ITEMS_SENECT_IDX(ITEMS_PTR)         (ITEMS_PTR->stSelection.iIndex)
 #define     ITEMS_SENECT_ITEM(ITEMS_PTR)            (ITEMS_PTR->stSelection.pstItem)

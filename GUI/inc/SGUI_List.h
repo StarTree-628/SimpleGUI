@@ -12,6 +12,9 @@
 //=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 typedef struct
 {
     SGUI_RECT                   stLayout;
@@ -20,13 +23,28 @@ typedef struct
     SGUI_SCROLLBAR_STRUCT       stScrollBar;
     const SGUI_FONT_RES*        pstFontRes;
 }SGUI_LIST;
+#ifdef __cplusplus
+}
+#endif
 
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 void                    SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount);
 void                    SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj);
 void                    SGUI_List_Resize(SGUI_LIST* pstObj, const SGUI_RECT* pstNewLayout);
+SGUI_ITEMS_ITEM*        SGUI_List_RemoveItem(SGUI_LIST* pstObj, SGUI_INT iRemoveIndex);
+SGUI_ITEMS_ITEM*        SGUI_List_InsertItem(SGUI_LIST* pstObj, SGUI_ITEMS_ITEM* pstNewItem, SGUI_INT iIndex);
+#ifdef __cplusplus
+}
+#endif
+
+//=======================================================================//
+//= Macro function.                                                     =//
+//=======================================================================//
 #define                 SGUI_List_Count(/* SGUI_LIST */OBJ) \
                             (SGUI_ItemsBase_Count(&((OBJ)->stItems)))
 #define                 SGUI_List_Selecte(/* SGUI_LIST */OBJ, /* SGUI_INT */IDX) \
@@ -37,6 +55,5 @@ void                    SGUI_List_Resize(SGUI_LIST* pstObj, const SGUI_RECT* pst
                             {SGUI_ItemsBase_SelecteLast(&((OBJ)->stItems))}
 #define                 SGUI_List_GetSelection(/* SGUI_LIST */OBJ) \
                             (SGUI_ItemsBase_GetSelection(&((OBJ)->stItems)))
-SGUI_ITEMS_ITEM*        SGUI_List_RemoveItem(SGUI_LIST* pstObj, SGUI_INT iRemoveIndex);
-SGUI_ITEMS_ITEM*        SGUI_List_InsertItem(SGUI_LIST* pstObj, SGUI_ITEMS_ITEM* pstNewItem, SGUI_INT iIndex);
+
 #endif // __INCLUDE_SGUI_List_H__

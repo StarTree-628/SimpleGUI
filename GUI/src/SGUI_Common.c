@@ -30,17 +30,17 @@ void SGUI_Common_AdaptDisplayInfo(SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInne
 {
     if((NULL != pstDisplayArea) && (NULL != pstInnerPos))
     {
-        if(RECT_X_START(*pstDisplayArea) < 0)
+        if(SGUI_RECT_X_START(*pstDisplayArea) < 0)
         {
-            RECT_X_START(*pstInnerPos) += RECT_X_START(*pstDisplayArea);
-            RECT_WIDTH(*pstDisplayArea) += RECT_X_START(*pstDisplayArea);
-            RECT_X_START(*pstDisplayArea) = 0;
+            SGUI_RECT_X_START(*pstInnerPos) += SGUI_RECT_X_START(*pstDisplayArea);
+            SGUI_RECT_WIDTH(*pstDisplayArea) += SGUI_RECT_X_START(*pstDisplayArea);
+            SGUI_RECT_X_START(*pstDisplayArea) = 0;
         }
-        if(RECT_Y_START(*pstDisplayArea) < 0)
+        if(SGUI_RECT_Y_START(*pstDisplayArea) < 0)
         {
-            RECT_Y_START(*pstInnerPos) += RECT_Y_START(*pstDisplayArea);
-            RECT_HEIGHT(*pstDisplayArea) += RECT_Y_START(*pstDisplayArea);
-            RECT_Y_START(*pstDisplayArea) = 0;
+            SGUI_RECT_Y_START(*pstInnerPos) += SGUI_RECT_Y_START(*pstDisplayArea);
+            SGUI_RECT_HEIGHT(*pstDisplayArea) += SGUI_RECT_Y_START(*pstDisplayArea);
+            SGUI_RECT_Y_START(*pstDisplayArea) = 0;
         }
     }
 }

@@ -7,13 +7,16 @@
 #include "SGUI_Basic.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define     SGUI_RTGRAPH_VALUE_ARRAY_SIZE       (128)
 
 //=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 typedef struct
 {
     SGUI_INT                yAxisMax; // Max value on screen display.
@@ -39,11 +42,21 @@ typedef struct
     SGUI_RTGRAPH_DATA*      Data;
     SGUI_RTGRAPH_CONTROL*   Control;
 }SGUI_RTGRAPH;
+#ifdef __cplusplus
+}
+#endif
 
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 void            SGUI_RealtimeGraph_Initialize(SGUI_RTGRAPH* pstRTGraph);
 void            SGUI_RealtimeGraph_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pstRTGraph);
 void            SGUI_RealtimeGraph_AppendValue(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pstRTGraph, SGUI_INT iNewValue);
+#ifdef __cplusplus
+}
+#endif
+
 #endif // __INCLUDE_GUI_REAL_GRAPH_H__

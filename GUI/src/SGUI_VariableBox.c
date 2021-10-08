@@ -209,7 +209,7 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
 
         /* Loop for paint each visible character. */
         iCharIdx = pstObj->stData.iFirstVisibleIndex;
-        while((pstObj->stData.szValue[iCharIdx] != '\0') && (stCharacterPos.iX < RECT_X_END(LAYOUT(pstObj))))
+        while((pstObj->stData.szValue[iCharIdx] != '\0') && (stCharacterPos.iX < SGUI_RECT_X_END(LAYOUT(pstObj))))
 		{
 			cPaintChar = ('\0' == cMask)?pstObj->stData.szValue[iCharIdx]:(iCharIdx == pstObj->stData.iFocusIndex)?pstObj->stData.szValue[iCharIdx]:cMask;
 			if(eMode==SGUI_DRAW_NORMAL)

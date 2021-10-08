@@ -19,7 +19,7 @@
 #endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define CLOCK_CENTER_X_COORD			(31)
 #define CLOCK_CENTER_Y_COORD			(31)

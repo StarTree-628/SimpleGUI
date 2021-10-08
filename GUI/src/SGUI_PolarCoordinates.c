@@ -11,7 +11,7 @@
 #include "SGUI_PolarCoordinates.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define SIN_MAP_SHIFT 15
 #define DEGREE_MIN 0

@@ -7,13 +7,11 @@
 #include "SGUI_Basic.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
-//=======================================================================//
-
-
-//=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 typedef struct
 {
     SGUI_INT                iA;
@@ -53,10 +51,15 @@ typedef struct
     SGUI_CURVE_PARAM        stParam;
     SGUI_CURVE_DATA         stData;
 }SGUI_CURVE_STRUCT;
-
+#ifdef __cplusplus
+}
+#endif
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 void                SGUI_Curve_Initialize(SGUI_CURVE_STRUCT* pstObj, const SGUI_CURVE_PARAM* pcstInitParam);
 void                SGUI_Curve_Repaint(SGUI_SCR_DEV* pstDeviceIF, const SGUI_CURVE_STRUCT* pstObj);
 void                SGUI_Curve_InitializePoint(SGUI_CURVE_POINT* pstNewPoint, SGUI_INT iX, SGUI_INT iY);
@@ -66,9 +69,15 @@ SGUI_BOOL           SGUI_Curve_InsertBeforePoint(SGUI_CURVE_STRUCT* pstObj, SGUI
 SGUI_BOOL           SGUI_Curve_InsertAfterPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POINT* pstNewPoint);
 SGUI_BOOL           SGUI_Curve_RemovePoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POINT* pstPoint);
 SGUI_CURVE_POINT*   SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iIndex);
-#define             SGUI_Curve_FocusedPoint(OBJ)        ((OBJ)->stData.pstFocused)
 SGUI_BOOL           SGUI_Curve_UpdateFocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iX, SGUI_INT iY);
 void                SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pstObj);
-SGUI_BOOL           SGUI_Curve_PointIsHighlight(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_POINT* pstPoint);
+#ifdef __cplusplus
+}
+#endif
+
+//=======================================================================//
+//= Macro function.                                                     =//
+//=======================================================================//
+#define             SGUI_Curve_FocusedPoint(OBJ)        ((OBJ)->stData.pstFocused)
 
 #endif // __INCLUDE_GUI_REAL_GRAPH_H__

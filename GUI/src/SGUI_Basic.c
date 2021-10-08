@@ -10,7 +10,7 @@
 #include "SGUI_Basic.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define SGUI_MIN_VAL(A, B)          (((A)>(B)?(B):(A)))
 #define SGUI_MAX_VAL(A, B)          (((A)<(B)?(B):(A)))
@@ -35,23 +35,21 @@ void SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_INT iP
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if(SGUI_Basic_PointIsInArea(&(pstDeviceIF->stActiveArea), iPosX, iPosY))
-    {
-        if(NULL == pstDeviceIF->fnSetPixel)
-        {
-            /* Action function is unspecified, no actions. */
-        }
-        else if(SGUI_COLOR_FRGCLR == eColor)
-        {
-            pstDeviceIF->fnSetPixel(iPosX, iPosY, 1);
-        }
-        else if(SGUI_COLOR_BKGCLR == eColor)
-        {
-            pstDeviceIF->fnSetPixel(iPosX, iPosY, 0);
-        }
-    }
+	if(NULL == pstDeviceIF->fnSetPixel)
+	{
+		/* Action function is unspecified, no actions. */
+	}
+	else if(SGUI_COLOR_FRGCLR == eColor)
+	{
+		pstDeviceIF->fnSetPixel(iPosX, iPosY, 1);
+	}
+	else if(SGUI_COLOR_BKGCLR == eColor)
+	{
+		pstDeviceIF->fnSetPixel(iPosX, iPosY, 0);
+	}
 }
 
+#ifdef SGUI_GET_POINT_FUNC_EN
 /*************************************************************************/
 /** Function Name:  SGUI_Basic_GetPoint                                 **/
 /** Purpose:        Get a pixel color .                                 **/
@@ -79,7 +77,7 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_I
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if((NULL != pstDeviceIF) && (iPosX < RECT_WIDTH(pstDeviceIF->stSize)) && (iPosY < RECT_HEIGHT(pstDeviceIF->stSize)))
+    if((NULL != pstDeviceIF) && (iPosX < SGUI_RECT_WIDTH(pstDeviceIF->stSize)) && (iPosY < SGUI_RECT_HEIGHT(pstDeviceIF->stSize)))
     {
         if(NULL == pstDeviceIF->fnSetPixel)
         {
@@ -101,6 +99,7 @@ SGUI_COLOR SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_I
 
     return eColor;
 }
+#endif // SGUI_GET_POINT_FUNC_EN
 
 /*************************************************************************/
 /** Function Name:  SGUI_Basic_ClearScreen                              **/
@@ -125,7 +124,7 @@ void SGUI_Basic_ClearScreen(SGUI_SCR_DEV* pstDeviceIF)
         else
         {
             /* Draw a blank rectangle for clean screen when clean function is not supposed. */
-            SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, RECT_WIDTH(pstDeviceIF->stSize), RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+            SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, SGUI_RECT_WIDTH(pstDeviceIF->stSize), SGUI_RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
         }
     }
 }
@@ -413,6 +412,7 @@ void SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iCx, SGUI_INT iCy
 	}
 }
 
+#ifdef SGUI_REVERSE_FUNC_EN
 /*************************************************************************/
 /** Function Name:  SGUI_Basic_ReverseBlockColor                        **/
 /** Purpose:        Reverse all pixel color in a rectangle area.        **/
@@ -450,6 +450,7 @@ void SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
         }
     }
 }
+#endif // SGUI_REVERSE_FUNC_EN
 
 /*************************************************************************/
 /** Function Name:  SGUI_Basic_FillRectangleArea                        **/
@@ -476,7 +477,7 @@ void SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
     // Fill center.
     if(eFillColor != SGUI_COLOR_TRANS)
     {
-
+        if(NULL == pstDeviceIF->fnFillRect)
         {
             if(iWidth > iHeight)
             {
@@ -495,6 +496,10 @@ void SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, S
                     SGUI_Basic_DrawVerticalLine(pstDeviceIF, iFillPos, iStartY, iStartY+iHeight-1, eFillColor);
                 }
             }
+        }
+        else
+        {
+            pstDeviceIF->fnFillRect(iStartX, iStartY, iWidth, iHeight, eFillColor);
         }
     }
 }
@@ -532,52 +537,52 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstDispla
     /* Process                          */
     /*----------------------------------*/
     // Only draw in visible area of screen.
-    if( (RECT_X_START(*pstDisplayArea) < RECT_WIDTH(pstDeviceIF->stSize)) && (RECT_Y_START(*pstDisplayArea) < RECT_HEIGHT(pstDeviceIF->stSize)) &&
-            (RECT_X_END(*pstDisplayArea) > 0) && (RECT_Y_END(*pstDisplayArea) > 0))
+    if( (SGUI_RECT_X_START(*pstDisplayArea) < SGUI_RECT_WIDTH(pstDeviceIF->stSize)) && (SGUI_RECT_Y_START(*pstDisplayArea) < SGUI_RECT_HEIGHT(pstDeviceIF->stSize)) &&
+            (SGUI_RECT_X_END(*pstDisplayArea) > 0) && (SGUI_RECT_Y_END(*pstDisplayArea) > 0))
     {
         // Adapt text display area and data area.
         // -SGUI_Common_AdaptDisplayInfo(pstDisplayArea, pstInnerPos);
         // Only process drawing when valid display data existed
-        if((RECT_VALID_WIDTH(*pstBitmapData, *pstInnerPos) > 0) && (RECT_VALID_HEIGHT(*pstBitmapData, *pstInnerPos) > 0))
+        if((SGUI_RECT_VALID_WIDTH(*pstBitmapData, *pstInnerPos) > 0) && (SGUI_RECT_VALID_HEIGHT(*pstBitmapData, *pstInnerPos) > 0))
         {
             // Set loop start parameter of x coordinate
-            iDrawPixX = RECT_X_START(*pstDisplayArea);
+            iDrawPixX = SGUI_RECT_X_START(*pstDisplayArea);
             iBmpPixX = 0;
-            if(RECT_X_START(*pstInnerPos) > 0)
+            if(SGUI_RECT_X_START(*pstInnerPos) > 0)
             {
-                iDrawPixX += RECT_X_START(*pstInnerPos);
+                iDrawPixX += SGUI_RECT_X_START(*pstInnerPos);
             }
             else
             {
-                iBmpPixX -= RECT_X_START(*pstInnerPos);
+                iBmpPixX -= SGUI_RECT_X_START(*pstInnerPos);
             }
             iDrawnWidthIndex = iBmpPixX;
             // Loop for x coordinate;
-            while((iDrawnWidthIndex<RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=RECT_X_END(*pstDisplayArea)) && (iDrawPixX<RECT_WIDTH(pstDeviceIF->stSize)))
+            while((iDrawnWidthIndex<SGUI_RECT_WIDTH(*pstBitmapData)) && (iDrawPixX<=SGUI_RECT_X_END(*pstDisplayArea)) && (iDrawPixX<SGUI_RECT_WIDTH(pstDeviceIF->stSize)))
             {
                 // Redirect to data array for column.
                 pData = pstBitmapData->pData+iBmpPixX;
                 // Set loop start parameter of y coordinate
-                iDrawPixY = RECT_Y_START(*pstDisplayArea);
+                iDrawPixY = SGUI_RECT_Y_START(*pstDisplayArea);
                 iBmpPixY = 0;
-                if(RECT_Y_START(*pstInnerPos) > 0)
+                if(SGUI_RECT_Y_START(*pstInnerPos) > 0)
                 {
-                    iDrawPixY += RECT_Y_START(*pstInnerPos);
+                    iDrawPixY += SGUI_RECT_Y_START(*pstInnerPos);
                 }
                 else
                 {
-                    iBmpPixY -= RECT_Y_START(*pstInnerPos);
+                    iBmpPixY -= SGUI_RECT_Y_START(*pstInnerPos);
                 }
                 iDrawnHeightIndex = iBmpPixY;
                 iPixIndex = iBmpPixY % 8;
-                pData += (iBmpPixY / 8) * RECT_WIDTH(*pstBitmapData);
+                pData += (iBmpPixY / 8) * SGUI_RECT_WIDTH(*pstBitmapData);
                 // Loop for y coordinate;
-                while((iDrawnHeightIndex<RECT_HEIGHT(*pstBitmapData)) && (iDrawPixY<=RECT_Y_END(*pstDisplayArea)) && (iDrawPixY<RECT_HEIGHT(pstDeviceIF->stSize)))
+                while((iDrawnHeightIndex<SGUI_RECT_HEIGHT(*pstBitmapData)) && (iDrawPixY<=SGUI_RECT_Y_END(*pstDisplayArea)) && (iDrawPixY<SGUI_RECT_HEIGHT(pstDeviceIF->stSize)))
                 {
                     if(iPixIndex == 8)
                     {
                         iPixIndex = 0;
-                        pData += RECT_WIDTH(*pstBitmapData);
+                        pData += SGUI_RECT_WIDTH(*pstBitmapData);
                     }
                     if(SGUI_GET_PAGE_BIT(*pData, iPixIndex) != eDrawMode)
                     {
@@ -621,10 +626,10 @@ SGUI_BOOL SGUI_Basic_PointIsInArea(const SGUI_RECT* pstArea, SGUI_INT iPosX, SGU
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if((iPosX < RECT_X_START(*pstArea)) ||
-       (iPosX > RECT_X_END(*pstArea)) ||
-	   (iPosY < RECT_Y_START(*pstArea)) ||
-       (iPosY > RECT_Y_END(*pstArea)))
+    if((iPosX < SGUI_RECT_X_START(*pstArea)) ||
+       (iPosX > SGUI_RECT_X_END(*pstArea)) ||
+	   (iPosY < SGUI_RECT_Y_START(*pstArea)) ||
+       (iPosY > SGUI_RECT_Y_END(*pstArea)))
     {
         bReturn = SGUI_FALSE;
     }
@@ -736,47 +741,5 @@ void SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX
         {
             SGUI_Basic_FillRectangleArea(pstDeviceIF, iStartX+1, iStartY+iFillet+1, iWidth-2, iHeight-(iFillet<<1)-2, eFillColor);
         }
-    }
-}
-
-/*************************************************************************/
-/** Function Name:  SGUI_Basic_ResetActiveArea                          **/
-/** Purpose:        Reset the active area of the device object.         **/
-/** Params:                                                             **/
-/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
-/** @ iStartX[in]:  X coordinate of the upper-left corner.              **/
-/** @ iStartY[in]:  Y coordinate of the upper-left corner.              **/
-/** @ iWidth[in]:   Width of rectangle.                                 **/
-/** @ iHeight[in]:  Height of rectangle.                                **/
-/** Return:         None.                                               **/
-/** Notice:         After called this function, the paint action will   **/
-/**                 only enabled in the specified rectangular area.     **/
-/*************************************************************************/
-void SGUI_Basic_ResetActiveArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight)
-{
-    /*----------------------------------*/
-    /* Process                          */
-    /*----------------------------------*/
-    pstDeviceIF->stActiveArea.iX = iStartX;
-    pstDeviceIF->stActiveArea.iY = iStartY;
-    pstDeviceIF->stActiveArea.iWidth = iWidth;
-    pstDeviceIF->stActiveArea.iHeight = iHeight;
-    if(pstDeviceIF->stActiveArea.iX < 0)
-    {
-        pstDeviceIF->stActiveArea.iWidth -= pstDeviceIF->stActiveArea.iX;
-        pstDeviceIF->stActiveArea.iX = 0;
-    }
-    if(pstDeviceIF->stActiveArea.iY < 0)
-    {
-        pstDeviceIF->stActiveArea.iHeight -= pstDeviceIF->stActiveArea.iY;
-        pstDeviceIF->stActiveArea.iY = 0;
-    }
-    if(pstDeviceIF->stActiveArea.iWidth < 0)
-    {
-        pstDeviceIF->stActiveArea.iWidth = 0;
-    }
-    if(pstDeviceIF->stActiveArea.iHeight < 0)
-    {
-        pstDeviceIF->stActiveArea.iHeight = 0;
     }
 }

@@ -9,6 +9,9 @@
 //=======================================================================//
 //= Data type definition.                                               =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 typedef enum
 {
     SGUI_SCROLLBAR_VERTICAL = 0,                        //Vertical scroll bar.
@@ -32,18 +35,31 @@ typedef struct
     SGUI_SCROLLBAR_PARAM        stParam;
     SGUI_SCROLLBAR_DATA         stData;
 }SGUI_SCROLLBAR_STRUCT;
+#ifdef __cplusplus
+}
+#endif
 
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 void        SGUI_ScrollBar_Initialize(SGUI_SCROLLBAR_STRUCT* pstObj, const SGUI_SCROLLBAR_PARAM* pcstInitParam);
+void        SGUI_ScrollBar_SetValue(SGUI_SCROLLBAR_STRUCT* pstObj, SGUI_SIZE sNewValue);
+void        SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* pstObj);
+#ifdef __cplusplus
+}
+#endif
+
+//=======================================================================//
+//= Macro function.                                                     =//
+//=======================================================================//
 #define     SGUI_ScrollBar_SetMax(OBJ, MAX) \
                 {(OBJ)->stParam.sMaxValue = MAX;}
 #define     SGUI_ScrollBar_GetMax(OBJ) \
                 ((OBJ)->stParam.sMaxValue)
-void        SGUI_ScrollBar_SetValue(SGUI_SCROLLBAR_STRUCT* pstObj, SGUI_SIZE sNewValue);
 #define     SGUI_ScrollBar_GetValue(OBJ) \
                 ((OBJ)->stData.sValue)
-void        SGUI_ScrollBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_SCROLLBAR_STRUCT* pstObj);
 
 #endif // __INCLUDE_GUI_SCROLLBAR_STRUCT__

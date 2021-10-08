@@ -97,8 +97,9 @@ class LCDFrame
 
 									~LCDFrame(void);
         static LCDFrame*        	GetInstance(void);
-        void                    	SetLCDPixel(uint32_t uiPosX, uint32_t uiY, uint32_t uiPixelValue);
-        uint32_t                	GetLCDPixel(uint32_t uiPosX, uint32_t uiY);
+        void                    	SetLCDPixel(int iX, int uiY, unsigned int uiColor);
+        unsigned int                GetLCDPixel(int iX, int uiY);
+        void                        FillRectangle(int iX, int iY, int iWidth, int iHeight, unsigned int uiColor);
         void                    	RefreshLCD(void);
         void						ClearLCD(void);
         bool						StartDummyMain(void);

@@ -11,11 +11,6 @@
 #include "SGUI_Curve.h"
 
 //=======================================================================//
-//= Static function declaration.                                        =//
-//=======================================================================//
-
-
-//=======================================================================//
 //= Function define.                                                    =//
 //=======================================================================//
 /*************************************************************************/
@@ -353,10 +348,10 @@ void SGUI_Curve_CalculatePointPosition(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE_POI
     /*----------------------------------*/
     if((NULL != pstObj) && (NULL != pstPoint))
     {
-        pstPoint->stPosition.iX = (RECT_WIDTH(pstObj->stParam.stLayout)-1)*(pstPoint->stPoint.iX-pstObj->stParam.stXRange.iMin)/(RANGE_SIZE(pstObj->stParam.stXRange)-1);
-        pstPoint->stPosition.iY = (RECT_HEIGHT(pstObj->stParam.stLayout)-1)*(pstPoint->stPoint.iY-pstObj->stParam.stYRange.iMin)/(RANGE_SIZE(pstObj->stParam.stYRange)-1);
+        pstPoint->stPosition.iX = (SGUI_RECT_WIDTH(pstObj->stParam.stLayout)-1)*(pstPoint->stPoint.iX-pstObj->stParam.stXRange.iMin)/(SGUI_RANGE_SIZE(pstObj->stParam.stXRange)-1);
+        pstPoint->stPosition.iY = (SGUI_RECT_HEIGHT(pstObj->stParam.stLayout)-1)*(pstPoint->stPoint.iY-pstObj->stParam.stYRange.iMin)/(SGUI_RANGE_SIZE(pstObj->stParam.stYRange)-1);
         pstPoint->stPosition.iX += pstObj->stParam.stLayout.iX;
-        pstPoint->stPosition.iY = (RECT_HEIGHT(pstObj->stParam.stLayout)-1)-pstPoint->stPosition.iY;
+        pstPoint->stPosition.iY = (SGUI_RECT_HEIGHT(pstObj->stParam.stLayout)-1)-pstPoint->stPosition.iY;
         pstPoint->stPosition.iY += pstObj->stParam.stLayout.iY;
     }
 }
@@ -508,62 +503,29 @@ void SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pst
             stFocusMarkArea.iWidth = 5;
             stFocusMarkArea.iHeight = 5;
 
-            if(RECT_X_START(stFocusMarkArea) <= RECT_X_START(pstObj->stParam.stLayout))
+            if(SGUI_RECT_X_START(stFocusMarkArea) <= SGUI_RECT_X_START(pstObj->stParam.stLayout))
             {
-                stFocusMarkArea.iWidth -= (RECT_X_START(pstObj->stParam.stLayout)-stFocusMarkArea.iX);
-                stFocusMarkArea.iX = RECT_X_START(pstObj->stParam.stLayout);
+                stFocusMarkArea.iWidth -= (SGUI_RECT_X_START(pstObj->stParam.stLayout)-stFocusMarkArea.iX);
+                stFocusMarkArea.iX = SGUI_RECT_X_START(pstObj->stParam.stLayout);
             }
 
-            if(RECT_X_END(stFocusMarkArea) >= RECT_X_END(pstObj->stParam.stLayout))
+            if(SGUI_RECT_X_END(stFocusMarkArea) >= SGUI_RECT_X_END(pstObj->stParam.stLayout))
             {
-                stFocusMarkArea.iWidth -= (RECT_X_END(stFocusMarkArea)-RECT_X_END(pstObj->stParam.stLayout));
+                stFocusMarkArea.iWidth -= (SGUI_RECT_X_END(stFocusMarkArea)-SGUI_RECT_X_END(pstObj->stParam.stLayout));
             }
 
-            if(RECT_Y_START(stFocusMarkArea) <= RECT_Y_START(pstObj->stParam.stLayout))
+            if(SGUI_RECT_Y_START(stFocusMarkArea) <= SGUI_RECT_Y_START(pstObj->stParam.stLayout))
             {
-                stFocusMarkArea.iHeight -= (RECT_Y_START(pstObj->stParam.stLayout)-stFocusMarkArea.iY);
-                stFocusMarkArea.iY = RECT_Y_START(pstObj->stParam.stLayout);
+                stFocusMarkArea.iHeight -= (SGUI_RECT_Y_START(pstObj->stParam.stLayout)-stFocusMarkArea.iY);
+                stFocusMarkArea.iY = SGUI_RECT_Y_START(pstObj->stParam.stLayout);
             }
 
-            if(RECT_Y_END(stFocusMarkArea) >= RECT_Y_END(pstObj->stParam.stLayout))
+            if(SGUI_RECT_Y_END(stFocusMarkArea) >= SGUI_RECT_Y_END(pstObj->stParam.stLayout))
             {
-                stFocusMarkArea.iHeight -= (RECT_Y_END(stFocusMarkArea)-RECT_Y_END(pstObj->stParam.stLayout));
+                stFocusMarkArea.iHeight -= (SGUI_RECT_Y_END(stFocusMarkArea)-SGUI_RECT_Y_END(pstObj->stParam.stLayout));
             }
-
-            //SGUI_Basic_ReverseBlockColor(pstDeviceIF, stFocusMarkArea.iX, stFocusMarkArea.iY, stFocusMarkArea.iWidth, stFocusMarkArea.iHeight);
+            /* Paint focused mark. */
             SGUI_Basic_DrawRectangle(pstDeviceIF, stFocusMarkArea.iX, stFocusMarkArea.iY, stFocusMarkArea.iWidth, stFocusMarkArea.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
         }
     }
-}
-
-/*************************************************************************/
-/** Function Name:  SGUI_Curve_PointIsHighlight                         **/
-/** Purpose:        Judge curve point is in highlight state.            **/
-/** Params:                                                             **/
-/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
-/** @ pstPoint[in]: Point object will be judged.                        **/
-/** Return:                                                             **/
-/** @ SGUI_TRUE     Point is highlight.                                 **/
-/** @ SGUI_FALSE:   Point is not highlight.                             **/
-/*************************************************************************/
-SGUI_BOOL SGUI_Curve_PointIsHighlight(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_POINT* pstPoint)
-{
-    /*----------------------------------*/
-    /* Variable Declaration             */
-    /*----------------------------------*/
-    SGUI_BOOL               bReturn;
-
-    /*----------------------------------*/
-    /* Process                          */
-    /*----------------------------------*/
-    if((NULL != pstDeviceIF) && (NULL != pstPoint))
-    {
-        bReturn = (SGUI_COLOR_BKGCLR==SGUI_Basic_GetPoint(pstDeviceIF, pstPoint->stPosition.iX, pstPoint->stPosition.iY))?SGUI_TRUE:SGUI_FALSE;
-    }
-    else
-    {
-        bReturn = SGUI_FALSE;
-    }
-
-    return bReturn;
 }

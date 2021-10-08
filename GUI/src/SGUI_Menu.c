@@ -10,7 +10,7 @@
 #include "SGUI_Menu.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define SGUI_MENU_ICON_DECLARE(NAME)                extern const SGUI_BMP_RES NAME
 #define SGUI_MENU_ICON_DEFINE(NAME, W, H, ...)      const SGUI_BYTE NAME##DATA[] = {__VA_ARGS__};\
@@ -111,7 +111,7 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
         }
         if(SGUI_Menu_CanScrollDown(pstObj))
         {
-            stIconArea.iY = RECT_Y_END(pstObj->stItems.stLayout)+1;
+            stIconArea.iY = SGUI_RECT_Y_END(pstObj->stItems.stLayout)+1;
             SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEDOWN, SGUI_DRAW_NORMAL);
         }
     }
@@ -186,7 +186,7 @@ void SGUI_Menu_PopupSubMenu(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj, const 
         iFullHeight = pstObj->stItems.iCount*ITEM_HEIGHT(pstObj->pstFontRes);
         iFullHeight = iFullHeight+SGUI_MENU_ICON_MOVEUP.iHeight+SGUI_MENU_ICON_MOVEDOWN.iHeight+2;
 
-        stLayout.iX = RECT_X_END(*cpstParentItemLayout)+1;
+        stLayout.iX = SGUI_RECT_X_END(*cpstParentItemLayout)+1;
         iVisibleHeight = pstDeviceIF->stSize.iHeight-cpstParentItemLayout->iY-1;
         if((iVisibleHeight < iFullHeight) && (cpstParentItemLayout->iY > (pstDeviceIF->stSize.iHeight/2)))
         {

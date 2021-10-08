@@ -12,7 +12,7 @@
 #include "SGUI_FontResource.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define                 NOTICE_TEXT_BUFFER_SIZE             (64)
 

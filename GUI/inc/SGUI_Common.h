@@ -8,7 +8,7 @@
 #include "SGUI_Interface.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define     NOTICE_ICON_SIZE                (16)
 #define     SGUI_NUMBER_STR_LENGTH_MAX      (12)
@@ -24,14 +24,16 @@
 //=======================================================================//
 //= Public function declaration.                                        =//
 //=======================================================================//
-
-//=======================================================================//
-//= Public function declaration.                                        =//
-//=======================================================================//
+#ifdef __cplusplus
+extern "C"{
+#endif
 void                    SGUI_Common_AdaptDisplayInfo(SGUI_RECT* pstDisplayArea, SGUI_POINT* pstInnerPos);
 SGUI_INT                SGUI_Common_IntegerToStringWithDecimalPoint(SGUI_INT iInteger, SGUI_INT iDecimalPlaces, SGUI_SZSTR pszStringBuffer, SGUI_INT iAlignment, SGUI_CHAR cFillCharacter);
 SGUI_SIZE               SGUI_Common_IntegerToString(SGUI_INT iInteger, SGUI_SZSTR pszStringBuffer, SGUI_UINT uiBase, SGUI_INT iAlignment, SGUI_CHAR cFillCharacter);
 SGUI_UINT               SGUI_Common_ConvertStringToUnsignedInteger(SGUI_SZSTR szString, SGUI_CHAR** ppcEndPointer, SGUI_UINT uiBase);
 SGUI_INT                SGUI_Common_ConvertStringToInteger(SGUI_SZSTR szString, SGUI_CHAR** ppcEndPointer, SGUI_UINT uiBase);
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __INCLUDE_GUI_COMMON_H__

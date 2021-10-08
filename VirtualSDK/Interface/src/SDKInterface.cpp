@@ -41,11 +41,11 @@ static wxCriticalSection	s_clsEventSyncCS;
 /** Params:																**/
 /**	@ iX[in]:		Pixel x-coordinate on display panel.                **/
 /**	@ iY[in]:		Pixel y-coordinate on display panel.                **/
-/**	@ iPixelValue[out]:	Pixel value, 0 for clear, 1 for set.			**/
+/**	@ uiPixelValue[in]:	Pixel value, 0 for clear, 1 for set.            **/
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_SetPixel(int iX, int iY, int iPixelValue)
+void SGUI_SDK_SetPixel(int iX, int iY, unsigned int uiColor)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -62,7 +62,7 @@ void SGUI_SDK_SetPixel(int iX, int iY, int iPixelValue)
     /*----------------------------------*/
     if(NULL != pclsMainFrameObjectPtr)
     {
-        pclsMainFrameObjectPtr->SetLCDPixel(iX, iY, iPixelValue);
+        pclsMainFrameObjectPtr->SetLCDPixel(iX, iY, uiColor);
     }
 }
 
@@ -75,7 +75,7 @@ void SGUI_SDK_SetPixel(int iX, int iY, int iPixelValue)
 /** Return:			Pixel state, 0 for cleared, 1 for set.              **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-int SGUI_SDK_GetPixel(int iX, int iY)
+unsigned int SGUI_SDK_GetPixel(int iX, int iY)
 {
     /*----------------------------------*/
     /* Variable Declaration				*/
@@ -101,6 +101,38 @@ int SGUI_SDK_GetPixel(int iX, int iY)
     }
 
     return iPixelValue;
+}
+
+/*************************************************************************/
+/** Function Name:	SGUI_SDK_FillRectangle                              **/
+/** Purpose:		Fill a rectangle area with the specified color.     **/
+/** Params:																**/
+/**	@ iX[in]:		Pixel x-coordinate on display panel.                **/
+/**	@ iY[in]:		Pixel y-coordinate on display panel.                **/
+/**	@ iWidth[in]:	Rectangle area width.                               **/
+/**	@ iHeight[in]:	Rectangle area height.                              **/
+/**	@ uiColor[in]:	Fill color.                                         **/
+/** Return:			None.                                               **/
+/*************************************************************************/
+void SGUI_SDK_FillRectangle(int iX, int iY, int iWidth, int iHeight, unsigned int uiColor)
+{
+    /*----------------------------------*/
+    /* Variable Declaration				*/
+    /*----------------------------------*/
+    LCDFrame*           pclsMainFrameObjectPtr;
+
+    /*----------------------------------*/
+    /* Initialize						*/
+    /*----------------------------------*/
+    pclsMainFrameObjectPtr = LCDFrame::GetInstance();
+
+    /*----------------------------------*/
+    /* Process							*/
+    /*----------------------------------*/
+    if((iX > 0) && (iY > 0))
+    {
+        pclsMainFrameObjectPtr->FillRectangle(iX, iY, iWidth, iHeight, uiColor);
+    }
 }
 
 /*************************************************************************/

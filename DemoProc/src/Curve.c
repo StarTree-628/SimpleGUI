@@ -16,7 +16,7 @@
 #include "SGUI_FontResource.h"
 
 //=======================================================================//
-//= User Macro definition.                                              =//
+//= Macro definition.                                                   =//
 //=======================================================================//
 #define                     CURVE_POINT_MUN_MAX                 (20)
 
@@ -272,10 +272,6 @@ HMI_ENGINE_RESULT HMI_DemoCurve_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HM
                 }
                 else
                 {
-                    if(SGUI_TRUE == SGUI_Curve_PointIsHighlight(pstDeviceIF, SGUI_Curve_FocusedPoint(&s_stCurve)))
-                    {
-                        SGUI_Curve_HighlightFocus(pstDeviceIF, &s_stCurve);
-                    }
                     s_stCurve.stData.pstFocused = s_stCurve.stData.pstFocused->pstNext;
                 }
                 pstFocusedPoint = s_stCurve.stData.pstFocused;

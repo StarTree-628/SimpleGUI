@@ -4,10 +4,10 @@
 
 #### 简介
 SimpleGUI是一款针对单色显示屏设计的GUI接口库。
->![SimpleGUI在SSD1306主控制器的OLED显示屏上的显示效果](https://images.gitee.com/uploads/images/2018/0725/220230_cfc1d5f8_769424.jpeg "SimpleGUI_1.jpg")
+>![SimpleGUI在SSD1306主控制器的OLED显示屏上的显示效果](![输入图片说明](Documents/images/Perview.png) "SimpleGUI_1.jpg")
 
-关于SimpleGUI的故事，请参见：
->https://gitee.com/Polarix/simplegui/blob/master/Introduction.md
+#### 特征
+相比于传统的GUI框架，SimpleGUI移除了诸如心跳、绘图缓冲、图层等概念，仅提供各种各样的绘图接口、以及由这些绘图接口绘制出的更复杂的图形组件，以此来降低整整体对系统资源的需求。
 
 #### 设计目标
 在尽可能减小资源消耗的前提下，提供以下功能：
@@ -17,7 +17,8 @@ SimpleGUI是一款针对单色显示屏设计的GUI接口库。
 3. 单色显示屏模拟环境，方便脱离硬件平台进行部分GUI开发。
 
 #### 部署模拟器
-SimpleGUI提供了一个单色显示屏的模拟器以方便开发者进行基于SimpleGUI的开发，模拟器的详细的使用方法请参照Documents文件夹下的“模拟器环境配置.pdf”文件。
+SimpleGUI提供了一个单色显示屏的模拟器以方便开发者进行基于SimpleGUI的开发，模拟器的详细的使用方法请参照Documents文件夹下的《01-快速开始SimpleGUI》。
+
 >预览效果
 >
 >![模拟器预览1](https://images.gitee.com/uploads/images/2018/0725/220159_f29eefb9_769424.jpeg "SimpleGUI_3.jpg")
@@ -25,7 +26,7 @@ SimpleGUI提供了一个单色显示屏的模拟器以方便开发者进行基�
 
 #### 移植
 
-SimpleGUI的移植方法，可以参照Documents文件夹下的“移植范例.pdf”文件，里面详细阐述了SimpleGUI在MDK5环境下移植到STM32F1平台下的方法和移植要点，其他平台也可参照。
+SimpleGUI的移植方法，可以参照Documents文件夹下的《02-移植演示程序》，里面详细阐述了SimpleGUI在MDK5环境下移植到STM32F1平台下的方法和移植要点，其他平台也可参照。
 
 #### 关于SimpleGUI
 SimpleGUI发布已经有很长时间了，在发布后很多人都来询问一些技术细节以及提出一些宝贵的意见与建议，但是很多建议和SimpleGUI的设计初衷相悖，所以我并没有采纳，关于这一点，还请大家谅解。所以在这里，详细阐述一下SimpleGUI的设计理念和主导思想。

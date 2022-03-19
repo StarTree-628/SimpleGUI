@@ -31,7 +31,6 @@
 #define     HMI_EVENT_INIT(EVENT)                           {                                                           \
                                                                 HMI_EVENT_DATA_MEMSET(EVENT);                           \
                                                                 EVENT.Head.iSize = sizeof(EVENT);                       \
-                                                                EVENT.Head.iType = EVENT_TYPE_ANY;                      \
                                                             }
 
 #define     HMI_EVENT_SIZE_CHK(EVENT, TYPE)                 (((EVENT).Head.iSize == sizeof(TYPE))?SGUI_TRUE:SGUI_FALSE)
@@ -62,7 +61,6 @@ typedef enum
 
 typedef struct
 {
-    SGUI_INT            iType;
     SGUI_INT            iID;
     SGUI_INT            iSize;
 }HMI_EVENT_BASE;

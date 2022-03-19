@@ -100,21 +100,18 @@ HMI_ENGINE_RESULT HMI_DemoNotice_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const H
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if(EVENT_TYPE_ACTION == pstEvent->iType)
+    if(EVENT_ID_KEY_PRESS == pstEvent->iID)
     {
-        if(EVENT_ID_KEY_PRESS == pstEvent->iID)
-        {
-            pstKeyEvent = (KEY_PRESS_EVENT*)pstEvent;
-            uiKeyValue = KEY_CODE_VALUE(pstKeyEvent->Data.uiKeyValue);
+        pstKeyEvent = (KEY_PRESS_EVENT*)pstEvent;
+        uiKeyValue = KEY_CODE_VALUE(pstKeyEvent->Data.uiKeyValue);
 
-            switch(uiKeyValue)
+        switch(uiKeyValue)
+        {
+            case KEY_VALUE_ENTER:
+            case KEY_VALUE_ESC:
             {
-                case KEY_VALUE_ENTER:
-                case KEY_VALUE_ESC:
-                {
-                    iProcessAction = HMI_DEMO_PROC_CANCEL;
-                    break;
-                }
+                iProcessAction = HMI_DEMO_PROC_CANCEL;
+                break;
             }
         }
     }

@@ -529,3 +529,37 @@ void SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pst
         }
     }
 }
+
+SGUI_INT SGUI_Curve_GetDependentValue(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iArgument)
+{
+    /*----------------------------------*/
+    /* Variable Declaration             */
+    /*----------------------------------*/
+    SGUI_INT            iDependent = 0;
+    SGUI_CURVE_POINT*   pstAreaStart = NULL;
+    SGUI_CURVE_POINT*   pstAreaEnd = NULL;
+
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if(pstObj)
+    {
+        pstAreaStart = pstObj->stData.stPoints.pstHead;
+        pstAreaEnd = pstAreaStart->pstNext;
+
+        while((NULL != pstAreaStart) && (NULL != pstAreaEnd))
+        {
+            if(iArgument > pstAreaEnd->stPoint.iX)
+            {
+                pstAreaStart = pstAreaEnd;
+                pstAreaEnd = pstAreaStart->pstNext;
+            }
+            else
+            {
+                iDependent = (iArgument-pstAreaStart->stPoint.iX) * (pstAreaEnd->stPoint.iY - pstAreaStart->stPoint.iY) / (pstAreaEnd->stPoint.iX - pstAreaStart->stPoint.iX) +  pstAreaStart->stPoint.iY;
+                break;
+            }
+        }
+    }
+    return iDependent;
+}

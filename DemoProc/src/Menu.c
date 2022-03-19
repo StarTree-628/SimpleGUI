@@ -128,75 +128,72 @@ HMI_ENGINE_RESULT HMI_DemoMenu_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if(pstEvent->iType == EVENT_TYPE_ACTION)
+    // Check event is valid.
+    if(SGUI_FALSE == HMI_EVENT_SIZE_CHK(*pstKeyEvent, KEY_PRESS_EVENT))
     {
-        // Check event is valid.
-        if(SGUI_FALSE == HMI_EVENT_SIZE_CHK(*pstKeyEvent, KEY_PRESS_EVENT))
+        // Event data is invalid.
+        eProcessResult = HMI_RET_INVALID_DATA;
+    }
+    else if(EVENT_ID_KEY_PRESS == pstEvent->iID)
+    {
+        uiKeyCode = pstKeyEvent->Data.uiKeyValue;
+        uiKeyValue = KEY_CODE_VALUE(uiKeyCode);
+        switch(uiKeyValue)
         {
-            // Event data is invalid.
-            eProcessResult = HMI_RET_INVALID_DATA;
-        }
-        else if(EVENT_ID_KEY_PRESS == pstEvent->iID)
-        {
-            uiKeyCode = pstKeyEvent->Data.uiKeyValue;
-            uiKeyValue = KEY_CODE_VALUE(uiKeyCode);
-            switch(uiKeyValue)
+            case KEY_VALUE_ENTER:
             {
-                case KEY_VALUE_ENTER:
+                if(&s_stDemoMenuObject == s_pstActivedMenu)
                 {
-                    if(&s_stDemoMenuObject == s_pstActivedMenu)
-                    {
-                        SGUI_ItemsBase_GetItemExtent(&(s_pstActivedMenu->stItems), SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex, &stItemArea);
-                        s_pstActivedMenu = &s_stDemoSubMenuObject;
-                        SGUI_Menu_Initialize(&s_stDemoSubMenuObject, &stItemArea, &SGUI_DEFAULT_FONT_8, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
-                        SGUI_Menu_PopupSubMenu(pstDeviceIF, &s_stDemoSubMenuObject, &stItemArea);
-                        SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
-                    }
-                    iProcessAction = HMI_DEMO_PROC_CONFIRM;
-                    break;
+                    SGUI_ItemsBase_GetItemExtent(&(s_pstActivedMenu->stItems), SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex, &stItemArea);
+                    s_pstActivedMenu = &s_stDemoSubMenuObject;
+                    SGUI_Menu_Initialize(&s_stDemoSubMenuObject, &stItemArea, &SGUI_DEFAULT_FONT_8, s_arrstSubMenuItems, sizeof(s_arrstSubMenuItems)/sizeof(SGUI_ITEMS_ITEM));
+                    SGUI_Menu_PopupSubMenu(pstDeviceIF, &s_stDemoSubMenuObject, &stItemArea);
+                    SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
                 }
-                case KEY_VALUE_ESC:
+                iProcessAction = HMI_DEMO_PROC_CONFIRM;
+                break;
+            }
+            case KEY_VALUE_ESC:
+            {
+                if(&s_stDemoMenuObject == s_pstActivedMenu)
                 {
-                    if(&s_stDemoMenuObject == s_pstActivedMenu)
+                    iProcessAction = HMI_DEMO_PROC_CANCEL;
+                }
+                else
+                {
+                    if(s_pstActivedMenu->stLayout.iWidth > 0)
                     {
-                        iProcessAction = HMI_DEMO_PROC_CANCEL;
+                        /* Cleanup sub-menu display. */
+                        SGUI_Basic_DrawRectangle(pstDeviceIF, s_pstActivedMenu->stLayout.iX, s_pstActivedMenu->stLayout.iY, s_pstActivedMenu->stLayout.iWidth, s_pstActivedMenu->stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+                        s_pstActivedMenu->stLayout.iWidth = 0;
+                        s_pstActivedMenu = &s_stDemoMenuObject;
                     }
-                    else
-                    {
-                        if(s_pstActivedMenu->stLayout.iWidth > 0)
-                        {
-                            /* Cleanup sub-menu display. */
-                            SGUI_Basic_DrawRectangle(pstDeviceIF, s_pstActivedMenu->stLayout.iX, s_pstActivedMenu->stLayout.iY, s_pstActivedMenu->stLayout.iWidth, s_pstActivedMenu->stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
-                            s_pstActivedMenu->stLayout.iWidth = 0;
-                            s_pstActivedMenu = &s_stDemoMenuObject;
-                        }
-                        SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
-                    }
+                    SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
+                }
 
-                    break;
-                }
-                case KEY_VALUE_UP:
+                break;
+            }
+            case KEY_VALUE_UP:
+            {
+                if(SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex > 0)
                 {
-                    if(SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex > 0)
-                    {
-                        SGUI_Menu_Selecte(s_pstActivedMenu, SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex-1);
-                        SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
-                    }
-                    break;
+                    SGUI_Menu_Selecte(s_pstActivedMenu, SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex-1);
+                    SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
                 }
-                case KEY_VALUE_DOWN:
+                break;
+            }
+            case KEY_VALUE_DOWN:
+            {
+                if(SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex < s_pstActivedMenu->stItems.iCount-1)
                 {
-                    if(SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex < s_pstActivedMenu->stItems.iCount-1)
-                    {
-                        SGUI_Menu_Selecte(s_pstActivedMenu, SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex+1);
-                        SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
-                    }
-                    break;
+                    SGUI_Menu_Selecte(s_pstActivedMenu, SGUI_Menu_GetSelection(s_pstActivedMenu)->iIndex+1);
+                    SGUI_Menu_Repaint(pstDeviceIF, s_pstActivedMenu);
                 }
-                default:
-                {
-                    break;
-                }
+                break;
+            }
+            default:
+            {
+                break;
             }
         }
     }

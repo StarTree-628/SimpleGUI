@@ -18,7 +18,8 @@
 #define     SGUI_ISUPPER(C)                 (((C>='A')&&(C<='Z'))?true:false)
 #define     SGUI_TOUPPER(C)                 (SGUI_ISUPPER(C)?(C):(C-32))
 #define     SGUI_SWAP(A, B)                 {A=A^B; B=A^B; A=A^B;}
-
+#define     SGUI_MIN_VAL(A, B)              ((A)>(B)?(B):(A))
+#define     SGUI_MAX_VAL(A, B)              ((A)<(B)?(B):(A))
 #define     LAYOUT(POBJ)                    ((POBJ)->stParam.stLayout)
 
 //=======================================================================//

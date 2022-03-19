@@ -71,6 +71,7 @@ SGUI_BOOL           SGUI_Curve_RemovePoint(SGUI_CURVE_STRUCT* pstObj, SGUI_CURVE
 SGUI_CURVE_POINT*   SGUI_Curve_FocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iIndex);
 SGUI_BOOL           SGUI_Curve_UpdateFocusPoint(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iX, SGUI_INT iY);
 void                SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pstObj);
+SGUI_INT            SGUI_Curve_GetDependentValue(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iArgument);
 #ifdef __cplusplus
 }
 #endif

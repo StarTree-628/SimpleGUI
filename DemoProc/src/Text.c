@@ -124,18 +124,15 @@ HMI_ENGINE_RESULT HMI_DemoText_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if(pstEvent->iType == EVENT_TYPE_ACTION)
+    // Check event is valid.
+    if(SGUI_FALSE == HMI_EVENT_SIZE_CHK(*pstKeyEvent, KEY_PRESS_EVENT))
     {
-        // Check event is valid.
-        if(SGUI_FALSE == HMI_EVENT_SIZE_CHK(*pstKeyEvent, KEY_PRESS_EVENT))
-        {
-            // Event data is invalid.
-            eProcessResult = HMI_RET_INVALID_DATA;
-        }
-        else if(EVENT_ID_KEY_PRESS == pstEvent->iID)
-        {
-            iProcessAction = HMI_DEMO_PROC_CANCEL;
-        }
+        // Event data is invalid.
+        eProcessResult = HMI_RET_INVALID_DATA;
+    }
+    else if(EVENT_ID_KEY_PRESS == pstEvent->iID)
+    {
+        iProcessAction = HMI_DEMO_PROC_CANCEL;
     }
     if(NULL != piActionID)
     {

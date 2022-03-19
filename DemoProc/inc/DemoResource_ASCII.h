@@ -11,6 +11,7 @@
 #define SCR1_LIST_ITEM5                 ("Menu")
 #define SCR1_LIST_ITEM6                 ("Notice box")
 #define SCR1_LIST_ITEM7                 ("Tuning curve")
+#define SCR1_LIST_ITEM8                 ("Polar coordinates")
 
 #define SCR1_LIST_APPEND1               ("Add item 1")
 #define SCR1_LIST_APPEND2               ("Add item 2")

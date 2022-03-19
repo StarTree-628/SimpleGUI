@@ -170,9 +170,9 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, co
     /*----------------------------------*/
     if(s_uiAutoConfirmTimer > 0)
     {
-        if(EVENT_TYPE_ACTION == pstEvent->iType)
+        switch(pstEvent->iID)
         {
-            if(EVENT_ID_KEY_PRESS == pstEvent->iID)
+            case EVENT_ID_KEY_PRESS:
             {
                 pstKeyEvent = (KEY_PRESS_EVENT*)pstEvent;
                 uiKeyValue = KEY_CODE_VALUE(pstKeyEvent->Data.uiKeyValue);
@@ -183,21 +183,17 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, co
                     s_uiAutoConfirmTimer = 0;
                 }
             }
-        }
-        else if(EVENT_TYPE_DATA == pstEvent->iType)
-        {
-            if(EVENT_ID_RTC == pstEvent->iID)
+            case EVENT_ID_RTC:
             {
                 //Count down five seconds
                 s_uiAutoConfirmTimer--;
+                // Redraw screen if time out.
+                if(0 == s_uiAutoConfirmTimer)
+                {
+                    eProcessResult = HMI_DemoVariableBox_RefreshScreen(pstDeviceIF, NULL);
+                    RTCTimerEnable(false);
+                }
             }
-        }
-
-        // Redraw screen if time out.
-        if(0 == s_uiAutoConfirmTimer)
-        {
-            eProcessResult = HMI_DemoVariableBox_RefreshScreen(pstDeviceIF, NULL);
-            RTCTimerEnable(false);
         }
     }
     else
@@ -290,6 +286,13 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, co
                                                  s_stTextVariableBox.stParam.stLayout.iHeight+4, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
                         SGUI_TextVariableBox_Repaint(pstDeviceIF, &s_stTextVariableBox, VARIABLE_MASK_CHARACTER, SGUI_DRAW_REVERSE);
                     }
+                    break;
+                }
+                case KEY_VALUE_SPACE:
+                {
+                    s_uiAutoConfirmTimer = 0;
+                    RTCTimerEnable(false);
+                    eProcessResult = HMI_DemoVariableBox_RefreshScreen(pstDeviceIF, NULL);
                     break;
                 }
                 default:

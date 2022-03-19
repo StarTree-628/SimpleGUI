@@ -38,6 +38,7 @@ static void                 HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
 static SGUI_CURVE_STRUCT        s_stCurve =                 {0x00};
 static SGUI_BOOL                s_arrbPointDataUsed[CURVE_POINT_MUN_MAX] = {0x00};
 static SGUI_CURVE_POINT         s_arrstPointArray[CURVE_POINT_MUN_MAX] = {0x00};
+static SGUI_INT                 s_iArgument;
 HMI_SCREEN_ACTION               s_stDemoCurveActions =      {
                                                                 HMI_DemoCurve_Initialize,
                                                                 HMI_DemoCurve_Prepare,
@@ -124,13 +125,11 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
     /*----------------------------------*/
     stTextArea.iX = 1;
     stTextArea.iY = 1;
-    stTextArea.iWidth = 48;
+    stTextArea.iWidth = pstDeviceIF->stSize.iWidth;
     stTextArea.iHeight = 8;
-    SGUI_Text_DrawText(pstDeviceIF, "Focused ", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+    SGUI_Text_DrawText(pstDeviceIF, "Press TAB to change focus.", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
     if(NULL != s_stCurve.stData.pstFocused)
     {
-        //SGUI_Common_IntegerToString(s_stRealtimeGraph.Data->ValueArray[s_stRealtimeGraph.Data->ValueCount-1], szTextBuffer, 10, 4, ' ');
-
         stTextArea.iY =  pstDeviceIF->stSize.iHeight-9;
         stTextArea.iWidth = 48;
         sTextLength = SGUI_Common_IntegerToString(s_stCurve.stData.pstFocused->stPoint.iX, szNumberTextBuffer, 10, -1, ' ');
@@ -139,6 +138,23 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
         SGUI_Text_DrawText(pstDeviceIF, ",", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
         stTextArea.iX+=SGUI_DEFAULT_FONT_8.iHalfWidth;
         sTextLength = SGUI_Common_IntegerToString(s_stCurve.stData.pstFocused->stPoint.iY, szNumberTextBuffer, 10, -1, ' ');
+        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+    }
+    else
+    {
+        SGUI_INT iArgument = s_iArgument;
+        SGUI_INT iDependent = SGUI_Curve_GetDependentValue(&s_stCurve, iArgument);
+        SGUI_INT iLineX = (s_iArgument-s_stCurve.stParam.stXRange.iMin) * SGUI_RECT_WIDTH(s_stCurve.stParam.stLayout) / SGUI_RANGE_SIZE(s_stCurve.stParam.stXRange) + s_stCurve.stParam.stLayout.iX;
+        SGUI_Basic_DrawVerticalLine(pstDeviceIF, iLineX, s_stCurve.stParam.stLayout.iY, s_stCurve.stParam.stLayout.iY + s_stCurve.stParam.stLayout.iHeight-1, SGUI_COLOR_FRGCLR);
+
+        stTextArea.iY =  pstDeviceIF->stSize.iHeight-9;
+        stTextArea.iWidth = 48;
+        sTextLength = SGUI_Common_IntegerToString(iArgument, szNumberTextBuffer, 10, -1, ' ');
+        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+        stTextArea.iX+=(SGUI_INT)(sTextLength*SGUI_DEFAULT_FONT_8.iHalfWidth);
+        SGUI_Text_DrawText(pstDeviceIF, ",", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+        stTextArea.iX+=SGUI_DEFAULT_FONT_8.iHalfWidth;
+        sTextLength = SGUI_Common_IntegerToString(iDependent, szNumberTextBuffer, 10, -1, ' ');
         SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
     }
 }
@@ -195,6 +211,9 @@ HMI_ENGINE_RESULT HMI_DemoCurve_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 
     SGUI_Curve_FocusPoint(&s_stCurve, 0);
 
+
+    s_iArgument = s_stCurve.stData.stPoints.pstHead->stPoint.iX;
+
     return HMI_RET_NORMAL;
 }
 
@@ -211,8 +230,8 @@ HMI_ENGINE_RESULT HMI_DemoCurve_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    HMI_DemoCurve_RefreshScreen(pstDeviceIF, pstParameters);
     SGUI_Curve_FocusPoint(&s_stCurve, 0);
+    HMI_DemoCurve_RefreshScreen(pstDeviceIF, pstParameters);
 
     return HMI_RET_NORMAL;
 }
@@ -225,9 +244,18 @@ HMI_ENGINE_RESULT HMI_DemoCurve_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
     SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, pstDeviceIF->stSize.iWidth, pstDeviceIF->stSize.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
     SGUI_Basic_DrawLine(pstDeviceIF, 1, 9, pstDeviceIF->stSize.iWidth-2, 9, SGUI_COLOR_FRGCLR);
     SGUI_Basic_DrawLine(pstDeviceIF, 1, pstDeviceIF->stSize.iHeight-10, pstDeviceIF->stSize.iWidth-2, pstDeviceIF->stSize.iHeight-10, SGUI_COLOR_FRGCLR);
-    HMI_DemoCurve_RepaintText(pstDeviceIF);
     SGUI_Curve_Repaint(pstDeviceIF, &s_stCurve);
-    SGUI_Curve_HighlightFocus(pstDeviceIF, &s_stCurve);
+
+    if(NULL != s_stCurve.stData.pstFocused)
+    {
+        SGUI_Curve_HighlightFocus(pstDeviceIF, &s_stCurve);
+    }
+    else
+    {
+        SGUI_INT iLineX = (s_iArgument-s_stCurve.stParam.stXRange.iMin) * SGUI_RECT_WIDTH(s_stCurve.stParam.stLayout) / SGUI_RANGE_SIZE(s_stCurve.stParam.stXRange) + s_stCurve.stParam.stLayout.iX;
+        SGUI_Basic_DrawVerticalLine(pstDeviceIF, iLineX, s_stCurve.stParam.stLayout.iY, s_stCurve.stParam.stLayout.iY + s_stCurve.stParam.stLayout.iHeight-1, SGUI_COLOR_FRGCLR);
+    }
+    HMI_DemoCurve_RepaintText(pstDeviceIF);
 
     return HMI_RET_NORMAL;
 }
@@ -301,8 +329,15 @@ HMI_ENGINE_RESULT HMI_DemoCurve_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HM
                 if(NULL != pstFocusedPoint)
                 {
                     SGUI_Curve_UpdateFocusPoint(&s_stCurve, pstFocusedPoint->stPoint.iX-1, pstFocusedPoint->stPoint.iY);
-                    HMI_DemoCurve_RefreshScreen(pstDeviceIF, NULL);
                 }
+                else
+                {
+                    if(s_iArgument > s_stCurve.stData.stPoints.pstHead->stPoint.iX)
+                    {
+                        --s_iArgument;
+                    }
+                }
+                HMI_DemoCurve_RefreshScreen(pstDeviceIF, NULL);
                 break;
             }
             case KEY_VALUE_RIGHT:
@@ -310,8 +345,15 @@ HMI_ENGINE_RESULT HMI_DemoCurve_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HM
                 if(NULL != pstFocusedPoint)
                 {
                     SGUI_Curve_UpdateFocusPoint(&s_stCurve, pstFocusedPoint->stPoint.iX+1, pstFocusedPoint->stPoint.iY);
-                    HMI_DemoCurve_RefreshScreen(pstDeviceIF, NULL);
                 }
+                else
+                {
+                    if(s_iArgument < s_stCurve.stData.stPoints.pstEnd->stPoint.iX)
+                    {
+                        ++s_iArgument;
+                    }
+                }
+                HMI_DemoCurve_RefreshScreen(pstDeviceIF, NULL);
                 break;
             }
             case KEY_VALUE_INSERT:

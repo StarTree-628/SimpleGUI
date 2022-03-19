@@ -246,7 +246,6 @@ void KeyPressEventProc(void)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    stEvent.Head.iType = EVENT_TYPE_ACTION;
     stEvent.Head.iID = EVENT_ID_KEY_PRESS;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
     pstSDKEvent = SGUI_SDK_GetKeyEventData();
@@ -292,7 +291,6 @@ void SysTickTimerEventProc(void)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    stEvent.Head.iType =    EVENT_TYPE_DATA;
     stEvent.Head.iID =      EVENT_ID_TIMER;
     stEvent.Data.iValue = (rand() % 200)-100;
     // Post timer event.
@@ -321,7 +319,6 @@ void RTCEventProc(void)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    stEvent.Head.iType =    EVENT_TYPE_DATA;
     stEvent.Head.iID =      EVENT_ID_RTC;
     // Post RTC update message to a screen.
     HMI_ProcessEvent((HMI_EVENT_BASE*)&stEvent);

@@ -11,8 +11,10 @@
 #include "SGUI_VariableBox.h"
 
 //=======================================================================//
-//= Static function declaration.                                        =//
+//= Global variable declaration.                                        =//
 //=======================================================================//
+const SGUI_CHAR ASCII_CHAR_SET[] = {" !\"#$%&,()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[/]^_'abcdefghijklmnopqrstuvwxyz{|}`"};
+const SGUI_CHAR NUM_CHAR_SET[] = {" 0123456789.-"};
 
 //=======================================================================//
 //= Function define.                                                    =//

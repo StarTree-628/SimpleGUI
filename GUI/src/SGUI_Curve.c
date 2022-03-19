@@ -530,6 +530,16 @@ void SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pst
     }
 }
 
+/*************************************************************************/
+/** Function Name:  SGUI_Curve_GetDependentValue                        **/
+/** Purpose:        Calculate dependent order by argument parameter     **/
+/**                 in curve area.                                      **/
+/** Params:                                                             **/
+/** @ pstObj[in]:   Curve object pointer.                               **/
+/** @ iArgument[in]: Input argument.                                    **/
+/** Return:         Calculated dependent from argument.                 **/
+/** Notice:         Return 0 if argument is not in curve area.          **/
+/*************************************************************************/
 SGUI_INT SGUI_Curve_GetDependentValue(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iArgument)
 {
     /*----------------------------------*/
@@ -551,6 +561,7 @@ SGUI_INT SGUI_Curve_GetDependentValue(SGUI_CURVE_STRUCT* pstObj, SGUI_INT iArgum
         {
             if(iArgument > pstAreaEnd->stPoint.iX)
             {
+                // Switch to next area if x-value is not in this area.
                 pstAreaStart = pstAreaEnd;
                 pstAreaEnd = pstAreaStart->pstNext;
             }

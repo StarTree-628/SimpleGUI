@@ -66,7 +66,7 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
     }
     else
     {
-        stSubLayout.iY = stSubLayout.iY+LIST_TITLE_HEIGHT(pstFontRes)+2;
+        stSubLayout.iY = pstObj->stLayout.iY+LIST_TITLE_HEIGHT(pstFontRes)+2;
         stSubLayout.iHeight = pstObj->stLayout.iHeight-LIST_TITLE_HEIGHT(pstFontRes)-3;
     }
     SGUI_ItemsBase_Initialize(&(pstObj->stItems), &stSubLayout, pstFontRes, pstItemsData, iItemsCount);

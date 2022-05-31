@@ -14,6 +14,11 @@
 #include "SGUI_FontResource.h"
 
 //=======================================================================//
+//= Macro definition.                                                   =//
+//=======================================================================//
+#define MONITOR_RECORDER_LENGTH     (21)
+
+//=======================================================================//
 //= Static function declaration.                                        =//
 //=======================================================================//
 static HMI_ENGINE_RESULT    HMI_DemoRealGraph_Initialize(SGUI_SCR_DEV* pstDeviceIF);
@@ -25,9 +30,14 @@ static HMI_ENGINE_RESULT    HMI_DemoRealGraph_PostProcess(SGUI_SCR_DEV* pstDevic
 //=======================================================================//
 //= Static variable declaration.                                        =//
 //=======================================================================//
-SGUI_RTGRAPH_CONTROL        s_stRealtimeGraphControl =  {50, -50, SGUI_TRUE, 3, 0};
-SGUI_RTGRAPH_DATA           s_stRealtimeGraphData =     {{0}, {0}, {0}, 0, 0};
-SGUI_RTGRAPH                s_stRealtimeGraph =         {{1, 9, 126, 49}, &s_stRealtimeGraphData, &s_stRealtimeGraphControl};
+static SGUI_RTGRAPH_POINT   s_arrRecorder[MONITOR_RECORDER_LENGTH];
+static SGUI_RTGRAPH         s_stRealtimeGraph =             {   .stData.stRecorder.iSize = MONITOR_RECORDER_LENGTH,
+                                                                .stData.stRecorder.arrValue = s_arrRecorder,
+                                                                .stData.BaseLineValue = 0,
+                                                                .stControl.yAxisMax = 50,
+                                                                .stControl.yAxisMin = -50,
+                                                                .stControl.EnableBaseline = SGUI_TRUE
+                                                            };
 static HMI_SCREEN_ACTION    s_stDemoRealtimeGraphActions = { HMI_DemoRealGraph_Initialize,
                                                         HMI_DemoRealGraph_Prepare,
                                                         HMI_DemoRealGraph_RefreshScreen,
@@ -48,18 +58,28 @@ HMI_SCREEN_OBJECT           g_stHMIDemo_RealtimeGraph = {HMI_SCREEN_ID_DEMO_REAL
 //=======================================================================//
 HMI_ENGINE_RESULT HMI_DemoRealGraph_Initialize(SGUI_SCR_DEV* pstDeviceIF)
 {
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
     //SGUI_RealtimeGraph_Initialize(&s_stRealtimeGraph);
+    s_stRealtimeGraph.stLayout.iX = 1;
+    s_stRealtimeGraph.stLayout.iY = 11;
     s_stRealtimeGraph.stLayout.iWidth = pstDeviceIF->stSize.iWidth-2;
-    s_stRealtimeGraph.stLayout.iHeight = pstDeviceIF->stSize.iHeight-15;
+    s_stRealtimeGraph.stLayout.iHeight = pstDeviceIF->stSize.iHeight-18;
     return HMI_RET_NORMAL;
 }
 
 HMI_ENGINE_RESULT HMI_DemoRealGraph_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* pstParameters)
 {
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
     // Reinitialize data.
     SGUI_RealtimeGraph_Initialize(&s_stRealtimeGraph);
     // Paint frame.
     SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, SGUI_RECT_WIDTH(pstDeviceIF->stSize), SGUI_RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+    SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 1, pstDeviceIF->stSize.iWidth-2, 10, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 1, pstDeviceIF->stSize.iWidth-2, pstDeviceIF->stSize.iHeight - 7, SGUI_COLOR_FRGCLR);
     // Update screen display.
     SGUI_RealtimeGraph_Repaint(pstDeviceIF, &s_stRealtimeGraph);
     // Start dummy heart-beat timer.
@@ -70,12 +90,16 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_Prepare(SGUI_SCR_DEV* pstDeviceIF, const voi
 
 HMI_ENGINE_RESULT HMI_DemoRealGraph_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const void* pstParameters)
 {
+    /*----------------------------------*/
+    /* Variable Declaration             */
+    /*----------------------------------*/
     SGUI_CHAR           szTextBuffer[16];
     SGUI_RECT           stTextDisplayArea;
     SGUI_POINT          stInnerPos;
 
-    // Paint frame.
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, SGUI_RECT_WIDTH(pstDeviceIF->stSize), SGUI_RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
     // Paint title
     stTextDisplayArea.iX = 1;
     stTextDisplayArea.iY = 1;
@@ -85,7 +109,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, con
     stInnerPos.iY = 0;
     SGUI_Text_DrawText(pstDeviceIF, SCR5_RT_GRAPH_TITLE, &SGUI_DEFAULT_FONT_8, &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
     // Paint value.
-    SGUI_Common_IntegerToString(s_stRealtimeGraph.Data->ValueArray[s_stRealtimeGraph.Data->ValueCount-1], szTextBuffer, 10, 4, ' ');
+    SGUI_Common_IntegerToString(s_stRealtimeGraph.stData.stRecorder.arrValue[s_stRealtimeGraph.stData.stRecorder.iSize-1].iValue, szTextBuffer, 10, 4, ' ');
     stTextDisplayArea.iX = 1;
     stTextDisplayArea.iY = SGUI_RECT_HEIGHT(pstDeviceIF->stSize)-6;
     stTextDisplayArea.iWidth = SGUI_RECT_WIDTH(pstDeviceIF->stSize)-2;
@@ -102,19 +126,13 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, cons
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    HMI_ENGINE_RESULT           eProcessResult;
+    HMI_ENGINE_RESULT           eProcessResult = HMI_RET_NORMAL;
     SGUI_INT                    iNewValue;
     SGUI_UINT16                 uiKeyCode;
     SGUI_UINT16                 uiKeyValue;
     KEY_PRESS_EVENT*            pstKeyEvent;
     DATA_EVENT*                 pstDataEvent;
-    SGUI_INT                    iProcessAction;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    eProcessResult =            HMI_RET_NORMAL;
-    iProcessAction =            HMI_DEMO_PROC_NO_ACT;
+    SGUI_INT                    iProcessAction = HMI_DEMO_PROC_NO_ACT;
 
     /*----------------------------------*/
     /* Process                          */
@@ -152,7 +170,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, cons
             else
             {
                 iNewValue = pstDataEvent->Data.iValue;
-                SGUI_RealtimeGraph_AppendValue(pstDeviceIF, &s_stRealtimeGraph, iNewValue);
+                SGUI_RealtimeGraph_PushRear(&s_stRealtimeGraph, iNewValue);
                 HMI_DemoRealGraph_RefreshScreen(pstDeviceIF, NULL);
             }
             break;

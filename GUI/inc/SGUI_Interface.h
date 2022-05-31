@@ -58,5 +58,7 @@ void                    SGUI_SystemIF_Free(SGUI_PTR pFreePointer);
                             (strcpy((DEST), (SRC)))
 #define                 SGUI_SystemIF_StringLengthCopy(/* SGUI_SZSTR */DEST, /* SGUI_CSZSTR */SRC, /* SGUI_SIZE */SIZE) \
                             (strncpy((DEST), (SRC), (SIZE)))
+#define                 SGUI_SystemIF_StringCompare(/* SGUI_SZSTR */LEFT, /* SGUI_CSZSTR */RIGHT) \
+                            (strcmp((LEFT), (RIGHT)))
 
 #endif // __INCLUDED_SGUI_INTERFACE_H__

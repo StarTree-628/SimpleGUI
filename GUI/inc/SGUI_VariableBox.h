@@ -35,16 +35,25 @@ typedef struct
 }SGUI_NUM_VARBOX_STRUCT;
 
 // Data type of text variable box.
+
+typedef struct
+{
+    SGUI_CSZSTR             cszCharSet;
+    SGUI_INT                iSize;
+}SGUI_TEXT_VARBOX_CHAR_SET;
+
 typedef struct
 {
     SGUI_RECT               stLayout;
     const SGUI_FONT_RES*    pstFontRes;
     SGUI_INT                iTextLength;
+    SGUI_TEXT_VARBOX_CHAR_SET stCharSet;
 }SGUI_TEXT_VARBOX_PARAM;
 
 typedef struct
 {
     SGUI_INT                iFocusIndex;
+    SGUI_INT                iFocusCharIndex;
     SGUI_INT				iFirstVisibleIndex;
     SGUI_INT				iLastVisibleIndex;
     SGUI_INT				iVisibleCharNum;
@@ -85,7 +94,8 @@ typedef enum
 #define VARBOX_TEXT_AREA_WIDTH(W)       ((W>2)?(W-2):0)
 #define VARBOX_TEXT_AREA_HEIGHT(FONT_SIZE) (g_stFontSize[FONT_SIZE].Height)
 
-#define VARBOX_TEXT_LENGTH_MAX          (11)
+#define VARBOX_TEXT_INVALID_CHAR_IDX    (-1)
+#define VARBOX_TEXT_LENGTH_MAX          (12)
 #define VARBOX_TEXT_BUFFER_SIZE         (VARBOX_TEXT_LENGTH_MAX+1)
 #define VARBOX_TEXT_WIDTH(FONT_SIZE, L) (L*(g_stFontSize[FONT_SIZE].Width))
 
@@ -104,6 +114,9 @@ extern "C"{
 void        SGUI_NumberVariableBox_Initialize(SGUI_NUM_VARBOX_STRUCT* pstObj, const SGUI_NUM_VARBOX_PARAM* pcstInitParam);
 void        SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_STRUCT* pstValue, SGUI_DRAW_MODE eMode);
 void        SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGUI_TEXT_VARBOX_PARAM* pcstInitParam, SGUI_SZSTR szTextBuffer);
+void        SGUI_TextVariableBox_SetFocusIndex(SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_INT iNewFocus);
+void        SGUI_TextVariableBox_IncreaseChar(SGUI_TEXT_VARBOX_STRUCT* pstObj);
+void        SGUI_TextVariableBox_DecreaseChar(SGUI_TEXT_VARBOX_STRUCT* pstObj);
 void        SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_CHAR cMask, SGUI_DRAW_MODE eMode);
 #ifdef __cplusplus
 }
@@ -120,29 +133,9 @@ void        SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VA
                                                             }
 #define     SGUI_NumberVariableBox_GetValue(POBJ)           ((POBJ)->stData.iValue)
 #define     SGUI_TextVariableBox_GetFocusIndex(POBJ)        ((POBJ)->stData.iFocusIndex)
-#define     SGUI_TextVariableBox_SetFocusIndex(POBJ, IDX)   if((IDX) < (POBJ)->stParam.iTextLength)\
-                                                            {\
-                                                                (POBJ)->stData.iFocusIndex = (IDX);\
-                                                            }
+#define     SGUI_TextVariableBox_FocusedChar(POBJ)          ((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex])
 #define     SGUI_TextVariableBox_IncreaseIndex(POBJ)        {SGUI_TextVariableBox_SetFocusIndex((POBJ), (POBJ)->stData.iFocusIndex+1);}
 #define     SGUI_TextVariableBox_DecreaseIndex(POBJ)        {SGUI_TextVariableBox_SetFocusIndex((POBJ), (POBJ)->stData.iFocusIndex-1);}
-#define     SGUI_TextVariableBox_FocusedChar(POBJ)          ((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex])
-#define     SGUI_TextVariableBox_IncreaseChar(POBJ)         if((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] == 0x7E)\
-                                                            {\
-                                                                (POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] = 0x20;\
-                                                            }\
-                                                            else\
-                                                            {\
-                                                                (POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex]++;\
-                                                            }
-#define     SGUI_TextVariableBox_DecreaseChar(POBJ)         if((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] == 0x20)\
-                                                            {\
-                                                                (POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] = 0x7E;\
-                                                            }\
-                                                            else\
-                                                            {\
-                                                                (POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex]--;\
-                                                            }
 #define     SGUI_TextVariableBox_GetText(POBJ)              ((POBJ)->stData.szValue)
 #define     SGUI_TextVariableBox_GetChar(POBJ, IDX)         (IDX<(POBJ)->stParam.iTextLength?(POBJ)->stData.szValue[IDX]:'\0')
 #define     SGUI_TextVariableBox_SetFocusedChar(POBJ, CH)   ((POBJ)->stData.szValue[(POBJ)->stData.iFocusIndex] = CH)

@@ -31,8 +31,6 @@ void SGUI_RealtimeGraph_Initialize(SGUI_RTGRAPH* pstRTGraph)
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RTGRAPH_DATA*          pstData;
-    SGUI_RTGRAPH_CONTROL*       pstControl;
     SGUI_INT                    iValueIndex;
 
     /*----------------------------------*/
@@ -40,38 +38,41 @@ void SGUI_RealtimeGraph_Initialize(SGUI_RTGRAPH* pstRTGraph)
     /*----------------------------------*/
     if(NULL != pstRTGraph)
     {
-        pstData = pstRTGraph->Data;
-        pstControl = pstRTGraph->Control;
-
         // yAxisMax must be greater then yAxisMin;
-        if(pstControl->yAxisMax < pstControl->yAxisMin)
+        if(pstRTGraph->stControl.yAxisMax < pstRTGraph->stControl.yAxisMin)
         {
-            SGUI_SWAP(pstControl->yAxisMax, pstControl->yAxisMin);
+            SGUI_SWAP(pstRTGraph->stControl.yAxisMax, pstRTGraph->stControl.yAxisMin);
         }
         // X-axis step in pixel must be greater then 2.
-        if(pstControl->xAxisStepPixel < 2)
+        if(pstRTGraph->stData.stRecorder.iSize > 2)
         {
-            pstControl->xAxisStepPixel = 2;
+            pstRTGraph->stControl.xAxisStepPixel = pstRTGraph->stLayout.iWidth / (pstRTGraph->stData.stRecorder.iSize-1);
+            if(pstRTGraph->stControl.xAxisStepPixel < 2)
+            {
+                pstRTGraph->stControl.xAxisStepPixel = 2;
+            }
+        }
+        else
+        {
+            pstRTGraph->stControl.xAxisStepPixel = 2;
         }
 
-        pstControl->ValueArea = pstControl->yAxisMax - pstControl->yAxisMin+1;
+        pstRTGraph->stControl.ValueArea = pstRTGraph->stControl.yAxisMax - pstRTGraph->stControl.yAxisMin+1;
 
         // Zero point value must NOT greater then yAxisMax and NOT less then yAxisMin.
-        if(pstData->BaseLineValue > pstControl->yAxisMax)
+        if(pstRTGraph->stData.BaseLineValue > pstRTGraph->stControl.yAxisMax)
         {
-            pstData->BaseLineValue = pstControl->yAxisMax;
+            pstRTGraph->stData.BaseLineValue = pstRTGraph->stControl.yAxisMax;
         }
-        if(pstData->BaseLineValue < pstControl->yAxisMin)
+        if(pstRTGraph->stData.BaseLineValue < pstRTGraph->stControl.yAxisMin)
         {
-            pstData->BaseLineValue = pstControl->yAxisMin;
+            pstRTGraph->stData.BaseLineValue = pstRTGraph->stControl.yAxisMin;
         }
-        // Calculate the number of value points that can be used.
-        pstData->ValueCount = (SGUI_RECT_WIDTH(pstRTGraph->stLayout)-2)/pstControl->xAxisStepPixel;
 
         // Initialize value array.
-        for(iValueIndex=0; iValueIndex<pstData->ValueCount; iValueIndex++)
+        for(iValueIndex=0; iValueIndex<pstRTGraph->stData.stRecorder.iSize; iValueIndex++)
         {
-            pstData->PointYCoordinateArray[iValueIndex] = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, pstData->BaseLineValue);;
+            pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iYCoord = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, pstRTGraph->stData.BaseLineValue);;
         }
     }
 }
@@ -91,8 +92,6 @@ void SGUI_RealtimeGraph_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pstRTGr
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RTGRAPH_DATA*          pstData;
-    SGUI_RTGRAPH_CONTROL*       pstControl;
     SGUI_INT                    iValueIndex;
     SGUI_INT                    iPixelCoordinateStartX, iPixelCoordinateEndX;
     SGUI_INT                    iBaseLineCoordinateY;
@@ -102,49 +101,43 @@ void SGUI_RealtimeGraph_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pstRTGr
     /*----------------------------------*/
     if((NULL != pstRTGraph) && (NULL != pstDeviceIF))
     {
-        pstData = pstRTGraph->Data;
-        pstControl = pstRTGraph->Control;
-
         // Draw frame
         SGUI_Basic_DrawRectangle(pstDeviceIF, SGUI_RECT_X_START(pstRTGraph->stLayout), SGUI_RECT_Y_START(pstRTGraph->stLayout),
-                                    SGUI_RECT_WIDTH(pstRTGraph->stLayout), SGUI_RECT_HEIGHT(pstRTGraph->stLayout), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+                                    SGUI_RECT_WIDTH(pstRTGraph->stLayout), SGUI_RECT_HEIGHT(pstRTGraph->stLayout), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
 
-        if(SGUI_TRUE == pstControl->EnableBaseline)
+        if(SGUI_TRUE == pstRTGraph->stControl.EnableBaseline)
         {
-            iBaseLineCoordinateY = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, pstData->BaseLineValue);
-            SGUI_Basic_DrawLine(pstDeviceIF, 1, iBaseLineCoordinateY, SGUI_RECT_WIDTH(pstDeviceIF->stSize)-2, iBaseLineCoordinateY, SGUI_COLOR_FRGCLR);
+            iBaseLineCoordinateY = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, pstRTGraph->stData.BaseLineValue);
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, SGUI_RECT_X_START(pstRTGraph->stLayout), SGUI_RECT_X_END(pstRTGraph->stLayout), iBaseLineCoordinateY, SGUI_COLOR_FRGCLR);
         }
 
-        if(pstData->ValueCount > 1)
+        if(pstRTGraph->stData.stRecorder.iSize > 1)
         {
-            for(iValueIndex=1; iValueIndex<pstData->ValueCount; iValueIndex++)
+            for(iValueIndex=1; iValueIndex<pstRTGraph->stData.stRecorder.iSize; iValueIndex++)
             {
-                iPixelCoordinateStartX = 1 + ((iValueIndex-1) * pstControl->xAxisStepPixel) + SGUI_RECT_X_START(pstRTGraph->stLayout);
-                iPixelCoordinateEndX = 1 + (iValueIndex * pstControl->xAxisStepPixel) + SGUI_RECT_X_START(pstRTGraph->stLayout);
-                SGUI_Basic_DrawLine(pstDeviceIF, iPixelCoordinateStartX, pstData->PointYCoordinateArray[iValueIndex-1],
-                                        iPixelCoordinateEndX, pstData->PointYCoordinateArray[iValueIndex], SGUI_COLOR_FRGCLR);
+                iPixelCoordinateStartX = ((iValueIndex-1) * pstRTGraph->stControl.xAxisStepPixel) + SGUI_RECT_X_START(pstRTGraph->stLayout);
+                iPixelCoordinateEndX = (iValueIndex * pstRTGraph->stControl.xAxisStepPixel) + SGUI_RECT_X_START(pstRTGraph->stLayout);
+                SGUI_Basic_DrawLine(pstDeviceIF, iPixelCoordinateStartX, pstRTGraph->stData.stRecorder.arrValue[iValueIndex-1].iYCoord,
+                                        iPixelCoordinateEndX, pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iYCoord, SGUI_COLOR_FRGCLR);
             }
         }
     }
 }
 
 /*************************************************************************/
-/** Function Name:  SGUI_RealtimeGraph_AppendValue                      **/
-/** Purpose:        Append a new value to graph.                        **/
+/** Function Name:  SGUI_RealtimeGraph_PushRear                         **/
+/** Purpose:        Append a new value to rear of graph.                **/
 /** Params:                                                             **/
-/** @ pstDeviceIF[in]:      SimpleGUI object pointer.                       **/
 /** @ pstRTGraph[in]:   Real-time graph object pointer.                 **/
 /** @ iNewValue[in]:    New value will be appended.                     **/
 /** Return:         None.                                               **/
 /** Notice:         None.                                               **/
 /*************************************************************************/
-void SGUI_RealtimeGraph_AppendValue(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pstRTGraph, SGUI_INT iNewValue)
+void SGUI_RealtimeGraph_PushRear(SGUI_RTGRAPH* pstRTGraph, SGUI_INT iNewValue)
 {
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RTGRAPH_DATA*          pstData;
-    SGUI_RTGRAPH_CONTROL*       pstControl;
     SGUI_INT                    iValueIndex;
     SGUI_INT                    iLimitedValue;
 
@@ -153,30 +146,72 @@ void SGUI_RealtimeGraph_AppendValue(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pst
     /*----------------------------------*/
     if(NULL != pstRTGraph)
     {
-        pstData = pstRTGraph->Data;
-        pstControl = pstRTGraph->Control;
-
-        // Push value.
-        for(iValueIndex=0; iValueIndex<pstData->ValueCount-1; iValueIndex++)
+        // Push value to front.
+        //      <<--
+        // [0]--------[N]
+        for(iValueIndex=0; iValueIndex<pstRTGraph->stData.stRecorder.iSize-1; iValueIndex++)
         {
-            pstData->ValueArray[iValueIndex] = pstData->ValueArray[iValueIndex+1];
-            pstData->LimitedValueArray[iValueIndex] = pstData->LimitedValueArray[iValueIndex+1];
-            pstData->PointYCoordinateArray[iValueIndex] = pstData->PointYCoordinateArray[iValueIndex+1];
+            pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iValue = pstRTGraph->stData.stRecorder.arrValue[iValueIndex+1].iValue;
+            pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iYCoord = pstRTGraph->stData.stRecorder.arrValue[iValueIndex+1].iYCoord;
         }
         // Append new value.
-        iValueIndex = pstData->ValueCount-1;
-        pstData->ValueArray[iValueIndex] = iNewValue;
+        iValueIndex = pstRTGraph->stData.stRecorder.iSize-1;
+        pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iValue = iNewValue;
         iLimitedValue = iNewValue;
-        if(iLimitedValue > pstControl->yAxisMax)
+        if(iLimitedValue > pstRTGraph->stControl.yAxisMax)
         {
-            iLimitedValue = pstControl->yAxisMax;
+            iLimitedValue = pstRTGraph->stControl.yAxisMax;
         }
-        if(iLimitedValue < pstControl->yAxisMin)
+        if(iLimitedValue < pstRTGraph->stControl.yAxisMin)
         {
-            iLimitedValue = pstControl->yAxisMin;
+            iLimitedValue = pstRTGraph->stControl.yAxisMin;
         }
-        pstData->LimitedValueArray[iValueIndex] = iLimitedValue;
-        pstData->PointYCoordinateArray[iValueIndex] = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, iLimitedValue);
+        pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iYCoord = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, iLimitedValue);
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_RealtimeGraph_PushFront                        **/
+/** Purpose:        Append a new value to front of graph.               **/
+/** Params:                                                             **/
+/** @ pstRTGraph[in]:   Real-time graph object pointer.                 **/
+/** @ iNewValue[in]:    New value will be appended.                     **/
+/** Return:         None.                                               **/
+/** Notice:         None.                                               **/
+/*************************************************************************/
+void SGUI_RealtimeGraph_PushFront(SGUI_RTGRAPH* pstRTGraph, SGUI_INT iNewValue)
+{
+    /*----------------------------------*/
+    /* Variable Declaration             */
+    /*----------------------------------*/
+    SGUI_INT                    iValueIndex;
+    SGUI_INT                    iLimitedValue;
+
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if(NULL != pstRTGraph)
+    {
+        // Push value to rear.
+        //      -->>
+        // [0]--------[N]
+        for(iValueIndex=pstRTGraph->stData.stRecorder.iSize-1; iValueIndex>0; iValueIndex--)
+        {
+            pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iValue = pstRTGraph->stData.stRecorder.arrValue[iValueIndex-1].iValue;
+            pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iYCoord = pstRTGraph->stData.stRecorder.arrValue[iValueIndex-1].iYCoord;
+        }
+        // Append new value.
+        pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iValue = iNewValue;
+        iLimitedValue = iNewValue;
+        if(iLimitedValue > pstRTGraph->stControl.yAxisMax)
+        {
+            iLimitedValue = pstRTGraph->stControl.yAxisMax;
+        }
+        if(iLimitedValue < pstRTGraph->stControl.yAxisMin)
+        {
+            iLimitedValue = pstRTGraph->stControl.yAxisMin;
+        }
+        pstRTGraph->stData.stRecorder.arrValue[iValueIndex].iYCoord = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, iLimitedValue);
     }
 }
 
@@ -195,7 +230,6 @@ SGUI_INT SGUI_RealtimeGraph_GetValuePointYCoordinate(SGUI_RTGRAPH* pstRTGraph, S
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RTGRAPH_CONTROL*       pstControl;
     SGUI_INT                    iDisplayValuePointAreaHeight;
     SGUI_INT                    iAbsoluteValue;
     SGUI_INT                    iValuePointCoordinate;
@@ -209,22 +243,20 @@ SGUI_INT SGUI_RealtimeGraph_GetValuePointYCoordinate(SGUI_RTGRAPH* pstRTGraph, S
     /*----------------------------------*/
     if(NULL != pstRTGraph)
     {
-        pstControl = pstRTGraph->Control;
-
         iDisplayValuePointAreaHeight = SGUI_RECT_HEIGHT(pstRTGraph->stLayout);
 
         //Make sure the value is within the valid range
-        if(iValue > pstControl->yAxisMax)
+        if(iValue > pstRTGraph->stControl.yAxisMax)
         {
-            iValue = pstControl->yAxisMax;
+            iValue = pstRTGraph->stControl.yAxisMax;
         }
-        if(iValue < pstControl->yAxisMin)
+        if(iValue < pstRTGraph->stControl.yAxisMin)
         {
-            iValue = pstControl->yAxisMin;
+            iValue = pstRTGraph->stControl.yAxisMin;
         }
-        iAbsoluteValue = iValue - pstControl->yAxisMin;
+        iAbsoluteValue = iValue - pstRTGraph->stControl.yAxisMin;
 
-        iValuePointCoordinate = iAbsoluteValue*iDisplayValuePointAreaHeight/pstControl->ValueArea;
+        iValuePointCoordinate = iAbsoluteValue*iDisplayValuePointAreaHeight/pstRTGraph->stControl.ValueArea;
 
         iValuePointCoordinate = iDisplayValuePointAreaHeight-iValuePointCoordinate;
 
@@ -232,4 +264,21 @@ SGUI_INT SGUI_RealtimeGraph_GetValuePointYCoordinate(SGUI_RTGRAPH* pstRTGraph, S
     }
 
     return iValuePointCoordinate;
+}
+
+void SGUI_RealtimeGraph_Cleanup(SGUI_RTGRAPH* pstRTGraph)
+{
+
+    if(pstRTGraph)
+    {
+        // Clean recorder data.
+        SGUI_SystemIF_MemorySet(pstRTGraph->stData.stRecorder.arrValue, 0x00, sizeof(SGUI_RTGRAPH_POINT)*pstRTGraph->stData.stRecorder.iSize);
+        // Reinitialize recorder data to baseline data.
+        for(SGUI_INT iDataIdx=0; iDataIdx<pstRTGraph->stData.stRecorder.iSize; iDataIdx++)
+        {
+            pstRTGraph->stData.stRecorder.arrValue[iDataIdx].iValue = pstRTGraph->stData.BaseLineValue;
+            pstRTGraph->stData.stRecorder.arrValue[iDataIdx].iYCoord = SGUI_RealtimeGraph_GetValuePointYCoordinate(pstRTGraph, pstRTGraph->stData.BaseLineValue);
+
+        }
+    }
 }

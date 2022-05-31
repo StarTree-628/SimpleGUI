@@ -41,6 +41,7 @@ static void                 HMI_DemoVariableBox_DrawFrame(SGUI_SCR_DEV* pstDevic
 //= Static variable declaration.                                        =//
 //=======================================================================//
 static SGUI_NUM_VARBOX_STRUCT   s_stNumberVariableBox =     {0x00};
+static const SGUI_CHAR          ASCII_CHAR_SET[] = {" !\"#$%&,()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[/]^_'abcdefghijklmnopqrstuvwxyz{|}`"};
 static SGUI_CHAR                s_szTextVariableBuffer[] =  {"ABCDEFG1234567890+-*/OPQ"};
 static SGUI_TEXT_VARBOX_STRUCT  s_stTextVariableBox =       {0x00};
 static SGUI_CHAR                s_szDefaultFrameTitle[] =   SCR4_VAR_BOX_TITLE;
@@ -96,6 +97,8 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_Initialize(SGUI_SCR_DEV* pstDeviceIF)
     stTextBoxInitParam.stLayout.iWidth = pstDeviceIF->stSize.iWidth-(VARIABLE_BOX_POSX*2)-4;
     stTextBoxInitParam.stLayout.iHeight = SGUI_DEFAULT_FONT_12.iHeight;
     stTextBoxInitParam.iTextLength = SGUI_SystemIF_StringLength(s_szTextVariableBuffer);
+    stTextBoxInitParam.stCharSet.cszCharSet = ASCII_CHAR_SET;
+    stTextBoxInitParam .stCharSet.iSize = 96;
 
     SGUI_TextVariableBox_Initialize(&s_stTextVariableBox, &stTextBoxInitParam, s_szTextVariableBuffer);
 

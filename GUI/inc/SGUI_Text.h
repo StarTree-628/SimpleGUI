@@ -14,6 +14,7 @@
 #define TEXT_NUMBER_STR_LENGTH_MAX      (12)
 #define TEXT_PLACEHOLDER_CHARACTER      ('*')
 #define SGUI_IS_VISIBLE_CHAR(C)         ((C>0x1F) && (C<0x7F))
+#define SGUI_T(TEXT)                    (TEXT)
 //=======================================================================//
 //= Public variable declaration.                                        =//
 //=======================================================================//

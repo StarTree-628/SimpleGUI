@@ -13,8 +13,12 @@
 //=======================================================================//
 //= Global variable declaration.                                        =//
 //=======================================================================//
-const SGUI_CHAR ASCII_CHAR_SET[] = {" !\"#$%&,()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[/]^_'abcdefghijklmnopqrstuvwxyz{|}`"};
-const SGUI_CHAR NUM_CHAR_SET[] = {" 0123456789.-"};
+
+
+//=======================================================================//
+//= Static function declaration.                                        =//
+//=======================================================================//
+static void SGUI_TextVariableBox_UpdateFocusCharIndex(SGUI_TEXT_VARBOX_STRUCT* pstObj);
 
 //=======================================================================//
 //= Function define.                                                    =//
@@ -129,7 +133,42 @@ void SGUI_TextVariableBox_Initialize(SGUI_TEXT_VARBOX_STRUCT* pstObj, const SGUI
 		{
 			pstObj->stData.iLastVisibleIndex = pstObj->stParam.iTextLength - 1;
 		}
+        pstObj->stData.iFocusCharIndex = -1;
+        for(SGUI_INT iCharIdx=0; iCharIdx<pstObj->stParam.stCharSet.iSize; iCharIdx++)
+        {
+            if(pstObj->stData.szValue[0] == pstObj->stParam.stCharSet.cszCharSet[iCharIdx])
+            {
+                pstObj->stData.iFocusCharIndex = iCharIdx;
+                break;
+            }
+        }
 		pstObj->stData.iOffset = 0;
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_TextVariableBox_UpdateFocusCharIndex           **/
+/** Purpose:        Inner function, used for match and update focused   **/
+/**                 character index in char-set.                        **/
+/** Params:                                                             **/
+/** @ pstObj[in]:   Text value edit box pointer.                        **/
+/** Return:         None.                                               **/
+/** Notice:         Focused char index will set to -1 if char is not in **/
+/**                 char-set.                                           **/
+/*************************************************************************/
+static void SGUI_TextVariableBox_UpdateFocusCharIndex(SGUI_TEXT_VARBOX_STRUCT* pstObj)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    pstObj->stData.iFocusCharIndex = VARBOX_TEXT_INVALID_CHAR_IDX;
+    for(SGUI_INT iCharIdx=0; iCharIdx<pstObj->stParam.stCharSet.iSize; iCharIdx++)
+    {
+        if(pstObj->stParam.stCharSet.cszCharSet[iCharIdx] == pstObj->stData.szValue[pstObj->stData.iFocusIndex])
+        {
+            pstObj->stData.iFocusCharIndex = iCharIdx;
+            break;
+        }
     }
 }
 
@@ -153,15 +192,10 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_COLOR              eBackColor;
+    SGUI_COLOR              eBackColor = ((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
     SGUI_POINT              stCharacterPos;
     SGUI_INT				iCharIdx;
     SGUI_CHAR				cPaintChar;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    eBackColor =            ((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
 
     /*----------------------------------*/
     /* Process                          */
@@ -199,7 +233,7 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
 		}
 		else if(pstObj->stData.iFocusIndex == pstObj->stData.iLastVisibleIndex)
 		{
-			pstObj->stData.iOffset = (pstObj->stParam.stLayout.iWidth % pstObj->stParam.pstFontRes->iHalfWidth) - pstObj->stParam.pstFontRes->iHalfWidth;
+			pstObj->stData.iOffset = ((pstObj->stParam.stLayout.iWidth % pstObj->stParam.pstFontRes->iHalfWidth) - pstObj->stParam.pstFontRes->iHalfWidth)%pstObj->stParam.pstFontRes->iHalfWidth;
 		}
 		else if (pstObj->stData.iFocusIndex == pstObj->stData.iFirstVisibleIndex)
 		{
@@ -225,5 +259,96 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
 			stCharacterPos.iX += pstObj->stParam.pstFontRes->iHalfWidth;
 			iCharIdx++;
 		}
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_TextVariableBox_SetFocusIndex                  **/
+/** Purpose:        Set a character focus according to given index.     **/
+/** Params:                                                             **/
+/** @ pstObj[in]:   Text value edit box pointer.                        **/
+/** @ iNewFocus[in]: New focus index, means character index in c-style  **/
+/**                 string.                                             **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_TextVariableBox_SetFocusIndex(SGUI_TEXT_VARBOX_STRUCT* pstObj, SGUI_INT iNewFocus)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if((NULL != pstObj) && (NULL != pstObj->stData.szValue))
+    {
+        if(iNewFocus < pstObj->stParam.iTextLength)
+        {
+            pstObj->stData.iFocusIndex = iNewFocus;
+            SGUI_TextVariableBox_UpdateFocusCharIndex(pstObj);
+        }
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_TextVariableBox_IncreaseChar                   **/
+/** Purpose:        Replace the focused character to next in char-set.  **/
+/** Params:                                                             **/
+/** @ pstObj[in]:   Text value edit box pointer.                        **/
+/** Return:         None.                                               **/
+/** Notice:         Focused char will replace to the first char if it   **/
+/**                 is the last in char set.                            **/
+/*************************************************************************/
+void SGUI_TextVariableBox_IncreaseChar(SGUI_TEXT_VARBOX_STRUCT* pstObj)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if((NULL != pstObj) && (NULL != pstObj->stData.szValue))
+    {
+        if(VARBOX_TEXT_INVALID_CHAR_IDX == pstObj->stData.iFocusCharIndex)
+        {
+            pstObj->stData.iFocusCharIndex = 0;
+
+        }
+        else
+        {
+            ++(pstObj->stData.iFocusCharIndex);
+            pstObj->stData.iFocusCharIndex = pstObj->stData.iFocusCharIndex % pstObj->stParam.stCharSet.iSize;
+        }
+        pstObj->stData.szValue[pstObj->stData.iFocusIndex] = pstObj->stParam.stCharSet.cszCharSet[pstObj->stData.iFocusCharIndex];
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_TextVariableBox_DecreaseChar                   **/
+/** Purpose:        Replace the focused character to previous in char-  **/
+/**                 set.                                                **/
+/** Params:                                                             **/
+/** @ pstObj[in]:   Text value edit box pointer.                        **/
+/** Return:         None.                                               **/
+/** Notice:         Focused char will replace to the last char if it    **/
+/**                 is the first in char set.                           **/
+/*************************************************************************/
+void SGUI_TextVariableBox_DecreaseChar(SGUI_TEXT_VARBOX_STRUCT* pstObj)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if((NULL != pstObj) && (NULL != pstObj->stData.szValue))
+    {
+        if(VARBOX_TEXT_INVALID_CHAR_IDX == pstObj->stData.iFocusCharIndex)
+        {
+            pstObj->stData.iFocusCharIndex = pstObj->stParam.stCharSet.iSize - 1;
+            pstObj->stData.szValue[pstObj->stData.iFocusIndex] = pstObj->stParam.stCharSet.cszCharSet[pstObj->stData.iFocusCharIndex];
+        }
+        else
+        {
+            if(0 == pstObj->stData.iFocusCharIndex)
+            {
+                pstObj->stData.iFocusCharIndex = pstObj->stParam.stCharSet.iSize-1;
+            }
+            else
+            {
+                --(pstObj->stData.iFocusCharIndex);
+            }
+        }
+        pstObj->stData.szValue[pstObj->stData.iFocusIndex] = pstObj->stParam.stCharSet.cszCharSet[pstObj->stData.iFocusCharIndex];
     }
 }

@@ -35,6 +35,7 @@ extern "C"{
 #endif
 void                    SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const SGUI_FONT_RES* pstFontRes, SGUI_CSZSTR cszTitle, SGUI_ITEMS_ITEM* pstItemsData, SGUI_INT iItemsCount);
 void                    SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj);
+void                    SGUI_List_RepaintItems(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj);
 void                    SGUI_List_Resize(SGUI_LIST* pstObj, const SGUI_RECT* pstNewLayout);
 SGUI_ITEMS_ITEM*        SGUI_List_RemoveItem(SGUI_LIST* pstObj, SGUI_INT iRemoveIndex);
 SGUI_ITEMS_ITEM*        SGUI_List_InsertItem(SGUI_LIST* pstObj, SGUI_ITEMS_ITEM* pstNewItem, SGUI_INT iIndex);

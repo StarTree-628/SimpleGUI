@@ -126,6 +126,31 @@ void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj)
 }
 
 /*************************************************************************/
+/** Function Name:  SGUI_List_RepaintItems                              **/
+/** Purpose:        Only refresh list items display.                    **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
+/** @ pstObj[in]:   Pointer of list data will be refreshed.             **/
+/** Return:         None.                                               **/
+/** Notice:         This function will refresh all list display on      **/
+/**                 screen, include edge, items, title and scrollbar.   **/
+/*************************************************************************/
+void SGUI_List_RepaintItems(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if(NULL != pstObj)
+    {
+        // Paint items.
+        SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
+        // Paint scroll bar.
+        SGUI_ScrollBar_SetValue(&(pstObj->stScrollBar), pstObj->stItems.stVisibleStart.iIndex);
+        SGUI_ScrollBar_Repaint(pstDeviceIF, &(pstObj->stScrollBar));
+    }
+}
+
+/*************************************************************************/
 /** Function Name:  SGUI_List_Resize                                    **/
 /** Purpose:        Resize and calculate layout parameter for display   **/
 /**                 changed.                                            **/

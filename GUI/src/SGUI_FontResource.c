@@ -35,8 +35,10 @@
 //=======================================================================//
 static SGUI_INT         SGUI_Resource_GetCharIndex_MiniNum(SGUI_UINT32 uiCode);
 static SGUI_INT         SGUI_Resource_GetCharIndex_Default(SGUI_UINT32 uiCode);
+static SGUI_INT         SGUI_Resource_GetUnicodeIndex(SGUI_UINT32 uiUnicode);
 static SGUI_CSZSTR      SGUI_Resource_StepNext_Default(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiCode);
 static SGUI_BOOL        SGUI_Resource_IsFullWidth_Default(SGUI_UINT32 uiCode);
+static SGUI_CSZSTR      SGUI_Resource_GetUnicode(SGUI_CSZSTR cszHeader, SGUI_UINT32* puiUnicode);
 static                  SGUI_FONT_RES_DECLARE(MiniNum);
 static                  SGUI_FONT_RES_DECLARE(8);
 static                  SGUI_FONT_RES_DECLARE(12);
@@ -81,7 +83,7 @@ const SGUI_FONT_RES SGUI_DEFAULT_FONT_12 =
 const SGUI_FONT_RES SGUI_DEFAULT_FONT_16 =
 {
     /*SGUI_INT                      iHalfWidth*/        8,
-    /*SGUI_INT                      iFullWidth*/        0,
+    /*SGUI_INT                      iFullWidth*/        16,
     /*SGUI_INT                      iHeight*/           16,
     /*SGUI_FN_IF_GET_CHAR_INDEX     fnGetIndex*/        SGUI_Resource_GetCharIndex_Default,
     /*SGUI_FN_IF_GET_DATA           fnGetData*/         SGUI_FONT_RES_DATA_FUNC_NAME(16),
@@ -415,6 +417,18 @@ const SGUI_BYTE SGUI_FONT_H16[] = {
 0x00,0x00,0x00,0x00,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00,0x00, //"|"
 0x00,0x02,0x02,0x7C,0x80,0x00,0x00,0x00,0x00,0x40,0x40,0x3F,0x00,0x00,0x00,0x00, //"}"
 0x00,0x06,0x01,0x01,0x02,0x02,0x04,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, //"~"       Index 94
+0x00,0xFE,0x02,0x02,0x72,0x7A,0x1A,0x1A,0x1A,0x9A,0xFA,0xF2,0x02,0x02,0xFE,0x00,0x00,0x7F,0x40,0x40,0x40,0x40,0x40,0x5A,0x5B,0x43,0x41,0x40,0x40,0x40,0x7F,0x00,/* [0       ] ['?' for undefined character. ] */
+0x04,0x04,0x04,0x04,0x04,0xFC,0x44,0x44,0x44,0x44,0x44,0xC4,0x04,0x04,0x04,0x00,0x80,0x40,0x20,0x18,0x06,0x01,0x00,0x00,0x40,0x80,0x40,0x3F,0x00,0x00,0x00,0x00,/* [0       ] [万 ] */
+0x00,0x00,0xF0,0x10,0x10,0x10,0x10,0xFF,0x10,0x10,0x10,0x10,0xF0,0x00,0x00,0x00,0x00,0x00,0x0F,0x04,0x04,0x04,0x04,0xFF,0x04,0x04,0x04,0x04,0x0F,0x00,0x00,0x00,/* [1       ] [中 ] */
+0x00,0xFE,0x02,0x12,0x92,0x92,0x92,0xF2,0x92,0x92,0x92,0x12,0x02,0xFE,0x00,0x00,0x00,0xFF,0x40,0x48,0x48,0x48,0x48,0x4F,0x48,0x4A,0x4C,0x48,0x40,0xFF,0x00,0x00,/* [2       ] [国 ] */
+0x00,0x00,0x1E,0x10,0x10,0x90,0xF0,0x9F,0x90,0x90,0x90,0x90,0x1E,0x00,0x00,0x00,0x80,0x80,0x84,0x42,0x41,0x42,0x24,0x28,0x10,0x08,0x04,0x03,0x00,0x00,0x00,0x00,/* [3       ] [岁 ] */
+};
+
+static const SGUI_UINT32 s_arrUnicodeTable[] = {
+    0x4E07, // U+4E07  万
+    0x4E2D, // U+4E2D  中
+    0x56FD, // U+56FD  国
+    0x5C81, // U+5C81  岁
 };
 
 SGUI_INT SGUI_Resource_GetCharIndex_MiniNum(SGUI_UINT32 uiCode)
@@ -507,13 +521,7 @@ SGUI_INT SGUI_Resource_GetCharIndex_Default(SGUI_UINT32 uiCode)
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_INT                    iIndex;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    // Initialize variable.
-    iIndex =                    SGUI_INVALID_INDEX;
+    SGUI_INT                    iIndex = SGUI_INVALID_INDEX;
 
     /*----------------------------------*/
     /* Process                          */
@@ -521,6 +529,53 @@ SGUI_INT SGUI_Resource_GetCharIndex_Default(SGUI_UINT32 uiCode)
     if((uiCode > 0x19) && (uiCode < 0x7F))
     {
         iIndex = uiCode - (0x20);
+    }
+    else
+    {
+        iIndex = SGUI_Resource_GetUnicodeIndex(uiCode);
+        if(SGUI_INVALID_INDEX == iIndex)
+        {
+            // Index is invalid.
+            // Might be characters not included.
+            iIndex = 95;
+        }
+        else
+        {
+            iIndex = 97 + (iIndex * 2);
+        }
+    }
+    return iIndex;
+}
+
+static SGUI_INT SGUI_Resource_GetUnicodeIndex(SGUI_UINT32 uiUnicode)
+{
+    /*----------------------------------*/
+    /* Variable Declaration             */
+    /*----------------------------------*/
+    SGUI_INT        iIndex = SGUI_INVALID_INDEX;
+    SGUI_INT        iUnicodeTableSize = sizeof(s_arrUnicodeTable)/sizeof(SGUI_UINT32);
+    SGUI_INT        iLeftIndex = 0;
+    SGUI_INT        iRightIndex = iUnicodeTableSize-1;
+
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    while(iLeftIndex <= iRightIndex)
+    {
+        SGUI_INT iMidIndex = (iLeftIndex + iRightIndex) / 2;
+        if (s_arrUnicodeTable[iMidIndex] > uiUnicode)
+        {
+            iRightIndex = iMidIndex - 1;
+        }
+        else if (s_arrUnicodeTable[iMidIndex] < uiUnicode)
+        {
+            iLeftIndex = iMidIndex + 1;
+        }
+        else
+        {
+            iIndex = iMidIndex;
+            break;
+        }
     }
     return iIndex;
 }
@@ -530,20 +585,14 @@ SGUI_CSZSTR SGUI_Resource_StepNext_Default(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiC
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    const SGUI_CHAR*            pcNextChar;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    pcNextChar =                cszSrc;
+    const SGUI_CHAR*        pcNextChar = cszSrc;
 
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
     if(NULL != pcNextChar)
     {
-        *puiCode = *pcNextChar;
-        pcNextChar++;
+        pcNextChar = SGUI_Resource_GetUnicode(pcNextChar, puiCode);
     }
 
     return pcNextChar;
@@ -551,7 +600,78 @@ SGUI_CSZSTR SGUI_Resource_StepNext_Default(SGUI_CSZSTR cszSrc, SGUI_UINT32* puiC
 
 SGUI_BOOL SGUI_Resource_IsFullWidth_Default(SGUI_UINT32 uiCode)
 {
-    return SGUI_FALSE;
+    return (uiCode > 0x7F);
+}
+
+SGUI_CSZSTR SGUI_Resource_GetUnicode(SGUI_CSZSTR cszHeader, SGUI_UINT32* puiUnicode)
+{
+    SGUI_UINT32     uiUnicode;
+    SGUI_UINT16     uiUTF8Length = 0;
+    SGUI_UINT16     uiSubsequent = 0;
+    SGUI_UINT8      uiUTF8HeadByte = (SGUI_UINT8)(*cszHeader);
+
+	if((uiUTF8HeadByte > 0x00) && (uiUTF8HeadByte <= 0x7F)) // 0XXXXXXX 单字节
+    {
+        uiUTF8Length = 1;
+        uiUnicode = uiUTF8HeadByte;
+    }
+    else if(0xC0 == (uiUTF8HeadByte & 0xE0)) // 110XXXXX 10XXXXXX 双字节
+    {
+        uiUTF8Length = 2;
+        uiSubsequent = 1;
+        uiUnicode = (uiUTF8HeadByte & 0x1F) << 6;   //00000XXX XX000000
+    }
+	else if(0xE0 == (uiUTF8HeadByte & 0xF0)) // 1110XXXX 10XXXXXX 10XXXXXX 三字节
+    {
+        uiUTF8Length = 3;
+        uiSubsequent = 2;
+        uiUnicode = (uiUTF8HeadByte & 0x0F) << 12;  //00000000 XXXX0000 00000000
+	}
+	else if(0xF0 == (uiUTF8HeadByte & 0xF8)) // 11110XXX 10XXXXXX 10XXXXXX 10XXXXXX 四字节
+    {
+        uiUTF8Length = 4;
+        uiSubsequent = 3;
+        uiUnicode = (uiUTF8HeadByte & 0x07) << 18;  //000XXX00 00000000 00000000
+	}
+	else
+    {
+		uiUTF8Length = 0;
+		uiSubsequent = 0;
+		uiUnicode = 0;
+	}
+
+	++cszHeader;
+	if(uiUTF8Length > 1)
+    {
+        while(('\0' != (*cszHeader)) && (uiSubsequent > 0))
+        {
+            if(0x80 == (0xC0 & (*cszHeader)))
+            {
+                --uiSubsequent;
+                uiUnicode |= (((*cszHeader) & 0x3F) << (6*uiSubsequent));
+                ++cszHeader;
+            }
+            else
+            {
+                break;
+            }
+        }
+        // Error occurred, might be invalid byte existed.
+        if(uiSubsequent > 0)
+        {
+            *puiUnicode = 0;
+        }
+        else
+        {
+            *puiUnicode = uiUnicode;
+        }
+    }
+    else
+    {
+        *puiUnicode = uiUnicode;
+    }
+
+    return cszHeader;
 }
 
 SGUI_FONT_RES_DEFINE(MiniNum, SGUI_FONT_H6);

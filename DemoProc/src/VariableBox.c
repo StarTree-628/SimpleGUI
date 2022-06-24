@@ -184,14 +184,19 @@ HMI_ENGINE_RESULT HMI_DemoVariableBox_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, co
                 {
                     // Stop count down when press space.
                     s_uiAutoConfirmTimer = 0;
+                    eProcessResult = HMI_DemoVariableBox_RefreshScreen(pstDeviceIF, NULL);
+                    RTCTimerEnable(false);
                 }
             }
             case EVENT_ID_RTC:
             {
-                //Count down five seconds
-                s_uiAutoConfirmTimer--;
+                if(s_uiAutoConfirmTimer > 0)
+                {
+                    //Count down five seconds
+                    s_uiAutoConfirmTimer--;
+                }
                 // Redraw screen if time out.
-                if(0 == s_uiAutoConfirmTimer)
+                else
                 {
                     eProcessResult = HMI_DemoVariableBox_RefreshScreen(pstDeviceIF, NULL);
                     RTCTimerEnable(false);

@@ -202,13 +202,11 @@ static void HMI_DemoPolarCoord_PaintClockText(SGUI_SCR_DEV* pstDeviceIF, SGUI_IN
     /* Variable Declaration             */
     /*----------------------------------*/
     SGUI_CHAR			szTextBuffer[10] = {0x00};
-    SGUI_RECT			stPaintArea = {78, 25, 48, 12};
-    SGUI_POINT			stInnerPos = {0, 0};
 
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
     snprintf(szTextBuffer, 10, "%02d:%02d:%02d", iHour, iMinute, iSecond);
-    SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_12, &stPaintArea, &stInnerPos, SGUI_DRAW_NORMAL);
+    SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_12, 87, 25, SGUI_DRAW_NORMAL);
 }
 

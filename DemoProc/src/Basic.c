@@ -56,6 +56,7 @@ HMI_ENGINE_RESULT HMI_DemoBasic_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
     {
         SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, pstDeviceIF->stSize.iWidth, pstDeviceIF->stSize.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
     }
+    SGUI_Basic_ResetMask(pstDeviceIF);
     HMI_DemoBasic_RefreshScreen(pstDeviceIF, pstParameters);
     return HMI_RET_NORMAL;
 }

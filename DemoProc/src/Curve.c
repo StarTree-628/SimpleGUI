@@ -110,35 +110,23 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RECT               stTextArea;
-    SGUI_POINT              stInnsrPos;
+    SGUI_INT                iPaintX = 1;
     SGUI_CHAR               szNumberTextBuffer[12];
     SGUI_SIZE               sTextLength;
 
     /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    SGUI_SystemIF_MemorySet(&stInnsrPos, 0x00, sizeof(SGUI_POINT));
-
-    /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    stTextArea.iX = 1;
-    stTextArea.iY = 1;
-    stTextArea.iWidth = pstDeviceIF->stSize.iWidth;
-    stTextArea.iHeight = 8;
-    SGUI_Text_DrawText(pstDeviceIF, "Press TAB to change focus.", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+    SGUI_Text_DrawText(pstDeviceIF, "Press TAB to change focus.", &SGUI_DEFAULT_FONT_8, iPaintX, 1, SGUI_DRAW_NORMAL);
     if(NULL != s_stCurve.stData.pstFocused)
     {
-        stTextArea.iY =  pstDeviceIF->stSize.iHeight-9;
-        stTextArea.iWidth = 48;
         sTextLength = SGUI_Common_IntegerToString(s_stCurve.stData.pstFocused->stPoint.iX, szNumberTextBuffer, 10, -1, ' ');
-        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
-        stTextArea.iX+=(SGUI_INT)(sTextLength*SGUI_DEFAULT_FONT_8.iHalfWidth);
-        SGUI_Text_DrawText(pstDeviceIF, ",", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
-        stTextArea.iX+=SGUI_DEFAULT_FONT_8.iHalfWidth;
+        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, iPaintX, pstDeviceIF->stSize.iHeight-9, SGUI_DRAW_NORMAL);
+        iPaintX+=(SGUI_INT)(sTextLength*SGUI_DEFAULT_FONT_8.iHalfWidth);
+        SGUI_Text_DrawText(pstDeviceIF, ",", &SGUI_DEFAULT_FONT_8, iPaintX, pstDeviceIF->stSize.iHeight-9, SGUI_DRAW_NORMAL);
+        iPaintX+=SGUI_DEFAULT_FONT_8.iHalfWidth;
         sTextLength = SGUI_Common_IntegerToString(s_stCurve.stData.pstFocused->stPoint.iY, szNumberTextBuffer, 10, -1, ' ');
-        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, iPaintX, pstDeviceIF->stSize.iHeight-9, SGUI_DRAW_NORMAL);
     }
     else
     {
@@ -147,15 +135,13 @@ void HMI_DemoCurve_RepaintText(SGUI_SCR_DEV* pstDeviceIF)
         SGUI_INT iLineX = (s_iArgument-s_stCurve.stParam.stXRange.iMin) * SGUI_RECT_WIDTH(s_stCurve.stParam.stLayout) / SGUI_RANGE_SIZE(s_stCurve.stParam.stXRange) + s_stCurve.stParam.stLayout.iX;
         SGUI_Basic_DrawVerticalLine(pstDeviceIF, iLineX, s_stCurve.stParam.stLayout.iY, s_stCurve.stParam.stLayout.iY + s_stCurve.stParam.stLayout.iHeight-1, SGUI_COLOR_FRGCLR);
 
-        stTextArea.iY =  pstDeviceIF->stSize.iHeight-9;
-        stTextArea.iWidth = 48;
         sTextLength = SGUI_Common_IntegerToString(iArgument, szNumberTextBuffer, 10, -1, ' ');
-        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
-        stTextArea.iX+=(SGUI_INT)(sTextLength*SGUI_DEFAULT_FONT_8.iHalfWidth);
-        SGUI_Text_DrawText(pstDeviceIF, ",", &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
-        stTextArea.iX+=SGUI_DEFAULT_FONT_8.iHalfWidth;
+        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, iPaintX, pstDeviceIF->stSize.iHeight-9, SGUI_DRAW_NORMAL);
+        iPaintX+=(SGUI_INT)(sTextLength*SGUI_DEFAULT_FONT_8.iHalfWidth);
+        SGUI_Text_DrawText(pstDeviceIF, ",", &SGUI_DEFAULT_FONT_8, iPaintX, pstDeviceIF->stSize.iHeight-9, SGUI_DRAW_NORMAL);
+        iPaintX+=SGUI_DEFAULT_FONT_8.iHalfWidth;
         sTextLength = SGUI_Common_IntegerToString(iDependent, szNumberTextBuffer, 10, -1, ' ');
-        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, &stTextArea, &stInnsrPos, SGUI_DRAW_NORMAL);
+        SGUI_Text_DrawText(pstDeviceIF, szNumberTextBuffer, &SGUI_DEFAULT_FONT_8, iPaintX, pstDeviceIF->stSize.iHeight-9, SGUI_DRAW_NORMAL);
     }
 }
 
@@ -230,6 +216,7 @@ HMI_ENGINE_RESULT HMI_DemoCurve_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
+    SGUI_Basic_ResetMask(pstDeviceIF);
     SGUI_Curve_FocusPoint(&s_stCurve, 0);
     HMI_DemoCurve_RefreshScreen(pstDeviceIF, pstParameters);
 

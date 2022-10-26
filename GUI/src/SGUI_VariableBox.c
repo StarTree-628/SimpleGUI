@@ -61,16 +61,15 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_AREA_SIZE              stTextExtentSize;
-    SGUI_POINT                  stTextInnerPos;
-    SGUI_COLOR                  eBackColor;
-    SGUI_CHAR                   szTextBuffer[VARBOX_TEXT_BUFFER_SIZE];
+    SGUI_AREA_SIZE      stTextExtentSize;
+    SGUI_INT            iPaintX, iPaintY;
+    SGUI_COLOR          eBackColor = ((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
+    SGUI_CHAR           szTextBuffer[VARBOX_TEXT_BUFFER_SIZE];
 
     /*----------------------------------*/
     /* Initialize                       */
     /*----------------------------------*/
     SGUI_SystemIF_MemorySet(szTextBuffer, 0x00, VARBOX_TEXT_BUFFER_SIZE);
-    eBackColor =                ((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
 
     /*----------------------------------*/
     /* Process                          */
@@ -78,9 +77,10 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
 
     if(NULL != pstObj)
     {
-        // Draw edge
+        /* Set mask area */
+        SGUI_Basic_SetMask(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iX+LAYOUT(pstObj).iWidth-1, LAYOUT(pstObj).iY+LAYOUT(pstObj).iHeight-1);
+        // Clean background
         SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
-
         // Convert number to string
         (void)SGUI_Common_IntegerToString(pstObj->stData.iValue, szTextBuffer, 10, -1, ' ');
         SGUI_Text_GetTextExtent(szTextBuffer, pstObj->stParam.pstFontRes, &stTextExtentSize);
@@ -88,21 +88,21 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
         {
             case SGUI_RIGHT:
             {
-                stTextInnerPos.iX = LAYOUT(pstObj).iWidth - stTextExtentSize.iWidth;
+                iPaintX = LAYOUT(pstObj).iX + LAYOUT(pstObj).iWidth - stTextExtentSize.iWidth;
                 break;
             }
             case SGUI_CENTER:
             {
-                stTextInnerPos.iX = (LAYOUT(pstObj).iWidth - stTextExtentSize.iWidth) / 2;
+                iPaintX = LAYOUT(pstObj).iX + (LAYOUT(pstObj).iWidth - stTextExtentSize.iWidth) / 2;
                 break;
             }
             default:
             {
-                stTextInnerPos.iX = 0;
+                iPaintX = LAYOUT(pstObj).iX;
             }
         }
-        stTextInnerPos.iY = 0;
-        SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, pstObj->stParam.pstFontRes, &(LAYOUT(pstObj)), &stTextInnerPos, eMode);
+        iPaintY = LAYOUT(pstObj).iY+(LAYOUT(pstObj).iHeight - pstObj->stParam.pstFontRes->iHeight);
+        SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, pstObj->stParam.pstFontRes, iPaintX, iPaintY, eMode);
     }
 }
 
@@ -193,7 +193,7 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
     /* Variable Declaration             */
     /*----------------------------------*/
     SGUI_COLOR              eBackColor = ((eMode==SGUI_DRAW_NORMAL)?SGUI_COLOR_BKGCLR:SGUI_COLOR_FRGCLR);
-    SGUI_POINT              stCharacterPos;
+    SGUI_INT                iCharPosX;
     SGUI_INT				iCharIdx;
     SGUI_CHAR				cPaintChar;
 
@@ -240,25 +240,28 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
 			pstObj->stData.iOffset = 0;
 		}
 		/* Prepare paint text position. */
-        stCharacterPos.iY = 0;
-        stCharacterPos.iX = pstObj->stData.iOffset;
+        iCharPosX = pstObj->stParam.stLayout.iX + pstObj->stData.iOffset;
 
+        /* Set mask */
+        SGUI_Basic_SetMask(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iX+LAYOUT(pstObj).iWidth-1, LAYOUT(pstObj).iY+LAYOUT(pstObj).iHeight-1);
         /* Loop for paint each visible character. */
         iCharIdx = pstObj->stData.iFirstVisibleIndex;
-        while((pstObj->stData.szValue[iCharIdx] != '\0') && (stCharacterPos.iX < SGUI_RECT_X_END(LAYOUT(pstObj))))
+        while((pstObj->stData.szValue[iCharIdx] != '\0') && (iCharPosX < SGUI_RECT_X_END(LAYOUT(pstObj))))
 		{
 			cPaintChar = ('\0' == cMask)?pstObj->stData.szValue[iCharIdx]:(iCharIdx == pstObj->stData.iFocusIndex)?pstObj->stData.szValue[iCharIdx]:cMask;
 			if(eMode==SGUI_DRAW_NORMAL)
 			{
-				SGUI_Text_DrawASCIICharacter(pstDeviceIF, cPaintChar, pstObj->stParam.pstFontRes, &LAYOUT(pstObj), &stCharacterPos, (iCharIdx == pstObj->stData.iFocusIndex)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+				SGUI_Text_DrawASCIICharacter(pstDeviceIF, cPaintChar, pstObj->stParam.pstFontRes, iCharPosX, LAYOUT(pstObj).iY, (iCharIdx == pstObj->stData.iFocusIndex)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
 			}
 			else
 			{
-				SGUI_Text_DrawASCIICharacter(pstDeviceIF, cPaintChar, pstObj->stParam.pstFontRes, &LAYOUT(pstObj), &stCharacterPos, (iCharIdx == pstObj->stData.iFocusIndex)?SGUI_DRAW_NORMAL:SGUI_DRAW_REVERSE);
+				SGUI_Text_DrawASCIICharacter(pstDeviceIF, cPaintChar, pstObj->stParam.pstFontRes, iCharPosX, LAYOUT(pstObj).iY, (iCharIdx == pstObj->stData.iFocusIndex)?SGUI_DRAW_NORMAL:SGUI_DRAW_REVERSE);
 			}
-			stCharacterPos.iX += pstObj->stParam.pstFontRes->iHalfWidth;
+			iCharPosX += pstObj->stParam.pstFontRes->iHalfWidth;
 			iCharIdx++;
 		}
+		/* Reset mask */
+		SGUI_Basic_ResetMask(pstDeviceIF);
     }
 }
 

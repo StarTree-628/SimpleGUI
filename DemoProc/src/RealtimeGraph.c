@@ -94,29 +94,15 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, con
     /* Variable Declaration             */
     /*----------------------------------*/
     SGUI_CHAR           szTextBuffer[16];
-    SGUI_RECT           stTextDisplayArea;
-    SGUI_POINT          stInnerPos;
 
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
     // Paint title
-    stTextDisplayArea.iX = 1;
-    stTextDisplayArea.iY = 1;
-    stTextDisplayArea.iWidth = SGUI_RECT_WIDTH(pstDeviceIF->stSize)-2;
-    stTextDisplayArea.iHeight = 8;
-    stInnerPos.iX = 0;
-    stInnerPos.iY = 0;
-    SGUI_Text_DrawText(pstDeviceIF, SCR5_RT_GRAPH_TITLE, &SGUI_DEFAULT_FONT_8, &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+    SGUI_Text_DrawText(pstDeviceIF, SCR5_RT_GRAPH_TITLE, &SGUI_DEFAULT_FONT_8, 1, 1, SGUI_DRAW_NORMAL);
     // Paint value.
     SGUI_Common_IntegerToString(s_stRealtimeGraph.stData.stRecorder.arrValue[s_stRealtimeGraph.stData.stRecorder.iSize-1].iValue, szTextBuffer, 10, 4, ' ');
-    stTextDisplayArea.iX = 1;
-    stTextDisplayArea.iY = SGUI_RECT_HEIGHT(pstDeviceIF->stSize)-6;
-    stTextDisplayArea.iWidth = SGUI_RECT_WIDTH(pstDeviceIF->stSize)-2;
-    stTextDisplayArea.iHeight = 5;
-    stInnerPos.iX = 0;
-    stInnerPos.iY = 0;
-    SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_MiniNum, &stTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+    SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_MiniNum, 1, SGUI_RECT_HEIGHT(pstDeviceIF->stSize)-6, SGUI_DRAW_NORMAL);
     SGUI_RealtimeGraph_Repaint(pstDeviceIF, &s_stRealtimeGraph);
     return HMI_RET_NORMAL;
 }

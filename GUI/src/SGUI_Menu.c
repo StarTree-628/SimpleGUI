@@ -81,14 +81,7 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RECT               stIconArea;
-    SGUI_POINT              stIconInnerPos;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    stIconInnerPos.iX =     0;
-    stIconInnerPos.iY =     0;
+    SGUI_INT                iArrowIconX, iArrowIconY;
 
     /*----------------------------------*/
     /* Process                          */
@@ -101,19 +94,20 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
         //SGUI_ItemsBase_Resize(&(pstObj->stItems));
         SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
         /* Paint arrow icon. */
-        stIconArea.iWidth = 5;
-        stIconArea.iHeight = 3;
-        stIconArea.iX = pstObj->stLayout.iX+((pstObj->stLayout.iWidth-stIconArea.iWidth)/2);
+        iArrowIconX = pstObj->stLayout.iX+((pstObj->stLayout.iWidth-5)/2);
         if(SGUI_Menu_CanScrollUp(pstObj))
         {
-            stIconArea.iY = pstObj->stLayout.iY+1;
-            SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
+            iArrowIconY = pstObj->stLayout.iY+1;
+            SGUI_Basic_SetMask(pstDeviceIF, iArrowIconX, iArrowIconY, iArrowIconX + 5 - 1, iArrowIconY + 3 - 1);
+            SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
         }
         if(SGUI_Menu_CanScrollDown(pstObj))
         {
-            stIconArea.iY = SGUI_RECT_Y_END(pstObj->stItems.stLayout)+1;
-            SGUI_Basic_DrawBitMap(pstDeviceIF, &stIconArea, &stIconInnerPos, &SGUI_MENU_ICON_MOVEDOWN, SGUI_DRAW_NORMAL);
+            iArrowIconY = SGUI_RECT_Y_END(pstObj->stItems.stLayout)+1;
+            SGUI_Basic_SetMask(pstDeviceIF, iArrowIconX, iArrowIconY, iArrowIconX + 5 - 1, iArrowIconY + 3 - 1);
+            SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
         }
+        SGUI_Basic_ResetMask(pstDeviceIF);
     }
 }
 

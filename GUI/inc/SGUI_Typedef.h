@@ -69,6 +69,14 @@ typedef struct
 
 typedef struct
 {
+    SGUI_INT                            iStartX;
+    SGUI_INT                            iStartY;
+    SGUI_INT                            iEndX;
+    SGUI_INT                            iEndY;
+}SGUI_PAINT_MASK;
+
+typedef struct
+{
     SGUI_INT                            iWidth;
     SGUI_INT                            iHeight;
 }SGUI_AREA_SIZE;
@@ -136,6 +144,8 @@ typedef struct
     SGUI_AREA_SIZE                      stSize;
     //Bitmap data buffer.
     SGUI_BUFFER                         stBuffer;
+    // Paint mask
+    SGUI_PAINT_MASK                     stMask;
     //Engine & device initialize function.
     SGUI_FN_IF_INITIALIZE               fnInitialize;
     //Clear screen function.

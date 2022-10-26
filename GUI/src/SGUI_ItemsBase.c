@@ -165,27 +165,23 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
     /*----------------------------------*/
     /* Variable Declaration             */
     /*----------------------------------*/
-    SGUI_RECT               stItemPaintArea;
-    SGUI_POINT              stItemTextPos;
     SGUI_ITEMS_ITEM*        pstPaintingItem;
     SGUI_CSZSTR             cszItemText;
-
-    /*----------------------------------*/
-    /* Initialize                       */
-    /*----------------------------------*/
-    stItemTextPos.iX =      1;
+    SGUI_INT                iItemPosY;
 
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
     if((NULL != pstDeviceIF) && (NULL != pstObj))
     {
-        /* Clear background */
+        /* Set mask area. */
+        SGUI_Basic_SetMask(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iX + pstObj->stLayout.iWidth - 1, pstObj->stLayout.iY + pstObj->stLayout.iHeight - 1);
+        /* Clear background. */
         if(pstObj->iCount < pstObj->iVisibleItems)
         {
             SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
         }
-
+        /* Paint list items if existed. */
         if(pstObj->iCount > 0)
         {
             /* Judge selection index is valid. */
@@ -210,56 +206,26 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
                 ITEMS_VISIBLE_START_ITEM(pstObj) = SGUI_ItemsBase_JumpItem(ITEMS_VISIBLE_END_ITEM(pstObj), 1 - ITEMS_VISIBLE_ITEMS(pstObj));
                 ITEMS_VISIBLE_START_IDX(pstObj) = ITEMS_VISIBLE_END_IDX(pstObj) - ITEMS_VISIBLE_ITEMS(pstObj) + 1;
             }
-            /* Initialize paint area. */
-            stItemPaintArea.iX = pstObj->stLayout.iX;
-            stItemPaintArea.iY = pstObj->stLayout.iY;
-            stItemPaintArea.iWidth = pstObj->stLayout.iWidth;
             /* Judge items painting offset and calculate the height of the first visible item. */
             if((ITEMS_SENECT_IDX(pstObj) == ITEMS_VISIBLE_START_IDX(pstObj)) || (NULL == ITEMS_VISIBLE_END_ITEM(pstObj)))
             {
                 pstObj->iItemPaintOffset = 0;
-                stItemPaintArea.iHeight = (pstObj->iVisibleItems>1)?(ITEM_HEIGHT(pstObj->pstFontRes)):(pstObj->stLayout.iHeight);
             }
             else if(ITEMS_SENECT_IDX(pstObj) == ITEMS_VISIBLE_END_IDX(pstObj))
             {
                 pstObj->iItemPaintOffset = (((pstObj->stLayout.iHeight)%ITEM_HEIGHT(pstObj->pstFontRes))-ITEM_HEIGHT(pstObj->pstFontRes))%ITEM_HEIGHT(pstObj->pstFontRes);
-                //pstObj->iItemPaintOffset = ((pstObj->stLayout.iHeight)%ITEM_HEIGHT(pstObj->pstFontRes))-ITEM_HEIGHT(pstObj->pstFontRes);
-                stItemPaintArea.iHeight = ITEM_HEIGHT(pstObj->pstFontRes)+pstObj->iItemPaintOffset;
-            }
-            else
-            {
-                stItemPaintArea.iHeight = ITEM_HEIGHT(pstObj->pstFontRes);
             }
 
-            /* Paint first visible item. */
+            /* Paint all visible item. */
             pstPaintingItem = ITEMS_VISIBLE_START_ITEM(pstObj);
-            stItemTextPos.iY = pstObj->iItemPaintOffset+1;
-            cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
-            SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
-            /* Paint remaining items if existed. */
-            pstPaintingItem = pstPaintingItem->pstNext;
-            stItemPaintArea.iHeight = ITEM_HEIGHT(pstObj->pstFontRes);
-            if(pstObj->iVisibleItems > 1)
+            iItemPosY = pstObj->stLayout.iY + pstObj->iItemPaintOffset;
+            while((pstPaintingItem != ITEMS_VISIBLE_END_ITEM(pstObj)->pstNext) && (NULL != pstPaintingItem))
             {
-                stItemPaintArea.iY += ITEM_HEIGHT(pstObj->pstFontRes)+(pstObj->iItemPaintOffset);
-                stItemTextPos.iY = 1;
-                while((pstPaintingItem != ITEMS_VISIBLE_END_ITEM(pstObj)) && (NULL != pstPaintingItem))
-                {
-                    cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
-                    SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
-                    stItemPaintArea.iY += ITEM_HEIGHT(pstObj->pstFontRes);
-                    pstPaintingItem = pstPaintingItem->pstNext;
-                }
-                /* Paint last visible item. */
-                if(NULL != pstPaintingItem)
-                {
-                    /* Paint last visible item. */
-                    stItemPaintArea.iHeight = (0==pstObj->iItemPaintOffset)?(pstObj->stLayout.iHeight%ITEM_HEIGHT(pstObj->pstFontRes)):(ITEM_HEIGHT(pstObj->pstFontRes));
-                    /* Correct last visible item height when items area height is an integer multiple of item height. */
-                    stItemPaintArea.iHeight = (0==stItemPaintArea.iHeight)?ITEM_HEIGHT(pstObj->pstFontRes):stItemPaintArea.iHeight;
-                    cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
-                    SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, &stItemPaintArea, &stItemTextPos, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
-                }
+                cszItemText = (NULL == pstPaintingItem->szVariableText) ? (pstPaintingItem->cszLabelText) : (pstPaintingItem->szVariableText);
+                SGUI_Basic_FillRectangleArea(pstDeviceIF, pstObj->stLayout.iX, iItemPosY, pstObj->stLayout.iWidth, ITEM_HEIGHT(pstObj->pstFontRes), pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_COLOR_FRGCLR:SGUI_COLOR_BKGCLR);
+                SGUI_Text_DrawText(pstDeviceIF, cszItemText, pstObj->pstFontRes, pstObj->stLayout.iX, iItemPosY + ITEM_EDGE_WIDTH, pstPaintingItem==ITEMS_SENECT_ITEM(pstObj)?SGUI_DRAW_REVERSE:SGUI_DRAW_NORMAL);
+                pstPaintingItem = pstPaintingItem->pstNext;
+                iItemPosY += ITEM_HEIGHT(pstObj->pstFontRes);
             }
         }
     }

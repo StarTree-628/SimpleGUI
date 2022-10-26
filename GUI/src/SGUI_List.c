@@ -93,35 +93,24 @@ void SGUI_List_Initialize(SGUI_LIST* pstObj, const SGUI_RECT* cpstLayout, const 
 void SGUI_List_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_LIST* pstObj)
 {
     /*----------------------------------*/
-    /* Variable Declaration             */
-    /*----------------------------------*/
-    SGUI_RECT               stTitleTextDisplayArea;
-    SGUI_POINT              stInnerPos;
-
-    /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
     if(NULL != pstObj)
     {
+        SGUI_Basic_ResetMask(pstDeviceIF);
         // Clear list item display area.
         SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
         // Paint title.
         if(NULL != pstObj->szTitle)
         {
-            stTitleTextDisplayArea.iX = pstObj->stLayout.iX+2;
-            stTitleTextDisplayArea.iY = pstObj->stLayout.iY+2;
-            stTitleTextDisplayArea.iWidth = pstObj->stLayout.iWidth-4;
-            stTitleTextDisplayArea.iHeight = pstObj->pstFontRes->iHeight;
-            stInnerPos.iX = 0;
-            stInnerPos.iY = 0;
-            SGUI_Text_DrawText(pstDeviceIF, pstObj->szTitle, pstObj->pstFontRes, &stTitleTextDisplayArea, &stInnerPos, SGUI_DRAW_NORMAL);
+            SGUI_Text_DrawText(pstDeviceIF, pstObj->szTitle, pstObj->pstFontRes, pstObj->stLayout.iX+2, pstObj->stLayout.iY+2, SGUI_DRAW_NORMAL);
             SGUI_Basic_DrawLine(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, pstObj->stLayout.iX+pstObj->stLayout.iWidth-1, pstObj->stLayout.iY+pstObj->pstFontRes->iHeight+3, SGUI_COLOR_FRGCLR);
         }
-        // Paint items.
-        SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
         // Paint scroll bar.
         SGUI_ScrollBar_SetValue(&(pstObj->stScrollBar), pstObj->stItems.stVisibleStart.iIndex);
         SGUI_ScrollBar_Repaint(pstDeviceIF, &(pstObj->stScrollBar));
+        // Paint items.
+        SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
     }
 }
 

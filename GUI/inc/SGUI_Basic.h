@@ -20,6 +20,8 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
+void        SGUI_Basic_ResetMask(SGUI_SCR_DEV* pstDeviceIF);
+void        SGUI_Basic_SetMask(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iY, SGUI_INT iWidth, SGUI_INT iHeight);
 void        SGUI_Basic_ClearScreen(SGUI_SCR_DEV* pstDeviceIF);
 void        SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_INT iPosY, SGUI_COLOR eColor);
 void        SGUI_Basic_DrawLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iEndX, SGUI_INT iEndY, SGUI_COLOR eColor);
@@ -35,7 +37,7 @@ void        SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iCx, SGUI_
 void        SGUI_Basic_ReverseBlockColor(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight);
 #endif // SGUI_REVERSE_FUNC_EN
 void        SGUI_Basic_FillRectangleArea(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eFillColor);
-void        SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstDisplayArea, const SGUI_POINT* pstInnerPos, const SGUI_BMP_RES* pstBitmapData, SGUI_DRAW_MODE eDrawMode);
+void        SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iY, const SGUI_BMP_RES* pstBitmapData, SGUI_DRAW_MODE eDrawMode);
 SGUI_BOOL   SGUI_Basic_PointIsInArea(const SGUI_RECT* pstArea, SGUI_INT iPosX, SGUI_INT iPosY);
 #ifdef __cplusplus
 }

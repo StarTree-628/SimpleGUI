@@ -62,6 +62,7 @@ HMI_ENGINE_RESULT HMI_DemoPolarCoord_Prepare(SGUI_SCR_DEV* pstDeviceIF, const vo
     /* Clean screen display. */
     pstDeviceIF->fnClear();
     /* Refresh display. */
+    SGUI_Basic_ResetMask(pstDeviceIF);
     HMI_DemoPolarCoord_RefreshScreen(pstDeviceIF, pstParameters);
     return HMI_RET_NORMAL;
 }
@@ -207,6 +208,6 @@ static void HMI_DemoPolarCoord_PaintClockText(SGUI_SCR_DEV* pstDeviceIF, SGUI_IN
     /* Process                          */
     /*----------------------------------*/
     snprintf(szTextBuffer, 10, "%02d:%02d:%02d", iHour, iMinute, iSecond);
-    SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_12, 87, 25, SGUI_DRAW_NORMAL);
+    SGUI_Text_DrawText(pstDeviceIF, szTextBuffer, &SGUI_DEFAULT_FONT_12, 75, 25, SGUI_DRAW_NORMAL);
 }
 

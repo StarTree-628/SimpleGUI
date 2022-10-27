@@ -98,13 +98,13 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
         if(SGUI_Menu_CanScrollUp(pstObj))
         {
             iArrowIconY = pstObj->stLayout.iY+1;
-            SGUI_Basic_SetMask(pstDeviceIF, iArrowIconX, iArrowIconY, iArrowIconX + 5 - 1, iArrowIconY + 3 - 1);
+            SGUI_Basic_SetMask2(pstDeviceIF, iArrowIconX, iArrowIconY, 5, 3);
             SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
         }
         if(SGUI_Menu_CanScrollDown(pstObj))
         {
             iArrowIconY = SGUI_RECT_Y_END(pstObj->stItems.stLayout)+1;
-            SGUI_Basic_SetMask(pstDeviceIF, iArrowIconX, iArrowIconY, iArrowIconX + 5 - 1, iArrowIconY + 3 - 1);
+            SGUI_Basic_SetMask2(pstDeviceIF, iArrowIconX, iArrowIconY, 5, 3);
             SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
         }
         SGUI_Basic_ResetMask(pstDeviceIF);

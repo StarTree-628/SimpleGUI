@@ -175,7 +175,7 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
     if((NULL != pstDeviceIF) && (NULL != pstObj))
     {
         /* Set mask area. */
-        SGUI_Basic_SetMask(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iX + pstObj->stLayout.iWidth - 1, pstObj->stLayout.iY + pstObj->stLayout.iHeight - 1);
+        SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stLayout));
         /* Clear background. */
         if(pstObj->iCount < pstObj->iVisibleItems)
         {

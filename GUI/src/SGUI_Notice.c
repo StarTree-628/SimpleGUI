@@ -65,12 +65,11 @@ SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICT_BOX* pstObj
             iIconPosX = pstObject->stLayout.iX+2;
             iIconPosY = pstObject->stLayout.iY+2;
             // Paint icon.
-            SGUI_Basic_SetMask(pstDeviceIF, iIconPosX, iIconPosY, iIconPosX + pstObject->pstIcon->iWidth - 1, iIconPosY + pstObject->pstIcon->iHeight - 1);
+            SGUI_Basic_SetMask1(pstDeviceIF, iIconPosX, iIconPosY, pstObject->pstIcon->iWidth, pstObject->pstIcon->iHeight);
             SGUI_Basic_DrawBitMap(pstDeviceIF, iIconPosX, iIconPosY, pstObject->pstIcon, SGUI_DRAW_NORMAL);
         }
-        // Draw text;
-        SGUI_Basic_SetMask(pstDeviceIF, iNoticeTextX, iNoticeTextY,
-                       iNoticeTextX + iNoticeTextWidth - 1, iNoticeTextY + iNiticeTextHeight - 1);
+        // Draw text
+        SGUI_Basic_SetMask2(pstDeviceIF, iNoticeTextX, iNoticeTextY, iNoticeTextWidth, iNiticeTextHeight);
         uiTextLines = SGUI_Text_DrawMultipleLinesText(pstDeviceIF, pstObject->cszNoticeText, pstFontRes, iNoticeTextX, iNoticeTextY + uiTextOffset, iNoticeTextWidth, SGUI_DRAW_NORMAL);
     }
     return uiTextLines;

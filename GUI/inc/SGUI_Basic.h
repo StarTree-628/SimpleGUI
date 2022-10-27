@@ -21,7 +21,10 @@
 extern "C"{
 #endif
 void        SGUI_Basic_ResetMask(SGUI_SCR_DEV* pstDeviceIF);
-void        SGUI_Basic_SetMask(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iY, SGUI_INT iWidth, SGUI_INT iHeight);
+void        SGUI_Basic_SetMask1(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iEndX, SGUI_INT iEndY);
+void        SGUI_Basic_SetMask2(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iY, SGUI_INT iWidth, SGUI_INT iHeight);
+void        SGUI_Basic_SetMask3(SGUI_SCR_DEV* pstDeviceIF, const SGUI_PAINT_MASK* pstMask);
+void        SGUI_Basic_SetMask4(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstRect);
 void        SGUI_Basic_ClearScreen(SGUI_SCR_DEV* pstDeviceIF);
 void        SGUI_Basic_DrawPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_INT iPosY, SGUI_COLOR eColor);
 void        SGUI_Basic_DrawLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iEndX, SGUI_INT iEndY, SGUI_COLOR eColor);

@@ -78,7 +78,7 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
     if(NULL != pstObj)
     {
         /* Set mask area */
-        SGUI_Basic_SetMask(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iX+LAYOUT(pstObj).iWidth-1, LAYOUT(pstObj).iY+LAYOUT(pstObj).iHeight-1);
+        SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stParam.stLayout));
         // Clean background
         SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
         // Convert number to string
@@ -243,7 +243,7 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
         iCharPosX = pstObj->stParam.stLayout.iX + pstObj->stData.iOffset;
 
         /* Set mask */
-        SGUI_Basic_SetMask(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iX+LAYOUT(pstObj).iWidth-1, LAYOUT(pstObj).iY+LAYOUT(pstObj).iHeight-1);
+        SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stParam.stLayout));
         /* Loop for paint each visible character. */
         iCharIdx = pstObj->stData.iFirstVisibleIndex;
         while((pstObj->stData.szValue[iCharIdx] != '\0') && (iCharPosX < SGUI_RECT_X_END(LAYOUT(pstObj))))

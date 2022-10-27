@@ -113,7 +113,7 @@ void SGUI_Basic_ResetMask(SGUI_SCR_DEV* pstDeviceIF)
 }
 
 /*************************************************************************/
-/** Function Name:  SGUI_Basic_SetMask                                  **/
+/** Function Name:  SGUI_Basic_SetMask1                                 **/
 /** Purpose:        Set paint mask area.                                **/
 /** Params:                                                             **/
 /** @ pstDeviceIF[in]: Device driver object pointer.                    **/
@@ -123,7 +123,7 @@ void SGUI_Basic_ResetMask(SGUI_SCR_DEV* pstDeviceIF)
 /** @ iEndY[in]:        Y coordinate of end point of rectangle.         **/
 /** Return:         None.                                               **/
 /*************************************************************************/
-void SGUI_Basic_SetMask(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iEndX, SGUI_INT iEndY)
+void SGUI_Basic_SetMask1(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iEndX, SGUI_INT iEndY)
 {
     /*----------------------------------*/
     /* Process                          */
@@ -133,6 +133,70 @@ void SGUI_Basic_SetMask(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iS
     pstDeviceIF->stMask.iEndX = (iEndX<pstDeviceIF->stSize.iWidth) ? iEndX : (pstDeviceIF->stSize.iWidth - 1);
     pstDeviceIF->stMask.iEndY = (iEndY<pstDeviceIF->stSize.iHeight) ? iEndY : (pstDeviceIF->stSize.iHeight - 1);
 
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_Basic_SetMask2                                 **/
+/** Purpose:        Set paint mask area.                                **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
+/** @ iX[in]:       X coordinate of start point of rectangle.           **/
+/** @ iY[in]:       Y coordinate of start point of rectangle.           **/
+/** @ iWidth[in]:   X coordinate of end point of rectangle.             **/
+/** @ iHeight[in]:  Y coordinate of end point of rectangle.             **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_Basic_SetMask2(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iY, SGUI_INT iWidth, SGUI_INT iHeight)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    pstDeviceIF->stMask.iStartX = (iX < 0) ? 0 : iX;
+    pstDeviceIF->stMask.iStartY = (iY < 0) ? 0 : iY;
+    SGUI_INT iNewMaskEndX = iX + iWidth - 1;
+    SGUI_INT iNewMaskEndY = iY + iHeight - 1;
+    pstDeviceIF->stMask.iEndX = (iNewMaskEndX<pstDeviceIF->stSize.iWidth) ? iNewMaskEndX : (pstDeviceIF->stSize.iWidth - 1);
+    pstDeviceIF->stMask.iEndY = (iNewMaskEndY<pstDeviceIF->stSize.iHeight) ? iNewMaskEndY : (pstDeviceIF->stSize.iHeight - 1);
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_Basic_SetMask3                                 **/
+/** Purpose:        Set paint mask area.                                **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
+/** @ pstMask[in]:  Mask range description.                             **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_Basic_SetMask3(SGUI_SCR_DEV* pstDeviceIF, const SGUI_PAINT_MASK* pstMask)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    pstDeviceIF->stMask.iStartX = (pstMask->iStartX < 0) ? 0 : pstMask->iStartX;
+    pstDeviceIF->stMask.iStartY = (pstMask->iStartY < 0) ? 0 : pstMask->iStartY;
+    pstDeviceIF->stMask.iEndX = (pstMask->iEndX < pstDeviceIF->stSize.iWidth) ? pstMask->iEndX : (pstDeviceIF->stSize.iWidth - 1);
+    pstDeviceIF->stMask.iEndY = (pstMask->iEndY < pstDeviceIF->stSize.iHeight) ? pstMask->iEndY : (pstDeviceIF->stSize.iHeight - 1);
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_Basic_SetMask4                                 **/
+/** Purpose:        Set paint mask area.                                **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
+/** @ pstRect[in]:  Rectangle description.                              **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_Basic_SetMask4(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstRect)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    pstDeviceIF->stMask.iStartX = (pstRect->iX < 0) ? 0 : pstRect->iX;
+    pstDeviceIF->stMask.iStartY = (pstRect->iY < 0) ? 0 : pstRect->iY;
+    SGUI_INT iNewMaskEndX = pstRect->iX + pstRect->iWidth - 1;
+    SGUI_INT iNewMaskEndY = pstRect->iY + pstRect->iHeight - 1;
+    pstDeviceIF->stMask.iEndX = (iNewMaskEndX<pstDeviceIF->stSize.iWidth) ? iNewMaskEndX : (pstDeviceIF->stSize.iWidth - 1);
+    pstDeviceIF->stMask.iEndY = (iNewMaskEndY<pstDeviceIF->stSize.iHeight) ? iNewMaskEndY : (pstDeviceIF->stSize.iHeight - 1);
 }
 
 /*************************************************************************/
@@ -579,11 +643,8 @@ void SGUI_Basic_DrawBitMap(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iY, 
     iPaintEndY = iY + pstBitmapData->iHeight - 1;
 
     // Only paint in visible area.
-    if((iPaintStartX > pstDeviceIF->stMask.iEndX) || (iPaintEndX < pstDeviceIF->stMask.iStartX) || (iPaintStartY > pstDeviceIF->stMask.iEndY) || (iPaintEndY < pstDeviceIF->stMask.iStartY))
-    {
-        // Not in visible area, do nothing.
-    }
-    else
+    if((iPaintStartX <= pstDeviceIF->stMask.iEndX) && (iPaintEndX >= pstDeviceIF->stMask.iStartX)
+       && (iPaintStartY <= pstDeviceIF->stMask.iEndY) && (iPaintEndY >= pstDeviceIF->stMask.iStartY))
     {
         // Set loop start parameter of x coordinate
         iPaintStartX = (iPaintStartX > pstDeviceIF->stMask.iStartX) ? iPaintStartX : pstDeviceIF->stMask.iStartX;

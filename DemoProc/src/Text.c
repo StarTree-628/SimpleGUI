@@ -74,28 +74,28 @@ HMI_ENGINE_RESULT HMI_DemoText_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const vo
     /*----------------------------------*/
     iTextAreaWidth = 62;
     iTextAreaHeight = SGUI_DEFAULT_FONT_MiniNum.iHeight+1;
-    SGUI_Basic_SetMask(pstDeviceIF, iTextPosX, iTextPosY, iTextPosX + iTextAreaWidth - 1, iTextPosY + iTextAreaHeight - 1);
+    SGUI_Basic_SetMask2(pstDeviceIF, iTextPosX, iTextPosY, iTextAreaWidth, iTextAreaHeight);
     SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_MIN_NUM, &SGUI_DEFAULT_FONT_MiniNum, iTextPosX, iTextPosY, SGUI_DRAW_NORMAL);
 
     iTextPosY += iTextAreaHeight;
     iTextAreaHeight = SGUI_DEFAULT_FONT_8.iHeight+1;
-    SGUI_Basic_SetMask(pstDeviceIF, iTextPosX, iTextPosY, iTextPosX + iTextAreaWidth - 1, iTextPosY + iTextAreaHeight - 1);
+    SGUI_Basic_SetMask2(pstDeviceIF, iTextPosX, iTextPosY, iTextAreaWidth, iTextAreaHeight);
     SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_INNER_8, &SGUI_DEFAULT_FONT_8, iTextPosX, iTextPosY, SGUI_DRAW_NORMAL);
 
     iTextPosY += iTextAreaHeight;
     iTextAreaHeight = SGUI_DEFAULT_FONT_12.iHeight+1;
-    SGUI_Basic_SetMask(pstDeviceIF, iTextPosX, iTextPosY, iTextPosX + iTextAreaWidth - 1, iTextPosY + iTextAreaHeight - 1);
+    SGUI_Basic_SetMask2(pstDeviceIF, iTextPosX, iTextPosY, iTextAreaWidth, iTextAreaHeight);
     SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_INNER_12, &SGUI_DEFAULT_FONT_12, iTextPosX, iTextPosY, SGUI_DRAW_REVERSE);
 
     iTextPosY += iTextAreaHeight;
     iTextAreaHeight = SGUI_DEFAULT_FONT_12.iHeight+1;
-    SGUI_Basic_SetMask(pstDeviceIF, iTextPosX, iTextPosY, iTextPosX + iTextAreaWidth - 1, iTextPosY + iTextAreaHeight - 1);
+    SGUI_Basic_SetMask2(pstDeviceIF, iTextPosX, iTextPosY, iTextAreaWidth, iTextAreaHeight);
     SGUI_Text_DrawText(pstDeviceIF, SCR3_TEXT_EXTEN_12, &GB2312_FZXS12, iTextPosX, iTextPosY, SGUI_DRAW_NORMAL);
 
     iTextPosX = 64;
     iTextPosY = 1;
     iTextAreaHeight = 62;
-    SGUI_Basic_SetMask(pstDeviceIF, iTextPosX, iTextPosY, iTextPosX + iTextAreaWidth - 1, iTextPosY + iTextAreaHeight - 1);
+    SGUI_Basic_SetMask2(pstDeviceIF, iTextPosX, iTextPosY, iTextAreaWidth, iTextAreaHeight);
     SGUI_Text_DrawMultipleLinesText(pstDeviceIF, SCR3_TEXT_MULTILINE_12, &GB2312_FZXS12, iTextPosX, iTextPosY, iTextAreaWidth, SGUI_DRAW_NORMAL);
     return HMI_RET_NORMAL;
 }

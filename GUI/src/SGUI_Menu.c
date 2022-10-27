@@ -88,26 +88,24 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
     /*----------------------------------*/
     if(NULL != pstObj)
     {
+        SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stLayout));
         /* Clear list item display area. */
         SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
         // Paint items.
-        //SGUI_ItemsBase_Resize(&(pstObj->stItems));
         SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
         /* Paint arrow icon. */
+        SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stLayout));
         iArrowIconX = pstObj->stLayout.iX+((pstObj->stLayout.iWidth-5)/2);
         if(SGUI_Menu_CanScrollUp(pstObj))
         {
             iArrowIconY = pstObj->stLayout.iY+1;
-            SGUI_Basic_SetMask2(pstDeviceIF, iArrowIconX, iArrowIconY, 5, 3);
             SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
         }
         if(SGUI_Menu_CanScrollDown(pstObj))
         {
             iArrowIconY = SGUI_RECT_Y_END(pstObj->stItems.stLayout)+1;
-            SGUI_Basic_SetMask2(pstDeviceIF, iArrowIconX, iArrowIconY, 5, 3);
-            SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEUP, SGUI_DRAW_NORMAL);
+            SGUI_Basic_DrawBitMap(pstDeviceIF, iArrowIconX, iArrowIconY, &SGUI_MENU_ICON_MOVEDOWN, SGUI_DRAW_NORMAL);
         }
-        SGUI_Basic_ResetMask(pstDeviceIF);
     }
 }
 

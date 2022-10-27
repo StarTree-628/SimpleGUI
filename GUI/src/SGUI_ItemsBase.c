@@ -179,7 +179,7 @@ void SGUI_ItemsBase_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_ITEMS_BASE* pstObj)
         /* Clear background. */
         if(pstObj->iCount < pstObj->iVisibleItems)
         {
-            SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+            SGUI_Basic_DrawRectangle3(pstDeviceIF, &(pstObj->stLayout), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
         }
         /* Paint list items if existed. */
         if(pstObj->iCount > 0)

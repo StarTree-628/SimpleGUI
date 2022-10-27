@@ -60,7 +60,7 @@ void SGUI_Curve_Repaint(SGUI_SCR_DEV* pstDeviceIF, const SGUI_CURVE_STRUCT* pstO
     if((NULL != pstDeviceIF) && (NULL != pstObj))
     {
         /* Clean up background. */
-        SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stParam.stLayout.iX, pstObj->stParam.stLayout.iY, pstObj->stParam.stLayout.iWidth, pstObj->stParam.stLayout.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+        SGUI_Basic_DrawRectangle3(pstDeviceIF, &(pstObj->stParam.stLayout), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
         if(pstObj->stData.stPoints.sCount > 1)
         {
 #if 1
@@ -525,7 +525,7 @@ void SGUI_Curve_HighlightFocus(SGUI_SCR_DEV* pstDeviceIF, SGUI_CURVE_STRUCT* pst
                 stFocusMarkArea.iHeight -= (SGUI_RECT_Y_END(stFocusMarkArea)-SGUI_RECT_Y_END(pstObj->stParam.stLayout));
             }
             /* Paint focused mark. */
-            SGUI_Basic_DrawRectangle(pstDeviceIF, stFocusMarkArea.iX, stFocusMarkArea.iY, stFocusMarkArea.iWidth, stFocusMarkArea.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+            SGUI_Basic_DrawRectangle3(pstDeviceIF, &stFocusMarkArea, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
         }
     }
 }

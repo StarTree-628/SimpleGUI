@@ -102,8 +102,7 @@ void SGUI_RealtimeGraph_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_RTGRAPH* pstRTGr
     if((NULL != pstRTGraph) && (NULL != pstDeviceIF))
     {
         // Draw frame
-        SGUI_Basic_DrawRectangle(pstDeviceIF, SGUI_RECT_X_START(pstRTGraph->stLayout), SGUI_RECT_Y_START(pstRTGraph->stLayout),
-                                    SGUI_RECT_WIDTH(pstRTGraph->stLayout), SGUI_RECT_HEIGHT(pstRTGraph->stLayout), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+        SGUI_Basic_DrawRectangle3(pstDeviceIF, &(pstRTGraph->stLayout), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
 
         if(SGUI_TRUE == pstRTGraph->stControl.EnableBaseline)
         {

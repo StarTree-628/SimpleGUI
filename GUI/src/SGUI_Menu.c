@@ -90,7 +90,7 @@ void SGUI_Menu_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_MENU* pstObj)
     {
         SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stLayout));
         /* Clear list item display area. */
-        SGUI_Basic_DrawRectangle(pstDeviceIF, pstObj->stLayout.iX, pstObj->stLayout.iY, pstObj->stLayout.iWidth, pstObj->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+        SGUI_Basic_DrawRectangle3(pstDeviceIF, &(pstObj->stLayout), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
         // Paint items.
         SGUI_ItemsBase_Repaint(pstDeviceIF, &(pstObj->stItems));
         /* Paint arrow icon. */

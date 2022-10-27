@@ -54,7 +54,7 @@ HMI_ENGINE_RESULT HMI_DemoBasic_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
     }
     else
     {
-        SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, pstDeviceIF->stSize.iWidth, pstDeviceIF->stSize.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+        SGUI_Basic_DrawRectangle1(pstDeviceIF, 0, 0, pstDeviceIF->stSize.iWidth, pstDeviceIF->stSize.iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
     }
     SGUI_Basic_ResetMask(pstDeviceIF);
     HMI_DemoBasic_RefreshScreen(pstDeviceIF, pstParameters);
@@ -78,13 +78,13 @@ HMI_ENGINE_RESULT HMI_DemoBasic_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const v
         SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 0, pstDeviceIF->stSize.iWidth-1, iPaintBkgIdx, SGUI_COLOR_FRGCLR);
     }
     // Paint rectangle
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 1, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 22, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 1, 43, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawRectangle1(pstDeviceIF, 1, 1, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRectangle1(pstDeviceIF, 1, 22, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+    SGUI_Basic_DrawRectangle1(pstDeviceIF, 1, 43, 30, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
 
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 37, 1, 5, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 37, 22, 5, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
-    SGUI_Basic_DrawRectangle(pstDeviceIF, 37, 43, 5, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
+    SGUI_Basic_DrawRectangle1(pstDeviceIF, 37, 1, 5, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);
+    SGUI_Basic_DrawRectangle1(pstDeviceIF, 37, 22, 5, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+    SGUI_Basic_DrawRectangle1(pstDeviceIF, 37, 43, 5, 20, SGUI_COLOR_FRGCLR, SGUI_COLOR_FRGCLR);
 
     // Paint circle
     SGUI_Basic_DrawCircle(pstDeviceIF, 55, 10, 9, SGUI_COLOR_FRGCLR, SGUI_COLOR_TRANS);

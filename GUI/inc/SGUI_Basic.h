@@ -33,7 +33,9 @@ SGUI_COLOR  SGUI_Basic_GetPoint(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iPosX, SGUI_
 #endif // SGUI_GET_POINT_FUNC_EN
 void        SGUI_Basic_DrawHorizontalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iEndX, SGUI_INT iY, SGUI_COLOR eColor);
 void        SGUI_Basic_DrawVerticalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_INT iStartY, SGUI_INT iEndY, SGUI_COLOR eColor);
-void        SGUI_Basic_DrawRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor);
+void        SGUI_Basic_DrawRectangle1(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor);
+void        SGUI_Basic_DrawRectangle2(SGUI_SCR_DEV* pstDeviceIF, const SGUI_POINT* pstBase, const SGUI_AREA_SIZE* pstSize, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor);
+void        SGUI_Basic_DrawRectangle3(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstRect, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor);
 void        SGUI_Basic_DrawRoundedRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_INT iFillet, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor);
 void        SGUI_Basic_DrawCircle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iCx, SGUI_INT iCy, SGUI_INT iRadius, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor);
 #ifdef SGUI_REVERSE_FUNC_EN

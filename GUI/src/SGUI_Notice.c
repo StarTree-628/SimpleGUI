@@ -45,7 +45,7 @@ SGUI_SIZE SGUI_Notice_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NOTICT_BOX* pstObj
     {
         SGUI_Basic_ResetMask(pstDeviceIF);
         // Draw edge
-        SGUI_Basic_DrawRectangle(pstDeviceIF, pstObject->stLayout.iX, pstObject->stLayout.iY, pstObject->stLayout.iWidth, pstObject->stLayout.iHeight, SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
+        SGUI_Basic_DrawRectangle3(pstDeviceIF, &(pstObject->stLayout), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
 
         SGUI_INT iNoticeTextY = pstObject->stLayout.iY+2;
         SGUI_INT iNiticeTextHeight = pstObject->stLayout.iHeight-4;

@@ -80,7 +80,7 @@ void SGUI_NumberVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_NUM_VARBOX_S
         /* Set mask area */
         SGUI_Basic_SetMask4(pstDeviceIF, &(pstObj->stParam.stLayout));
         // Clean background
-        SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
+        SGUI_Basic_DrawRectangle3(pstDeviceIF, &(LAYOUT(pstObj)), eBackColor, eBackColor);
         // Convert number to string
         (void)SGUI_Common_IntegerToString(pstObj->stData.iValue, szTextBuffer, 10, -1, ' ');
         SGUI_Text_GetTextExtent(szTextBuffer, pstObj->stParam.pstFontRes, &stTextExtentSize);
@@ -203,7 +203,7 @@ void SGUI_TextVariableBox_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_TEXT_VARBOX_ST
     if((NULL != pstObj) && (NULL != pstObj->stData.szValue))
     {
         // Clear background.
-        SGUI_Basic_DrawRectangle(pstDeviceIF, LAYOUT(pstObj).iX, LAYOUT(pstObj).iY, LAYOUT(pstObj).iWidth, LAYOUT(pstObj).iHeight, eBackColor, eBackColor);
+        SGUI_Basic_DrawRectangle3(pstDeviceIF, &(LAYOUT(pstObj)), eBackColor, eBackColor);
 
         if(pstObj->stData.iFocusIndex >= pstObj->stParam.iTextLength)
 		{

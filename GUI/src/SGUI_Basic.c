@@ -221,7 +221,7 @@ void SGUI_Basic_ClearScreen(SGUI_SCR_DEV* pstDeviceIF)
         else
         {
             /* Draw a blank rectangle for clean screen when clean function is not supposed. */
-            SGUI_Basic_DrawRectangle(pstDeviceIF, 0, 0, SGUI_RECT_WIDTH(pstDeviceIF->stSize), SGUI_RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+            SGUI_Basic_DrawRectangle1(pstDeviceIF, 0, 0, SGUI_RECT_WIDTH(pstDeviceIF->stSize), SGUI_RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
         }
     }
 }
@@ -397,7 +397,7 @@ void SGUI_Basic_DrawVerticalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_IN
 }
 
 /*************************************************************************/
-/** Function Name:  SGUI_Basic_DrawRectangle                            **/
+/** Function Name:  SGUI_Basic_DrawRectangle1                           **/
 /** Purpose:        Draw a rectangle on screen.                         **/
 /** Params:                                                             **/
 /** @ pstDeviceIF[in]: Device driver object pointer.                    **/
@@ -408,9 +408,8 @@ void SGUI_Basic_DrawVerticalLine(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iX, SGUI_IN
 /** @ eEdgeColor[in]:   Edge color.                                     **/
 /** @ eFillColor[in]:   Fill color.                                     **/
 /** Return:         None.                                               **/
-/** Notice:         None.                                               **/
 /*************************************************************************/
-void SGUI_Basic_DrawRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor)
+void SGUI_Basic_DrawRectangle1(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_INT iStartY, SGUI_INT iWidth, SGUI_INT iHeight, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor)
 {
     /*----------------------------------*/
     /* Process                          */
@@ -445,6 +444,107 @@ void SGUI_Basic_DrawRectangle(SGUI_SCR_DEV* pstDeviceIF, SGUI_INT iStartX, SGUI_
             if((eFillColor != SGUI_COLOR_TRANS) && (iWidth > 2) && (iHeight > 2))
             {
                 SGUI_Basic_FillRectangleArea(pstDeviceIF, iStartX+1, iStartY+1, iWidth-2, iHeight-2, eFillColor);
+            }
+        }
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_Basic_DrawRectangle2                           **/
+/** Purpose:        Draw a rectangle on screen.                         **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
+/** @ pstBase[in]:  Connrdinate of rectangle upper-left corner.         **/
+/** @ pstSize[in]:  Rectangle size.                                     **/
+/** @ eEdgeColor[in]:   Edge color.                                     **/
+/** @ eFillColor[in]:   Fill color.                                     **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_Basic_DrawRectangle2(SGUI_SCR_DEV* pstDeviceIF, const SGUI_POINT* pstBase, const SGUI_AREA_SIZE* pstSize, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if((pstSize->iWidth > 0) && (pstSize->iHeight > 0))
+    {
+        if((pstSize->iWidth == 1) && (pstSize->iHeight == 1))
+        {
+            SGUI_Basic_DrawPoint(pstDeviceIF, pstBase->iX, pstBase->iY, eEdgeColor);
+        }
+        else if(pstSize->iWidth == 1)
+        {
+            SGUI_Basic_DrawVerticalLine(pstDeviceIF, pstBase->iX, pstBase->iY, pstBase->iY+pstSize->iHeight-1, eEdgeColor);
+        }
+        else if(pstSize->iHeight == 1)
+        {
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, pstBase->iX, pstBase->iX+pstSize->iWidth-1, pstBase->iY, eEdgeColor);
+        }
+        else
+        {
+            // Draw edge.
+            // Check and set changed page and column index is in edge display action.
+            // Top edge
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, pstBase->iX, pstBase->iX+pstSize->iWidth-1, pstBase->iY, eEdgeColor);
+            // Bottom edge
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, pstBase->iX, pstBase->iX+pstSize->iWidth-1, pstBase->iY+pstSize->iHeight-1, eEdgeColor);
+            // Left edge
+            SGUI_Basic_DrawVerticalLine(pstDeviceIF, pstBase->iX, pstBase->iY+1, pstBase->iY+pstSize->iHeight-2, eEdgeColor);
+            // Right edge
+            SGUI_Basic_DrawVerticalLine(pstDeviceIF, pstBase->iX+pstSize->iWidth-1, pstBase->iY+1, pstBase->iY+pstSize->iHeight-2, eEdgeColor);
+            // Fill area.
+            if((eFillColor != SGUI_COLOR_TRANS) && (pstSize->iWidth > 2) && (pstSize->iHeight > 2))
+            {
+                SGUI_Basic_FillRectangleArea(pstDeviceIF, pstBase->iX+1, pstBase->iY+1, pstSize->iWidth-2, pstSize->iHeight-2, eFillColor);
+            }
+        }
+    }
+}
+
+/*************************************************************************/
+/** Function Name:  SGUI_Basic_DrawRectangle                            **/
+/** Purpose:        Draw a rectangle on screen.                         **/
+/** Params:                                                             **/
+/** @ pstDeviceIF[in]: Device driver object pointer.                    **/
+/** @ pstRect[in]:  Rectangle description.                              **/
+/** @ eEdgeColor[in]:   Edge color.                                     **/
+/** @ eFillColor[in]:   Fill color.                                     **/
+/** Return:         None.                                               **/
+/*************************************************************************/
+void SGUI_Basic_DrawRectangle3(SGUI_SCR_DEV* pstDeviceIF, const SGUI_RECT* pstRect, SGUI_COLOR eEdgeColor, SGUI_COLOR eFillColor)
+{
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if((pstRect->iWidth > 0) && (pstRect->iHeight > 0))
+    {
+        if((pstRect->iWidth == 1) && (pstRect->iHeight == 1))
+        {
+            SGUI_Basic_DrawPoint(pstDeviceIF, pstRect->iX, pstRect->iY, eEdgeColor);
+        }
+        else if(pstRect->iWidth == 1)
+        {
+            SGUI_Basic_DrawVerticalLine(pstDeviceIF, pstRect->iX, pstRect->iY, pstRect->iY+pstRect->iHeight-1, eEdgeColor);
+        }
+        else if(pstRect->iHeight == 1)
+        {
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, pstRect->iX, pstRect->iX+pstRect->iWidth-1, pstRect->iY, eEdgeColor);
+        }
+        else
+        {
+            // Draw edge.
+            // Check and set changed page and column index is in edge display action.
+            // Top edge
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, pstRect->iX, pstRect->iX+pstRect->iWidth-1, pstRect->iY, eEdgeColor);
+            // Bottom edge
+            SGUI_Basic_DrawHorizontalLine(pstDeviceIF, pstRect->iX, pstRect->iX+pstRect->iWidth-1, pstRect->iY+pstRect->iHeight-1, eEdgeColor);
+            // Left edge
+            SGUI_Basic_DrawVerticalLine(pstDeviceIF, pstRect->iX, pstRect->iY+1, pstRect->iY+pstRect->iHeight-2, eEdgeColor);
+            // Right edge
+            SGUI_Basic_DrawVerticalLine(pstDeviceIF, pstRect->iX+pstRect->iWidth-1, pstRect->iY+1, pstRect->iY+pstRect->iHeight-2, eEdgeColor);
+            // Fill area.
+            if((eFillColor != SGUI_COLOR_TRANS) && (pstRect->iWidth > 2) && (pstRect->iHeight > 2))
+            {
+                SGUI_Basic_FillRectangleArea(pstDeviceIF, pstRect->iX+1, pstRect->iY+1, pstRect->iWidth-2, pstRect->iHeight-2, eFillColor);
             }
         }
     }

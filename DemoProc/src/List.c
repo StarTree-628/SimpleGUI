@@ -181,7 +181,7 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
             case KEY_VALUE_PLUS_PAD:
             {
                 // Erase old paint.
-                SGUI_Basic_DrawRectangle(pstDeviceIF, s_arrstLayouts[s_iLayoutIndex].iX, s_arrstLayouts[s_iLayoutIndex].iY, s_arrstLayouts[s_iLayoutIndex].iWidth, s_arrstLayouts[s_iLayoutIndex].iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+                SGUI_Basic_DrawRectangle3(pstDeviceIF, &s_arrstLayouts[s_iLayoutIndex], SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
                 // Select new layout.
                 s_iLayoutIndex++;
                 s_iLayoutIndex = s_iLayoutIndex%(sizeof(s_arrstLayouts)/sizeof(SGUI_RECT));
@@ -193,7 +193,7 @@ HMI_ENGINE_RESULT HMI_DemoList_ProcessEvent(SGUI_SCR_DEV* pstDeviceIF, const HMI
             case KEY_VALUE_SUB_PAD:
             {
                 // Erase old paint.
-                SGUI_Basic_DrawRectangle(pstDeviceIF, s_arrstLayouts[s_iLayoutIndex].iX, s_arrstLayouts[s_iLayoutIndex].iY, s_arrstLayouts[s_iLayoutIndex].iWidth, s_arrstLayouts[s_iLayoutIndex].iHeight, SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
+                SGUI_Basic_DrawRectangle3(pstDeviceIF, &s_arrstLayouts[s_iLayoutIndex], SGUI_COLOR_BKGCLR, SGUI_COLOR_BKGCLR);
                 // Select new layout.
                 s_iLayoutIndex--;
                 s_iLayoutIndex = s_iLayoutIndex%(sizeof(s_arrstLayouts)/sizeof(SGUI_RECT));

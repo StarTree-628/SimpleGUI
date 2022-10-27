@@ -77,6 +77,7 @@ HMI_ENGINE_RESULT HMI_DemoRealGraph_Prepare(SGUI_SCR_DEV* pstDeviceIF, const voi
     // Reinitialize data.
     SGUI_RealtimeGraph_Initialize(&s_stRealtimeGraph);
     // Paint frame.
+    SGUI_Basic_ResetMask(pstDeviceIF);
     SGUI_Basic_DrawRectangle1(pstDeviceIF, 0, 0, SGUI_RECT_WIDTH(pstDeviceIF->stSize), SGUI_RECT_HEIGHT(pstDeviceIF->stSize), SGUI_COLOR_FRGCLR, SGUI_COLOR_BKGCLR);
     SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 1, pstDeviceIF->stSize.iWidth-2, 10, SGUI_COLOR_FRGCLR);
     SGUI_Basic_DrawHorizontalLine(pstDeviceIF, 1, pstDeviceIF->stSize.iWidth-2, pstDeviceIF->stSize.iHeight - 7, SGUI_COLOR_FRGCLR);

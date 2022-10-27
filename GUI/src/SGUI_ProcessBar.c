@@ -19,12 +19,11 @@
 /** Resources:      Process bar data structure.                         **/
 /** Params:                                                             **/
 /** @ pstDeviceIF[in]:  SimpleGUI object pointer.                       **/
-/** @ pstProcessBarData[in]: Process bar data whitch will update on     **/
-/**                 screen.                                             **/
+/** @ pstObj[in]:   Process bar object.                                 **/
 /** Return:         None.                                               **/
 /** Notice:         None.                                               **/
 /*************************************************************************/
-void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pstProcessBarData)
+void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pstObj)
 {
     /*----------------------------------*/
     /* Variable Declaration             */
@@ -36,44 +35,44 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    if(NULL != pstProcessBarData)
+    if(NULL != pstObj)
     {
-        if((pstProcessBarData->Parameter.Width > 3) && (pstProcessBarData->Parameter.Height > 3))
+        if((pstObj->stParameter.stLayout.iWidth > 3) && (pstObj->stParameter.stLayout.iHeight > 3))
         {
             // Check value must be less then PROCBAR_VALUE_MAX.
-            if(pstProcessBarData->Data.Value > pstProcessBarData->Parameter.MaxValue)
+            if(pstObj->stData.iValue > pstObj->stParameter.iMaxValue)
             {
-                pstProcessBarData->Data.Value = pstProcessBarData->Parameter.MaxValue;
+                pstObj->stData.iValue = pstObj->stParameter.iMaxValue;
             }
             // Update process bar data.
-            switch(pstProcessBarData->Parameter.Direction)
+            switch(pstObj->stParameter.eDirection)
             {
                 case SGUI_PROCBAR_DOWN: // Process from up to down.
                 {
-                    uiProcessBlockStartX    = pstProcessBarData->Parameter.PosX + 1;
-                    uiProcessBlockStartY    = pstProcessBarData->Parameter.PosY + 1;
-                    uiProcessBlockWidth     = pstProcessBarData->Parameter.Width - 2;
-                    uiProcessBlockHeight    = (pstProcessBarData->Parameter.Height - 2) * (pstProcessBarData->Data.Value) / pstProcessBarData->Parameter.MaxValue;
+                    uiProcessBlockStartX    = pstObj->stParameter.stLayout.iX + 1;
+                    uiProcessBlockStartY    = pstObj->stParameter.stLayout.iY + 1;
+                    uiProcessBlockWidth     = pstObj->stParameter.stLayout.iWidth - 2;
+                    uiProcessBlockHeight    = (pstObj->stParameter.stLayout.iHeight - 2) * (pstObj->stData.iValue) / pstObj->stParameter.iMaxValue;
                     eBackColor = SGUI_COLOR_BKGCLR;
                     eFillColor = SGUI_COLOR_FRGCLR;
                     break;
                 }
                 case SGUI_PROCBAR_LEFT: // Process from right to left.
                 {
-                    uiProcessBlockStartX    = pstProcessBarData->Parameter.PosX + 1;
-                    uiProcessBlockStartY    = pstProcessBarData->Parameter.PosY + 1;
-                    uiProcessBlockWidth     = (pstProcessBarData->Parameter.Width - 2) * (pstProcessBarData->Parameter.MaxValue - pstProcessBarData->Data.Value) / pstProcessBarData->Parameter.MaxValue;
-                    uiProcessBlockHeight    = pstProcessBarData->Parameter.Height - 2;
+                    uiProcessBlockStartX    = pstObj->stParameter.stLayout.iX + 1;
+                    uiProcessBlockStartY    = pstObj->stParameter.stLayout.iY + 1;
+                    uiProcessBlockWidth     = (pstObj->stParameter.stLayout.iWidth - 2) * (pstObj->stParameter.iMaxValue - pstObj->stData.iValue) / pstObj->stParameter.iMaxValue;
+                    uiProcessBlockHeight    = pstObj->stParameter.stLayout.iHeight - 2;
                     eBackColor = SGUI_COLOR_FRGCLR;
                     eFillColor = SGUI_COLOR_BKGCLR;
                     break;
                 }
                 case SGUI_PROCBAR_RIGHT:    // Process from left to right.
                 {
-                    uiProcessBlockStartX    = pstProcessBarData->Parameter.PosX + 1;
-                    uiProcessBlockStartY    = pstProcessBarData->Parameter.PosY + 1;
-                    uiProcessBlockWidth     = (pstProcessBarData->Parameter.Width - 2) * (pstProcessBarData->Data.Value) / pstProcessBarData->Parameter.MaxValue;
-                    uiProcessBlockHeight    = pstProcessBarData->Parameter.Height - 2;
+                    uiProcessBlockStartX    = pstObj->stParameter.stLayout.iX + 1;
+                    uiProcessBlockStartY    = pstObj->stParameter.stLayout.iY + 1;
+                    uiProcessBlockWidth     = (pstObj->stParameter.stLayout.iWidth - 2) * (pstObj->stData.iValue) / pstObj->stParameter.iMaxValue;
+                    uiProcessBlockHeight    = pstObj->stParameter.stLayout.iHeight - 2;
                     eBackColor = SGUI_COLOR_BKGCLR;
                     eFillColor = SGUI_COLOR_FRGCLR;
                     break;
@@ -81,16 +80,16 @@ void SGUI_ProcessBar_Repaint(SGUI_SCR_DEV* pstDeviceIF, SGUI_PROCBAR_STRUCT *pst
                 case SGUI_PROCBAR_UP:   // Process from down to up.
                 default:
                 {
-                    uiProcessBlockStartX    = pstProcessBarData->Parameter.PosX + 1;
-                    uiProcessBlockStartY    = pstProcessBarData->Parameter.PosY + 1;
-                    uiProcessBlockWidth     = pstProcessBarData->Parameter.Width - 2;
-                    uiProcessBlockHeight    = (pstProcessBarData->Parameter.Height - 2) * (pstProcessBarData->Parameter.MaxValue - pstProcessBarData->Data.Value) / pstProcessBarData->Parameter.MaxValue;
+                    uiProcessBlockStartX    = pstObj->stParameter.stLayout.iX + 1;
+                    uiProcessBlockStartY    = pstObj->stParameter.stLayout.iY + 1;
+                    uiProcessBlockWidth     = pstObj->stParameter.stLayout.iWidth - 2;
+                    uiProcessBlockHeight    = (pstObj->stParameter.stLayout.iHeight - 2) * (pstObj->stParameter.iMaxValue - pstObj->stData.iValue) / pstObj->stParameter.iMaxValue;
                     eBackColor = SGUI_COLOR_FRGCLR;
                     eFillColor = SGUI_COLOR_BKGCLR;
                 }
             }
             // Redraw edge and clean up area.
-            SGUI_Basic_DrawRectangle1(pstDeviceIF, pstProcessBarData->Parameter.PosX, pstProcessBarData->Parameter.PosY, pstProcessBarData->Parameter.Width, pstProcessBarData->Parameter.Height, SGUI_COLOR_FRGCLR, eBackColor);
+            SGUI_Basic_DrawRectangle3(pstDeviceIF, &(pstObj->stParameter.stLayout), SGUI_COLOR_FRGCLR, eBackColor);
             // Draw process block.
             SGUI_Basic_DrawRectangle1(pstDeviceIF, uiProcessBlockStartX, uiProcessBlockStartY, uiProcessBlockWidth, uiProcessBlockHeight, eFillColor, eFillColor);
         }

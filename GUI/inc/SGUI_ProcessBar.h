@@ -19,24 +19,21 @@ typedef enum
 
 typedef struct
 {
-    SGUI_INT                PosX;
-    SGUI_INT                PosY;
-    SGUI_SIZE               Width;
-    SGUI_SIZE               Height;
-    SGUI_PROCBAR_DIRECTION  Direction;
-    SGUI_UINT32             MaxValue;
+    SGUI_RECT               stLayout;
+    SGUI_PROCBAR_DIRECTION  eDirection;
+    SGUI_INT                iMaxValue;
 
 }SGUI_PROCBAR_PARAMETER;
 
 typedef struct
 {
-    SGUI_SIZE               Value;
+    SGUI_INT                iValue;
 }SGUI_PROCBAR_DATA;
 
 typedef struct
 {
-    SGUI_PROCBAR_PARAMETER  Parameter;
-    SGUI_PROCBAR_DATA       Data;
+    SGUI_PROCBAR_PARAMETER  stParameter;
+    SGUI_PROCBAR_DATA       stData;
 }SGUI_PROCBAR_STRUCT;
 
 //=======================================================================//

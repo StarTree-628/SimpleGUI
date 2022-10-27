@@ -157,13 +157,13 @@ void SGUI_Text_DrawText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SG
 /** @ pstDeviceIF[in]:  SimpleGUI object pointer.                       **/
 /** @ cszText[in]:  Text array pointer.                                 **/
 /** @ pstFontRes[in]: Font resource object.                             **/
-/** @ pstDisplayArea[in]: Display area size.                            **/
-/** @ iTopOffset[in]: Text paint offset in vertical.                    **/
+/** @ iX[in]:       Paint bitmap x-coordinate.                          **/
+/** @ iY[in]:       Paint bitmap y-coordinate.                          **/
+/** @ iWidth[in]:   Text line max width.                                **/
 /** @ eFontMode[in]: Character display mode(normal or reverse color).   **/
 /** Return:         Used line count.                                    **/
-/** Notice:         None.                                               **/
 /*************************************************************************/
-SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_RECT* pstDisplayArea, SGUI_INT iTopOffset, SGUI_DRAW_MODE eFontMode)
+SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR cszText, const SGUI_FONT_RES* pstFontRes, SGUI_INT iX, SGUI_INT iY, SGUI_INT iWidth, SGUI_DRAW_MODE eFontMode)
 {
     /*----------------------------------*/
     /* Variable Declaration             */
@@ -172,9 +172,6 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
     SGUI_UINT32                 uiCharacterCode;
     SGUI_SIZE                   uiLines = 0;
     SGUI_BMP_RES                stCharBitmap;
-    SGUI_INT                    iX = pstDisplayArea->iX;
-    SGUI_INT                    iY = pstDisplayArea->iY;
-    SGUI_INT                    iWidth = pstDisplayArea->iWidth;
     SGUI_INT                    iPaintX = iX;
     SGUI_INT                    iPaintY = iY;
     /*----------------------------------*/
@@ -206,7 +203,7 @@ SGUI_SIZE SGUI_Text_DrawMultipleLinesText(SGUI_SCR_DEV* pstDeviceIF, SGUI_CSZSTR
             stCharBitmap.iWidth = pstFontRes->fnIsFullWidth(uiCharacterCode)?pstFontRes->iFullWidth:pstFontRes->iHalfWidth;
 
             // Judge change line
-            if((iPaintX+stCharBitmap.iWidth-1) >= iWidth)
+            if((iPaintX+stCharBitmap.iWidth-1) >= (pstDeviceIF->stMask.iStartX + iWidth))
             {
                  // Change lines.
                 iPaintX = iX;

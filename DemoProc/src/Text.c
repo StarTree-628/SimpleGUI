@@ -95,7 +95,8 @@ HMI_ENGINE_RESULT HMI_DemoText_RefreshScreen(SGUI_SCR_DEV* pstDeviceIF, const vo
     iTextPosX = 64;
     iTextPosY = 1;
     iTextAreaHeight = 62;
-    //SGUI_Text_DrawMultipleLinesText(pstDeviceIF, SCR3_TEXT_MULTILINE_12, &GB2312_FZXS12, &stDisplayArea, 0, SGUI_DRAW_NORMAL);
+    SGUI_Basic_SetMask(pstDeviceIF, iTextPosX, iTextPosY, iTextPosX + iTextAreaWidth - 1, iTextPosY + iTextAreaHeight - 1);
+    SGUI_Text_DrawMultipleLinesText(pstDeviceIF, SCR3_TEXT_MULTILINE_12, &GB2312_FZXS12, iTextPosX, iTextPosY, iTextAreaWidth, SGUI_DRAW_NORMAL);
     return HMI_RET_NORMAL;
 }
 

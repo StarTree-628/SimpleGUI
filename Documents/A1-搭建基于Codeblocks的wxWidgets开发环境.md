@@ -213,6 +213,18 @@
 
 &emsp;&emsp;选择设置好的的编译器配置，然后单击“OK”，重新开始编译即可。
 
+#### 4.4. 编译错误：找不到链接的库文件
+
+&emsp;&emsp;这个错误和4.2是类似的原因，4.2是找不到头文件，这里是找不到库文件。    
+
+><p align='center'><img src='images/A1/QA05.png' title='wxWidgets的库文件找不到' style='max-width:800px'></img></p>
+
+&emsp;&emsp;解决方式也和4.2类似，4.2章节修改的是头文件的搜索路径，这里需要修改的是库文件的搜索路径，修改童谣需要注意编译目标。    
+
+><p align='center'><img src='images/A1/QA06.png' title='设置正确的库文件路径' style='max-width:800px'></img></p>
+
+&emsp;&emsp;修改好库文件的搜索路径，然后单击“OK”，重新开始编译即可。    
+
 ### 5. 联系开发者
 &emsp;&emsp;首先，感谢您对SimpleGUI的赏识与支持。  
 &emsp;&emsp;虽然最早仅仅作为一套GUI接口库使用，但我最终希望SimpleGUI能够为您提供一套完整的单色屏GUI及交互设计解决方案，如果您有新的需求、提议亦或想法，欢迎在以下地址留言，或加入[QQ交流群799501887](https://jq.qq.com/?_wv=1027&k=5ahGPvK)留言交流。  

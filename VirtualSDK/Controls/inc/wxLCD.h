@@ -25,11 +25,11 @@ class wxLCD: public wxLCDBase
 								wxLCD(wxWindow *pclsParent, wxWindowID iWinID = wxID_ANY, const wxPoint& clsPosition = wxDefaultPosition, const wxSize& clsSizeInPixel = wxDefaultSizeInPixel);
 								~wxLCD(void);
 		int						GetPixel(const int iX, const int iY);
-		void					SetPixel(const int iX, const int iY, const int iValue);
+		void					SetPixel(const int iX, const int iY, const unsigned int uiColor);
 		void					CleanScreen(void);
 		void					SetPanelColour(const wxColour& clsPanelColour, bool bRefreshNow = true);
 		void					SetPixelColour(const wxColour& clsPixelColour, bool bRefreshNow = true);
-
+        void                    FillRectangle(int iX, int iY, int iWidth, int iHeight, unsigned int uiColor);
 		// Prepare to remove.
 		void				    SetParameter(PixelPanelParameter* pstPanelParameter);
 };

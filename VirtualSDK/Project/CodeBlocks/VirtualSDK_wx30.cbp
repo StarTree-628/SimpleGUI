@@ -4,14 +4,14 @@
 	<Project>
 		<Option title="SimpleGUI VirtualSDK" />
 		<Option pch_mode="2" />
-		<Option compiler="mingw-w64" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="x86">
 				<Option output="../../../Build/x86/bin/SimpleGUI" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../../Build" />
 				<Option object_output="../../../Build/x86/obj" />
 				<Option type="0" />
-				<Option compiler="mingw-w64" />
+				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add directory="$(#wx)/lib/gcc_x86_dll/mswu" />
@@ -36,7 +36,7 @@
 				<Option working_dir="../../../Build" />
 				<Option object_output="../../../Build/x64/obj" />
 				<Option type="0" />
-				<Option compiler="mingw-w64" />
+				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add directory="$(#wx)/lib/gcc_x64_dll/mswu" />
@@ -116,6 +116,9 @@
 		<Unit filename="../../../DemoProc/src/Notice.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../DemoProc/src/PolarCoordinates.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../DemoProc/src/RealtimeGraph.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -139,6 +142,7 @@
 		<Unit filename="../../../GUI/inc/SGUI_List.h" />
 		<Unit filename="../../../GUI/inc/SGUI_Menu.h" />
 		<Unit filename="../../../GUI/inc/SGUI_Notice.h" />
+		<Unit filename="../../../GUI/inc/SGUI_PolarCoordinates.h" />
 		<Unit filename="../../../GUI/inc/SGUI_ProcessBar.h" />
 		<Unit filename="../../../GUI/inc/SGUI_RealtimeGraph.h" />
 		<Unit filename="../../../GUI/inc/SGUI_ScrollBar.h" />
@@ -173,6 +177,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../GUI/src/SGUI_Notice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../GUI/src/SGUI_PolarCoordinates.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../GUI/src/SGUI_ProcessBar.c">

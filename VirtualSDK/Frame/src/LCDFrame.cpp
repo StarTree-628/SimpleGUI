@@ -415,6 +415,9 @@ void LCDFrame::ClearLCD(void)
 /*************************************************************************/
 LCDFrame* LCDFrame::GetInstance(void)
 {
+    /*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
 	if(NULL == m_pclsInstance)
 	{
 		m_pclsInstance = new LCDFrame();
@@ -427,35 +430,62 @@ LCDFrame* LCDFrame::GetInstance(void)
 /** Function Name:	SetLCDPixel                                         **/
 /** Purpose:		Set a pixel value.                                  **/
 /** Params:																**/
-/**	@ uiPosX[in]:       X-Coordinate of pixel.                          **/
-/**	@ uiY[in]:       Y-Coordinate of pixel.                          **/
-/**	@ strTitle[in]:     Pixel value, 0 for clear, 1 for set.            **/
+/**	@ iX[in]:       X-Coordinate of pixel.                              **/
+/**	@ iY[in]:       Y-Coordinate of pixel.                              **/
+/**	@ uiColor[in]:  Pixel color.                                        **/
 /** Return:			None.                                               **/
 /** Notice:			This function only change the pixel register, To    **/
 /**                 update the screen display, need to call RefreshLCD  **/
 /**                 function or Or use the DrawPixel function directly. **/
 /*************************************************************************/
-void LCDFrame::SetLCDPixel(uint32_t uiPosX, uint32_t uiY, uint32_t uiPixelValue)
+void LCDFrame::SetLCDPixel(int iX, int iY, unsigned int uiColor)
 {
-    m_pclsCtrlPaintPanel->SetPixel(uiPosX, uiY, uiPixelValue);
+    /*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+    m_pclsCtrlPaintPanel->SetPixel(iX, iY, uiColor);
 }
 
 /*************************************************************************/
 /** Function Name:	GetLCDPixel                                         **/
 /** Purpose:		Get a pixel value.                                  **/
 /** Params:																**/
-/**	@ uiPosX[in]:       X-Coordinate of pixel.                          **/
-/**	@ uiY[in]:       Y-Coordinate of pixel.                          **/
+/**	@ iX[in]:       X-Coordinate of pixel.                              **/
+/**	@ iY[in]:       Y-Coordinate of pixel.                              **/
 /** Return:			None.                                               **/
 /** Notice:			The value is got form the display buffer.			**/
 /*************************************************************************/
-uint32_t LCDFrame::GetLCDPixel(uint32_t uiPosX, uint32_t uiY)
+unsigned int LCDFrame::GetLCDPixel(int iX, int iY)
 {
-    uint32_t                uiPixelValue;
+    unsigned int        uiPixelColor;
 
-    uiPixelValue = (uint32_t)m_pclsCtrlPaintPanel->GetPixel(uiPosX, uiY);
+    /*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+    uiPixelColor = (uint32_t)m_pclsCtrlPaintPanel->GetPixel(iX, iY);
 
-    return uiPixelValue;
+    return uiPixelColor;
+}
+
+/*************************************************************************/
+/** Function Name:	FillRectangle                                       **/
+/** Purpose:		Set a pixel value.                                  **/
+/** Params:																**/
+/**	@ iX[in]:       X-Coordinate of pixel.                              **/
+/**	@ iY[in]:       Y-Coordinate of pixel.                              **/
+/**	@ iWidth[in]:   Fill area width.                                    **/
+/**	@ iHeight[in]:  Fill area height.                                   **/
+/**	@ uiColor[in]:  Pixel color.                                        **/
+/** Return:			None.                                               **/
+/** Notice:			This function will fill a rectangle area with the   **/
+/**                 specified color.                                    **/
+/*************************************************************************/
+void LCDFrame::FillRectangle(int iX, int iY, int iWidth, int iHeight, unsigned int uiColor)
+{
+    /*----------------------------------*/
+	/* Process							*/
+	/*----------------------------------*/
+	m_pclsCtrlPaintPanel->FillRectangle(iX, iY, iWidth, iHeight, uiColor);
 }
 
 /*************************************************************************/

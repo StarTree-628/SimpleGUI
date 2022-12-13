@@ -1,16 +1,16 @@
 /*************************************************************************/
-/** Copyright.															**/
-/** FileName: SGUI_IconResource.c										**/
-/** Author: XuYulin														**/
-/** Description: Simple GUI basic drawing operating interface.			**/
+/** Copyright.                                                          **/
+/** FileName: SGUI_IconResource.c                                       **/
+/** Author: XuYulin                                                     **/
+/** Description: Simple GUI basic drawing operating interface.          **/
 /*************************************************************************/
 //=======================================================================//
-//= Include files.													    =//
+//= Include files.                                                      =//
 //=======================================================================//
 #include "SGUI_IconResource.h"
 
 //=======================================================================//
-//= Static variable define.												=//
+//= Static variable define.                                             =//
 //=======================================================================//
 SGUI_BMP_RESOURCE_DEFINE(SGUI_RES_ICON_ERROR_16, 16, 16,
 0xFF,0x01,0x01,0x19,0x39,0x71,0xE1,0xC1,0xC1,0xE1,0x71,0x39,0x19,0x01,0x01,0xFF,
@@ -47,3 +47,9 @@ SGUI_BMP_RESOURCE_DEFINE(SGUI_RES_ICON_WARNING_24, 24, 24,
 0xFF,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0xF1,0xF9,0xF9,0xF1,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0xFF,
 0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x1F,0xFF,0xFF,0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,
 0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x9E,0x9E,0x9E,0x9E,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF);
+
+SGUI_BMP_RESOURCE_DEFINE(SGUI_MENU_ICON_MOVEUP_W5H3, 5, 3,
+0x04,0x06,0x07,0x06,0x04);
+
+SGUI_BMP_RESOURCE_DEFINE(SGUI_MENU_ICON_MOVEDOWN_W5H3, 5, 3,
+0x01,0x03,0x07,0x03,0x01);

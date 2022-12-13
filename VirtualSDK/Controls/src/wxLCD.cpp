@@ -72,9 +72,9 @@ int wxLCD::GetPixel(const int iX, const int iY)
 	return iReturn;
 }
 
-void wxLCD::SetPixel(const int iX, const int iY, const int iValue)
+void wxLCD::SetPixel(const int iX, const int iY, const unsigned int uiColor)
 {
-	if(1 == iValue)
+	if(1 == uiColor)
 	{
 		SetPixelUnitColor(iX, iY, m_clsPixelHColour);
 	}
@@ -82,6 +82,17 @@ void wxLCD::SetPixel(const int iX, const int iY, const int iValue)
 	{
 		SetPixelUnitColor(iX, iY, m_clsPixelLColour);
 	}
+}
+
+void wxLCD::FillRectangle(int iX, int iY, int iWidth, int iHeight, unsigned int uiColor)
+{
+    for(int iPosY=0; iPosY<iHeight; iPosY++)
+    {
+        for(int iPosX=0; iPosX<iWidth; iPosX++)
+        {
+            SetPixel(iPosX+iX, iPosY+iY, uiColor);
+        }
+    }
 }
 
 void wxLCD::CleanScreen(void)

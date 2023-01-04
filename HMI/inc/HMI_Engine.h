@@ -111,7 +111,8 @@ extern "C"{
 HMI_ENGINE_RESULT   HMI_ActiveEngine(HMI_ENGINE_OBJECT* pstHMIEngineObject, SGUI_INT iScreenID);
 HMI_ENGINE_RESULT   HMI_StartEngine(const void* pstParameters);
 HMI_ENGINE_RESULT   HMI_ProcessEvent(const HMI_EVENT_BASE* pstEvent);
-HMI_ENGINE_RESULT   HMI_SwitchScreen(SGUI_INT iDestScreenID, const void* pstParameters);
+HMI_ENGINE_RESULT   HMI_GoToScreen(SGUI_INT iDestScreenID, const void* pstParameters);
+HMI_ENGINE_RESULT   HMI_SwitchToScreen(SGUI_INT iDestScreenID, const void* pstParameters);
 HMI_ENGINE_RESULT   HMI_GoBack(const void* pstParameters);
 HMI_ENGINE_RESULT   HMI_SetDeviceObject(SGUI_SCR_DEV* pstDeviceObj);
 #ifdef __cplusplus

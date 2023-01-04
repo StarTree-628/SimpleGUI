@@ -210,15 +210,14 @@ HMI_ENGINE_RESULT HMI_ProcessEvent(const HMI_EVENT_BASE* pstEvent)
 }
 
 /*****************************************************************************/
-/** Function Name:  HMI_SwitchScreen                                        **/
+/** Function Name:  HMI_GoToScreen                                          **/
 /** Purpose:        Turn to a screen with screen index.                     **/
 /** Params:                                                                 **/
 /** @ iDestScreenID[in]: Screen ID witch will be going to.                  **/
 /** @ pstParameters[in]: Screen prepare data pointer.                       **/
 /** Return:         HMI_ENGINE_RESULT.                                      **/
-/** Notice:         Screen will only refresh when pstPreProcessData is NULL **/
 /*****************************************************************************/
-HMI_ENGINE_RESULT HMI_SwitchScreen(SGUI_INT iDestScreenID, const void* pstParameters)
+HMI_ENGINE_RESULT HMI_GoToScreen(SGUI_INT iDestScreenID, const void* pstParameters)
 {
     /*----------------------------------*/
     /* Variable Declaration             */
@@ -250,6 +249,68 @@ HMI_ENGINE_RESULT HMI_SwitchScreen(SGUI_INT iDestScreenID, const void* pstParame
         else
         {
             pstDestScreen->pstPrevious = g_pstActivedEngineObject->CurrentScreenObject;
+            g_pstActivedEngineObject->CurrentScreenObject = pstDestScreen;
+            if(NULL != pstDestScreen->pstActions)
+            {
+                if(NULL != pstDestScreen->pstActions->Prepare)
+                {
+                    eProcessResult = pstDestScreen->pstActions->Prepare(g_pstActivedEngineObject->Interface, pstParameters);
+                }
+            }
+        }
+
+    }
+    else
+    {
+        // No activated HMI engine object.
+        eProcessResult = HMI_RET_INVALID_DATA;
+    }
+
+    return eProcessResult;
+}
+
+/*****************************************************************************/
+/** Function Name:  HMI_SwitchToScreen                                      **/
+/** Purpose:        Turn to a screen with screen index but current screen   **/
+/**                 not recorder in history.                                **/
+/** Params:                                                                 **/
+/** @ iDestScreenID[in]: Screen ID witch will be going to.                  **/
+/** @ pstParameters[in]: Screen prepare data pointer.                       **/
+/** Return:         HMI_ENGINE_RESULT.                                      **/
+/*****************************************************************************/
+HMI_ENGINE_RESULT HMI_SwitchToScreen(SGUI_INT iDestScreenID, const void* pstParameters)
+{
+    /*----------------------------------*/
+    /* Variable Declaration             */
+    /*----------------------------------*/
+    HMI_ENGINE_RESULT           eProcessResult;
+    HMI_SCREEN_OBJECT*          pstDestScreen;
+
+    /*----------------------------------*/
+    /* Initialize                       */
+    /*----------------------------------*/
+    eProcessResult =            HMI_RET_NORMAL;
+
+    /*----------------------------------*/
+    /* Process                          */
+    /*----------------------------------*/
+    if(NULL != g_pstActivedEngineObject)
+    {
+        pstDestScreen = HMI_GetScreenObjectInEngine(g_pstActivedEngineObject, iDestScreenID);
+        if(NULL == pstDestScreen)
+        {
+            /* Not find screen object by ID. */
+            eProcessResult = HMI_RET_INVALID_DATA;
+        }
+        else if(NULL != pstDestScreen->pstPrevious)
+        {
+            /* Cannot reenter to a screen object. */
+            eProcessResult = HMI_RET_ERROR;
+        }
+        else
+        {
+            pstDestScreen->pstPrevious = g_pstActivedEngineObject->CurrentScreenObject->pstPrevious;
+            g_pstActivedEngineObject->CurrentScreenObject->pstPrevious = NULL;
             g_pstActivedEngineObject->CurrentScreenObject = pstDestScreen;
             if(NULL != pstDestScreen->pstActions)
             {

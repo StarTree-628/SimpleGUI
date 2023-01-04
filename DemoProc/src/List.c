@@ -298,42 +298,42 @@ HMI_ENGINE_RESULT HMI_DemoList_PostProcess(SGUI_SCR_DEV* pstDeviceIF, HMI_ENGINE
         {
             case 0:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_BASIC_PAINT, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_BASIC_PAINT, NULL);
                 break;
             }
             case 1:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_PAINT_TEXT, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_PAINT_TEXT, NULL);
                 break;
             }
             case 2:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_VARIABLE_BOX, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_VARIABLE_BOX, NULL);
                 break;
             }
             case 3:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_REAL_TIME_GRAPH, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_REAL_TIME_GRAPH, NULL);
                 break;
             }
             case 4:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_MENU, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_MENU, NULL);
                 break;
             }
             case 5:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_TEXT_NOTICE, SCR7_NOTICE_TEXT);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_TEXT_NOTICE, SCR7_NOTICE_TEXT);
                 break;
             }
             case 6:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_CURVE, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_CURVE, NULL);
                 break;
             }
             case 7:
             {
-                HMI_SwitchScreen(HMI_SCREEN_ID_DEMO_POLOR_COORD, NULL);
+                HMI_GotoScreen(HMI_SCREEN_ID_DEMO_POLOR_COORD, NULL);
                 break;
             }
             default:

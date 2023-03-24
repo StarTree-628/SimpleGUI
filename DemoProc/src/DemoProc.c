@@ -11,7 +11,7 @@
 #include "SGUI_Basic.h"
 
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-#include "SDKInterface.h"
+#include "simulator_if.h"
 #include "SGUI_FontResource.h"
 #else
 #include "screen.h"
@@ -97,8 +97,8 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
 #ifdef SGUI_GET_POINT_FUNC_EN
     g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
 #endif // SGUI_GET_POINT_FUNC_EN
-    g_stDeviceInterface.fnFillRect = SGUI_SDK_FillRectangle;
-    g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;
+    //g_stDeviceInterface.fnFillRect = SGUI_SDK_FillRectangle;
+    //g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;
     g_stDeviceInterface.fnSyncBuffer = SGUI_SDK_RefreshDisplay;
 #else
     #error Add screen device object initialize process here.
@@ -152,37 +152,6 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
     return eProcessResult;
 }
 
-#ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-/*****************************************************************************/
-/** Function Name:  CheckEventFlag                                          **/
-/** Purpose:        Check SimpleGUI virtual SDK event trigger flag and      **/
-/**                 reset for next trigger and check.                       **/
-/** Parameters:                                                             **/
-/** @ eIndex[in]:   Checked flag index.                                     **/
-/** Return:         true for event is trigger, false for not.               **/
-/** Notice:         This function only used in SimpleGUI virtual SDK        **/
-/*****************************************************************************/
-bool CheckEventFlag(ENV_FLAG_INDEX eIndex)
-{
-    /*----------------------------------*/
-    /* Variable Declaration             */
-    /*----------------------------------*/
-    bool                    bReturn;
-
-    /*----------------------------------*/
-    /* Process                          */
-    /*----------------------------------*/
-    bReturn = SGUI_SDK_GetEventSyncFlag(eIndex);
-
-    if(true == bReturn)
-    {
-        SGUI_SDK_SetEvnetSyncFlag(eIndex, false);
-    }
-
-    return bReturn;
-}
-#endif // _SIMPLE_GUI_VIRTUAL_ENVIRONMENT_SIMULATOR_
-
 /*****************************************************************************/
 /** Function Name:  DemoMainProcess                                         **/
 /** Purpose:        It is a dummy main function for SimpleGUI Virtual SDK,  **/
@@ -202,8 +171,9 @@ void DemoMainProcess(void)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    while(1)
+    while(SGUI_SDK_IsActive())
     {
+        SGUI_SDK_TicksProlog();
         // Check and process heart-beat timer event.
         if(true == SysTickTimerTriggered())
         {
@@ -236,9 +206,6 @@ void KeyPressEventProc(void)
     /* Variable Declaration             */
     /*----------------------------------*/
     KEY_PRESS_EVENT         stEvent;
-#ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    const SDK_KB_EVENT*     pstSDKEvent;
-#endif // _SIMPLE_GUI_IN_VIRTUAL_SDK_
 
     /*----------------------------------*/
     /* Initialize                       */
@@ -250,20 +217,7 @@ void KeyPressEventProc(void)
     /*----------------------------------*/
     stEvent.Head.iID = EVENT_ID_KEY_PRESS;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    pstSDKEvent = SGUI_SDK_GetKeyEventData();
-    stEvent.Data.uiKeyValue = pstSDKEvent->iKeyCode;
-    if(pstSDKEvent->bShift)
-    {
-        stEvent.Data.uiKeyValue |= KEY_OPTION_SHIFT;
-    }
-    if(pstSDKEvent->bCtrl)
-    {
-        stEvent.Data.uiKeyValue |= KEY_OPTION_CTRL;
-    }
-    if(pstSDKEvent->bAlt)
-    {
-        stEvent.Data.uiKeyValue |= KEY_OPTION_ALT;
-    }
+    stEvent.Data.uiKeyValue = SGUI_SDK_GetKeyCode();
 #else
     #error Add key event data prepare process here.
 #endif
@@ -293,8 +247,8 @@ void SysTickTimerEventProc(void)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    stEvent.Head.iID =      EVENT_ID_TIMER;
-    stEvent.Data.iValue = (rand() % 200)-100;
+    stEvent.Head.iID = EVENT_ID_TIMER;
+    stEvent.Data.iValue = simulator_if_get_data();
     // Post timer event.
     HMI_ProcessEvent((HMI_EVENT_BASE*)&stEvent);
 }
@@ -339,7 +293,7 @@ bool SysTickTimerTriggered(void)
     /* Process                          */
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    return CheckEventFlag(ENV_FLAG_IDX_SDK_TIM_EVENT);
+    return simulator_if_has_data();
 #else
     #error Add sys-tick timer trigger process here.
 #endif
@@ -358,7 +312,7 @@ bool RTCTimerTriggered(void)
     /* Process                          */
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    return CheckEventFlag(ENV_FLAG_IDX_SDK_SEC_EVENT);
+    return false;
 #else
     // // Add Dummy RTC trigger process here.
     return false;
@@ -378,7 +332,7 @@ bool UserEventTriggered(void)
     /* Process                          */
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    return CheckEventFlag(ENV_FLAG_IDX_SDK_KEY_EVENT);
+    return SGUI_SDK_HasKey();
 #else
     #error Add user event trigger process here.
 #endif
@@ -398,7 +352,7 @@ void SysTickTimerEnable(bool bEnable)
     /* Process                          */
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    (void)SGUI_SDK_ConfigGeneralTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
+    // (void)SGUI_SDK_ConfigGeneralTimer(bEnable?DEMO_HEART_BEAT_INTERVAL_MS:0);
 #else
     #error Add sys-tick timer enable/disable process here.
 #endif
@@ -419,7 +373,7 @@ void RTCTimerEnable(bool bEnable)
     /* Process                          */
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    (void)SGUI_SDK_EnableSecondInterrupt(bEnable);
+    // (void)SGUI_SDK_EnableSecondInterrupt(bEnable);
 #endif
 }
 

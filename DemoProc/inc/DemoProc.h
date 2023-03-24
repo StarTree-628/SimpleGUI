@@ -11,7 +11,7 @@
 #include "DemoActions.h"
 #include "Resource.h"
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-#include "SDKInterface.h"
+#include "simulator_if.h"
 #endif
 
 //=======================================================================//

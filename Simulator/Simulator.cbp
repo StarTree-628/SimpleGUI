@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SimpleGUI_Simulator" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/SimpleGUI_Simulator" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/SimpleGUI_Simulator" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-D_SIMPLE_GUI_DEMO_INNER_CHS_" />
+			<Add option="-D_SIMPLE_GUI_ENCODE_TEXT_" />
+			<Add directory="$(#sdl2.include)/SDL2" />
+			<Add directory="../DemoProc/inc" />
+			<Add directory="../GUI/inc" />
+			<Add directory="../HMI/inc" />
+			<Add directory="inc" />
+			<Add directory="../Library/inc" />
+		</Compiler>
+		<Linker>
+			<Add library="libmingw32.a" />
+			<Add library="libuser32.a" />
+			<Add library="libgdi32.a" />
+			<Add library="libwinmm.a" />
+			<Add library="libdxguid.a" />
+			<Add library="libSDL2main.a" />
+			<Add library="libSDL2.a" />
+			<Add library="libiconv64.a" />
+			<Add directory="$(#sdl2.lib)" />
+			<Add directory="../Library/lib64" />
+		</Linker>
+		<ExtraCommands>
+			<Add after="XCOPY $(#sdl2)\bin\*.dll $(TARGET_OUTPUT_DIR) /D /Y" />
+		</ExtraCommands>
+		<Unit filename="../DemoProc/inc/DemoActions.h" />
+		<Unit filename="../DemoProc/inc/DemoProc.h" />
+		<Unit filename="../DemoProc/inc/DemoResource_ASCII.h" />
+		<Unit filename="../DemoProc/inc/DemoResource_GB2312.h" />
+		<Unit filename="../DemoProc/inc/DemoResource_UTF8.h" />
+		<Unit filename="../DemoProc/inc/Resource.h" />
+		<Unit filename="../DemoProc/src/Basic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/Curve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/DemoProc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/List.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/Menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/Notice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/PolarCoordinates.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/RealtimeGraph.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/Resource.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/Text.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../DemoProc/src/VariableBox.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/inc/SGUI_Basic.h" />
+		<Unit filename="../GUI/inc/SGUI_Common.h" />
+		<Unit filename="../GUI/inc/SGUI_Config.h" />
+		<Unit filename="../GUI/inc/SGUI_Curve.h" />
+		<Unit filename="../GUI/inc/SGUI_FontResource.h" />
+		<Unit filename="../GUI/inc/SGUI_Graph.h" />
+		<Unit filename="../GUI/inc/SGUI_IconResource.h" />
+		<Unit filename="../GUI/inc/SGUI_Interface.h" />
+		<Unit filename="../GUI/inc/SGUI_ItemsBase.h" />
+		<Unit filename="../GUI/inc/SGUI_List.h" />
+		<Unit filename="../GUI/inc/SGUI_Menu.h" />
+		<Unit filename="../GUI/inc/SGUI_Notice.h" />
+		<Unit filename="../GUI/inc/SGUI_PolarCoordinates.h" />
+		<Unit filename="../GUI/inc/SGUI_ProcessBar.h" />
+		<Unit filename="../GUI/inc/SGUI_RealtimeGraph.h" />
+		<Unit filename="../GUI/inc/SGUI_ScrollBar.h" />
+		<Unit filename="../GUI/inc/SGUI_Text.h" />
+		<Unit filename="../GUI/inc/SGUI_Typedef.h" />
+		<Unit filename="../GUI/inc/SGUI_VariableBox.h" />
+		<Unit filename="../GUI/src/SGUI_Basic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_Common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_Curve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_FontResource.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_IconResource.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_Interface.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_ItemsBase.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_List.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_Menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_Notice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_PolarCoordinates.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_ProcessBar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_RealtimeGraph.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_ScrollBar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_Text.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../GUI/src/SGUI_VariableBox.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../HMI/inc/HMI_Engine.h" />
+		<Unit filename="../HMI/src/HMI_Engine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="inc/console_log.h" />
+		<Unit filename="inc/simulator.h" />
+		<Unit filename="inc/simulator_event.h" />
+		<Unit filename="inc/simulator_if.h" />
+		<Unit filename="inc/simulator_random_data.h" />
+		<Unit filename="inc/simulator_timer.h" />
+		<Unit filename="inc/simulator_window.h" />
+		<Unit filename="src/console_log.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/simulator.cpp" />
+		<Unit filename="src/simulator_event.cpp" />
+		<Unit filename="src/simulator_if.cpp" />
+		<Unit filename="src/simulator_random_data.cpp" />
+		<Unit filename="src/simulator_timer.cpp" />
+		<Unit filename="src/simulator_window.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

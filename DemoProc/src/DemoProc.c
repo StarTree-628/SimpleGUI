@@ -93,13 +93,13 @@ HMI_ENGINE_RESULT InitializeHMIEngineObj(void)
     g_stDeviceInterface.stSize.iWidth = 128;
     g_stDeviceInterface.stSize.iHeight = 64;
     /* Initialize interface object. */
-    g_stDeviceInterface.fnSetPixel = SGUI_SDK_SetPixel;
+    g_stDeviceInterface.fnSetPixel = simulator_if_paint_pixel;
 #ifdef SGUI_GET_POINT_FUNC_EN
-    g_stDeviceInterface.fnGetPixel = SGUI_SDK_GetPixel;
+    g_stDeviceInterface.fnGetPixel = simulator_if_read_pixel;
 #endif // SGUI_GET_POINT_FUNC_EN
     //g_stDeviceInterface.fnFillRect = SGUI_SDK_FillRectangle;
     //g_stDeviceInterface.fnClear = SGUI_SDK_ClearDisplay;
-    g_stDeviceInterface.fnSyncBuffer = SGUI_SDK_RefreshDisplay;
+    g_stDeviceInterface.fnSyncBuffer = simulator_if_flush_screen;
 #else
     #error Add screen device object initialize process here.
 #endif
@@ -171,9 +171,9 @@ void DemoMainProcess(void)
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
-    while(SGUI_SDK_IsActive())
+    while(simulator_is_active())
     {
-        SGUI_SDK_TicksProlog();
+        simulator_ticks_prolog();
         // Check and process heart-beat timer event.
         if(true == SysTickTimerTriggered())
         {
@@ -217,7 +217,7 @@ void KeyPressEventProc(void)
     /*----------------------------------*/
     stEvent.Head.iID = EVENT_ID_KEY_PRESS;
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    stEvent.Data.uiKeyValue = SGUI_SDK_GetKeyCode();
+    stEvent.Data.uiKeyValue = simulator_if_read_key();
 #else
     #error Add key event data prepare process here.
 #endif
@@ -332,7 +332,7 @@ bool UserEventTriggered(void)
     /* Process                          */
     /*----------------------------------*/
 #ifdef _SIMPLE_GUI_IN_VIRTUAL_SDK_
-    return SGUI_SDK_HasKey();
+    return simulator_if_has_key_event();
 #else
     #error Add user event trigger process here.
 #endif

@@ -22,7 +22,7 @@
 //=======================================================================//
 //= Static function declaration.									    =//
 //=======================================================================//
-static unsigned int         SGUI_SDK_ConvKeyScanCode(int iScanCode);
+static unsigned int         simulator_if_conv_keycode(int iScanCode);
 
 //=======================================================================//
 //= Static object declaration.                                          =//
@@ -42,7 +42,7 @@ simulator                   s_simulator_obj;
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_SetPixel(int iX, int iY, unsigned int uiColor)
+void simulator_if_paint_pixel(int iX, int iY, unsigned int uiColor)
 {
     /*----------------------------------*/
     /* Process							*/
@@ -66,7 +66,7 @@ void SGUI_SDK_SetPixel(int iX, int iY, unsigned int uiColor)
 /** Return:			Pixel state, 0 for cleared, 1 for set.              **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-unsigned int SGUI_SDK_GetPixel(int iX, int iY)
+unsigned int simulator_if_read_pixel(int iX, int iY)
 {
     return 0;
 }
@@ -78,7 +78,7 @@ unsigned int SGUI_SDK_GetPixel(int iX, int iY)
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_RefreshDisplay(void)
+void simulator_if_flush_screen(void)
 {
     s_simulator_obj.window(0).sync_paint_buffer();
 }
@@ -90,13 +90,13 @@ void SGUI_SDK_RefreshDisplay(void)
 /** Return:			None.                                               **/
 /** Notice:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_ClearDisplay(void)
+void simulator_if_clear_screen(void)
 {
     s_simulator_obj.window(0).clear_paint();
     s_simulator_obj.window(0).sync_paint_buffer();
 }
 
-bool SGUI_SDK_HasKey(void)
+bool simulator_if_has_key_event(void)
 {
     return (s_simulator_obj.window(0).key_event().size() > 0);
 }
@@ -108,14 +108,14 @@ bool SGUI_SDK_HasKey(void)
 /** [in] iScanCode: Key scan code from SDL engine.                      **/
 /** Return:			Simple GUI demo key code value.                     **/
 /*************************************************************************/
-unsigned int SGUI_SDK_GetKeyCode(void)
+unsigned int simulator_if_read_key(void)
 {
     unsigned int uiKeyCode = KEY_VALUE_NONE;
     if(!s_simulator_obj.window(0).key_event().empty())
     {
-        if(sim_key_release == (s_simulator_obj.window(0).key_event().front().event()))
+        if(sim_key_press == (s_simulator_obj.window(0).key_event().front().event()))
         {
-            uiKeyCode = SGUI_SDK_ConvKeyScanCode(s_simulator_obj.window(0).key_event().front().code());
+            uiKeyCode = simulator_if_conv_keycode(s_simulator_obj.window(0).key_event().front().code());
         }
         s_simulator_obj.window(0).key_event().pop();
     }
@@ -132,24 +132,24 @@ int simulator_if_get_data(void)
     return s_simulator_obj.random().value();
 }
 
-bool SGUI_SDK_TicksProlog(void)
+bool simulator_ticks_prolog(void)
 {
     return s_simulator_obj.window(0).prolog();
 }
 
-bool SGUI_SDK_IsActive(void)
+bool simulator_is_active(void)
 {
     return !(s_simulator_obj.window(0).exit());
 }
 
 /*************************************************************************/
-/** Function Name:	SGUI_SDK_KeyCode                                    **/
+/** Function Name:	simulator_if_conv_keycode                           **/
 /** Purpose:		Convert SDL2 key scan code to demo key code value.  **/
 /** Params:                                                             **/
 /** [in] iScanCode: Key scan code from SDL engine.                      **/
 /** Return:			Simple GUI demo key code value.                     **/
 /*************************************************************************/
-unsigned int SGUI_SDK_ConvKeyScanCode(int iScanCode)
+unsigned int simulator_if_conv_keycode(int iScanCode)
 {
     uint16_t uiKeyCode = KEY_VALUE_NONE;
     switch(iScanCode)
@@ -183,14 +183,22 @@ unsigned int SGUI_SDK_ConvKeyScanCode(int iScanCode)
         case SDL_SCANCODE_SPACE:
         {
             uiKeyCode = KEY_VALUE_SPACE;
+            break;
         }
         case SDL_SCANCODE_ESCAPE:
         {
             uiKeyCode = KEY_VALUE_ESC;
+            break;
         }
         case SDL_SCANCODE_BACKSPACE:
         {
             uiKeyCode = KEY_VALUE_BACKSPACE;
+            break;
+        }
+        case SDL_SCANCODE_TAB:
+        {
+            uiKeyCode = KEY_VALUE_TAB;
+            break;
         }
         default:
         {
@@ -208,7 +216,7 @@ unsigned int SGUI_SDK_ConvKeyScanCode(int iScanCode)
 /** Return:			None.                                               **/
 /** Notice:			Post event to main frame for initialize SDK.		**/
 /*************************************************************************/
-bool SGUI_SDK_Initialize(void)
+bool simulator_init(void)
 {
     /*----------------------------------*/
     /* Process							*/
@@ -224,7 +232,7 @@ bool SGUI_SDK_Initialize(void)
 /** Params:			None.                                               **/
 /** Return:			None.                                               **/
 /*************************************************************************/
-void SGUI_SDK_Deinitialize(void)
+void simulator_deinit(void)
 {
     s_simulator_obj.deinit();
 }
@@ -244,11 +252,11 @@ int SGUI_SDK_DummyMainProc(void)
     /* Process							*/
     /*----------------------------------*/
     // Initialize main frame.
-    SGUI_SDK_Initialize();
+    simulator_init();
     // Call main process.
     DemoMainProcess();
 
-    SGUI_SDK_Deinitialize();
+    simulator_deinit();
 
     return 0;
 }

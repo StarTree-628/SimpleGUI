@@ -36,19 +36,18 @@ typedef struct
 //=======================================================================//
 //= Public function declaration.									    =//
 //=======================================================================//
-bool			    SGUI_SDK_Initialize(void);
-void			    SGUI_SDK_Deinitialize(void);
-bool                SGUI_SDK_HasKey(void);
-unsigned int        SGUI_SDK_GetKeyCode(void);
+bool			    simulator_init(void);
+void			    simulator_deinit(void);
+bool			    simulator_ticks_prolog(void);
+bool			    simulator_is_active(void);
+bool                simulator_if_has_key_event(void);
+unsigned int        simulator_if_read_key(void);
 bool                simulator_if_has_data(void);
 int                 simulator_if_get_data(void);
-bool			    SGUI_SDK_TicksProlog(void);
-bool			    SGUI_SDK_IsActive(void);
-void			    SGUI_SDK_SetPixel(int iX, int iY, unsigned int uiColor);
-unsigned int        SGUI_SDK_GetPixel(int iX, int iY);
-void			    SGUI_SDK_RefreshDisplay(void);
-void			    SGUI_SDK_ClearDisplay(void);
-
+void			    simulator_if_paint_pixel(int iX, int iY, unsigned int uiColor);
+unsigned int        simulator_if_read_pixel(int iX, int iY);
+void			    simulator_if_flush_screen(void);
+void			    simulator_if_clear_screen(void);
 int				    SGUI_SDK_DummyMainProc(void);
 void			    SGUI_SDK_GeneralTimerHandler(void);
 void			    SGUI_SDK_SecondTimerHandler(void);

@@ -165,7 +165,7 @@ bool simulator_window::prolog(void)
                 }
                 case SDL_KEYUP:
                 {
-                    m_key_event_queue.emplace(m_event.key.keysym.scancode, sim_key_release);
+                    //m_key_event_queue.emplace(m_event.key.keysym.scancode, sim_key_release);
                     break;
                 }
                 default:

@@ -48,6 +48,7 @@ HMI_ENGINE_RESULT HMI_DemoBasic_Prepare(SGUI_SCR_DEV* pstDeviceIF, const void* p
     /*----------------------------------*/
     /* Process                          */
     /*----------------------------------*/
+    SGUI_Basic_ResetMask(pstDeviceIF);
     if(NULL != pstDeviceIF->fnClear)
     {
         pstDeviceIF->fnClear();
